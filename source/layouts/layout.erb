@@ -5,13 +5,14 @@
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/stylesheets/all.css">
     <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,400,700' rel='stylesheet' type='text/css'>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   </head>
   <body>
 
   <div class='sidebar'>
 
     <div class="name">
-      <img class="blur" src="/images/logo.svg"/>
+      <a href="/"><img class="blur index" src="/images/logo.svg"/></a>
     </div>
     <div class='quarters'>
       <a href="/about"> <img class="blur about" src="http://www.gravatar.com/avatar/78359dd9d3cf59abacfa85565edc1eb2?s=500" /></a>
@@ -21,10 +22,10 @@
     <a href="/blog"> <img class="blur blog" src="/images/compex.svg"/></a>
     </div>
     <div class='quarters'>
-    <a href="/"> <img class="blur music" src="/images/guitar.svg"/></a>
+    <img class="blur music" src="/images/guitar.svg"/>
     </div>
     <div class='quarters'>
-    <a href="/"> <img class="blur photo" src="/images/cam.svg"/></a>
+     <img class="blur photo" src="/images/cam.svg"/>
     </div>
   </div>
 
@@ -49,5 +50,15 @@
 
   <%= yield %>
 
+      <script>
+
+        if (window.location.pathname=='/')
+          var thing = 'index';
+        else
+          var thing = window.location.pathname.match(/(\w+)/)[1];
+
+        $('.' + thing).addClass('activepage')
+
+      </script>
   </body>
 </html>

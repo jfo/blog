@@ -3,18 +3,27 @@ title: Blog Posts
 hide_footer: true
 ---
 
-<h1>Blog Posts</h1>
-
-<% blog.articles.each do |article| %>
+<% newest = blog.articles[0] %>
   <article>
-    <h1>
-      <a href="<%= article.url %>"><%= article.title %></a>
-      <time><%= article.date.strftime('%b %e %Y') %></time>
-    </h1>
-
-    <%= article.summary %>
-
-    <a href="<%= article.url %>">Read more</a>
+    <h2>
+      <a href="<%= newest.url %>" style="text-decoration: none; color:#333;"><%= newest.title %></a>
+      <time><%= newest.date.strftime('%b %e %Y') %></time>
+    </h2>
+    <%= newest.body %>
   </article>
+
+  <hr></hr>
+<% blog.articles[1..5].each do |article| %>
+  <article>
+    <h2>
+      <a href="<%= article.url %>" style="text-decoration: none; color:#333;"><%= article.title %></a>
+      <time><%= article.date.strftime('%b %e %Y') %></time>
+    </h2>
+    <%= article.summary %>
+    <a href="<%= article.url %>" style="text-align:center;">more</a>
+  </article>
+  <hr></hr>
 <% end %>
+
+<a href="/allposts">All posts</a>
 

@@ -15,3 +15,4 @@ gem 'nokogiri'
 gem 'middleman-syntax'
 
 gem 'redcarpet'
+gem 'builder'
