@@ -1,2 +1,20 @@
 ---
+title: Blog Posts
+hide_footer: true
 ---
+
+<h1>Blog Posts</h1>
+
+<% blog.articles.each do |article| %>
+  <article>
+    <h1>
+      <a href="<%= article.url %>"><%= article.title %></a>
+      <time><%= article.date.strftime('%b %e %Y') %></time>
+    </h1>
+
+    <%= article.summary %>
+
+    <a href="<%= article.url %>">Read more</a>
+  </article>
+<% end %>
+
