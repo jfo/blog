@@ -1,4 +1,10 @@
 ---
 ---
 
-<div id="background" style="background-image: url(/images/background.jpg);"></div>
+<div id="background" style="background-image: url(/images/backgrounds/1.jpg)"></div>
+
+<script>
+  var num = Math.floor(Math.random() * 11) + 1
+  document.getElementById('background').style.backgroundImage = "url(/images/backgrounds/"+num+".jpg)"
+</script>
+

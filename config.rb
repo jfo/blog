@@ -53,9 +53,9 @@ set :images_dir, 'images'
 
 activate :directory_indexes
 
-activate :blog do |blog|
-  blog.prefix = "blog"
-end
+# activate :blog do |blog|
+  # blog.prefix = "blog"
+# end
 
 # Build-specific configuration
 configure :build do

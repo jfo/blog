@@ -5,12 +5,24 @@ body {
 }
 
 .sidebar {
+  padding: 2% 0 0 0;
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
   background-color: rgba(255,255,255,0.5);
   width: 15%;
+  text-align: center;
+}
+
+.side {
+  position: absolute;
+  margin: 0 0 0 15%;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 10%;
+  /* background-color: rgba(255,255,0,1); */
   text-align: center;
 }
 
@@ -22,7 +34,6 @@ body {
 
 .name {
   height: 15%;
-  -webkit-filter: blur(2px);
   font-size: 30px;
   transition: 1.5s ease;
   color: rgb(68, 68, 68);
@@ -33,16 +44,15 @@ body {
   height: 20%;
 }
 
-.quarters img {
+.sidebar img {
     max-height: 100%;
     max-width: 100%;
-    -webkit-filter: blur(2px);
+    -webkit-filter: blur(4px);
     transition: 1.5s ease;
 }
-.quarters img:hover { -webkit-filter: blur(0px) }
+.sidebar img:hover { -webkit-filter: blur(0px) }
 
 #background {
-  /* background-image: /images/72.jpg; */
   position: absolute;
   top: 0;
   left: 0;
