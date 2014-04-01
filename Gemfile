@@ -14,5 +14,5 @@ gem "wdm", "~> 0.1.0", :platforms => [:mswin, :mingw]
 gem 'nokogiri'
 gem 'middleman-syntax'
 
-gem 'redcarpet'
-gem 'builder'
+gem "builder", "~> 3.0.0"
+gem "redcarpet", "~> 3.1.1"
