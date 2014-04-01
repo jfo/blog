@@ -1,7 +1,7 @@
 SSH_USER = 'ubuntu'
 SSH_HOST = 'aws'
 SSH_DIR  = 'jeffo.io'
-RSYNC    = true 
+RSYNC    = true
 
 desc "Run the preview server at http://localhost:4567"
 task :preview do
@@ -28,4 +28,9 @@ task :deploy => :build do
   puts status ? "OK" : "FAILED"
 end
 
-# TODO: add task to update the symlink to point to the new release
+desc "Build, commit, and push the website to github"
+task :push => :build do
+  puts "-----> Committing website to #{SSH_HOST}"
+  status = system("cd build && git add -A && git commit -m '#{Time.now}' && git push && cd ..")
+  puts status ? "OK" : "FAILED"
+end
