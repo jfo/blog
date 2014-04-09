@@ -3,36 +3,11 @@ layout: post
 status: publish
 published: true
 title: How brainfuck works
-author: Jeff
-author_login: jeffowler
-author_email: jeffowler@gmail.com
-excerpt: "<p style=\"text-align: center;\"><img class=\"aligncenter  wp-image-539\"
-  alt=\"bf\" src=\"http://www.jeffalanfowler.com/blog/wp-content/uploads/2013/09/bf.jpg\"
-  width=\"100%\" /></p>\r\n<p style=\"text-align: center;\"><a href=\"http://en.wikipedia.org/wiki/Brainfuck\"
-  target=\"_blank\">brainfuck</a>:\r\n<a href=\"http://mothereff.in/brainfuck-minifier\"
-  target=\"_blank\">The ee cummings of esolangs. </a></p>\r\nI got some good advice
-  from <a href=\"http://piablumenthal.com/\" target=\"_blank\">Pia</a>, who writes
-  and makes such cool, cool  looking stuff, and that advice was to treat a blog not
-  like a personal journal, really, but more like a way to provide your future self
-  (at least) with documentation on and about the things that you work on, do, make,
-  etc. etc. etc. I like that idea, thanks Pia.\r\n\r\nSo here is part one of a two
-  part post on brainfuck, an actual name of an actual <a href=\"http://en.wikipedia.org/wiki/Turing_completeness\">Turing
-  complete</a> programming language that people use for things. Sort of. Not really
-  though.\r\n\r\nI lost my mind last weekend and learned the basics; I wrote a Ruby
-  based interpreter and a FizzBuzz, and when I was done I was unable to focus my eyes
-  which, according to Gabe, is \"Totally a thing!\".\r\n\r\nAlso, <a href=\"https://soundcloud.com/dawn-of-midi\">Dawn
-  of Midi<em></em></a> is really good to listen to on day three of staring at something
-  incomprehensible, FYI.\r\n\r\nHere's how it works:\r\n\r\n"
-wordpress_id: 461
-wordpress_url: http://www.jeffalanfowler.com/blog/?p=461
 categories:
 - Programming
 tags: []
 comments: []
 ---
-<p style="text-align: center;"><img class="aligncenter  wp-image-539" alt="bf" src="http://www.jeffalanfowler.com/blog/wp-content/uploads/2013/09/bf.jpg" width="100%" /></p>
-<p style="text-align: center;"><a href="http://en.wikipedia.org/wiki/Brainfuck" target="_blank">brainfuck</a>:
-<a href="http://mothereff.in/brainfuck-minifier" target="_blank">The ee cummings of esolangs. </a></p>
 I got some good advice from <a href="http://piablumenthal.com/" target="_blank">Pia</a>, who writes and makes such cool, cool  looking stuff, and that advice was to treat a blog not like a personal journal, really, but more like a way to provide your future self (at least) with documentation on and about the things that you work on, do, make, etc. etc. etc. I like that idea, thanks Pia.
 
 So here is part one of a two part post on brainfuck, an actual name of an actual <a href="http://en.wikipedia.org/wiki/Turing_completeness">Turing complete</a> programming language that people use for things. Sort of. Not really though.
@@ -148,8 +123,10 @@ Now the very first thing the program does is to move the pointer over just once 
 But we have two more symbols, and they are the really good ones:
 
 ```
-[       if the value of current cell is zero, skip to the matching bracket without executing the code.
-]       if the value of the current cell is NOT zero, go back to the opening bracket and execute the code again.
+[
+if the value of current cell is zero, skip to the matching bracket without executing the code.
+]
+if the value of the current cell is NOT zero, go back to the opening bracket and execute the code again.
 ```
 
 OMG! LOORPS!
@@ -181,7 +158,7 @@ Decrease to 2...
 ```
 
 
-You get the idea. The loop will run until the value of the cell is zero and then terminate- leaving the final value of everything at zero, leaving no trace, <a href="http://www.burningman.com/environment/resources/lnt.html" target="_blank">like a conscientious burner on the playa</a>.
+You get the idea. The loop will run until the value of the cell is zero and then terminate- leaving the final value of everything at zero, leaving no trace.
 
 So in addition to starting each iteration of the program by moving to a "clean" cell, you could also decrement the current cell back to zero (from wherever it might have ended up) by inserting that simple loop before anything else.
 
