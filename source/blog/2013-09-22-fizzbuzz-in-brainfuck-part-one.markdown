@@ -1,11 +1,7 @@
 ---
 layout: post
-status: publish
-published: true
 title: fizzbuzz in brainfuck, part one
 author: Jeff
-author_login: jeffowler
-author_email: jeffowler@gmail.com
 categories:
 - Programming
 tags: []
