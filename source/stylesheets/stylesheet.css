@@ -65,6 +65,10 @@ pre {
   font-size: 13px;
   color: gray;
 }
+.quarters-txt a{
+  color: gray;
+  text-decoration: none;
+}
 
 p, li {
   line-height: 1.6;
