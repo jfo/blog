@@ -1,4 +1,7 @@
 <% wrap_layout :standard do %>
   <h1><%= current_article.title %></h1>
   <%= yield %>
+   <a href="/allposts">
+    <p class="quarters-txt">see all posts</p>
+  </a>
 <% end %>
