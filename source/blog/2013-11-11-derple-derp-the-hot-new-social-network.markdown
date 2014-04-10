@@ -25,7 +25,6 @@ It was definitely a kick in the ass towards the end... I really should have stud
 In a way, the whole tutorial provide a sort of mirror to itself by illustrating a large "goal" to be pursued by a n00b dev. I have a much clearer picture in my mind of what the framework is capable of and generally how it goes about doing things, even if a lot of the specifics are a little bit foggy- and I have been using the guide as a reference if I want to try to implement something that I remember being covered in it.
 
 <a href="https://derplederp.herokuapp.com/" target="_blank">You can see it here</a>- hell, you can even sign up for an account. It actually works.
-<p style="text-align: center;"><a href="http://www.jeffalanfowler.com/blog/wp-content/uploads/2013/11/Screen-Shot-2013-11-11-at-9.41.02-PM.png"><img class="wp-image-761 aligncenter" alt="Screen Shot 2013-11-11 at 9.41.02 PM" src="http://www.jeffalanfowler.com/blog/wp-content/uploads/2013/11/Screen-Shot-2013-11-11-at-9.41.02-PM.png" width="600" height="330" /></a></p>
 &nbsp;
 
 &nbsp;

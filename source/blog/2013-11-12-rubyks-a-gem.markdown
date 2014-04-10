@@ -9,7 +9,7 @@ categories:
 tags: []
 comments: []
 ---
-After writing the initial iteration of the The Chorder, I started thinking about other systems that I might be able to model, and the rubiks cube seemed perfect. It is visual, easy to conceptualize, and completely contained- any possible combination can be arrived at by starting at the solved cube (the "base case") and shuffling. All I had to do was model the state of the cube in some sort of data structure and implement the various transformations accurately and the program would be accurate. Easy, right?!
+After writing the initial iteration of the [The Chorder](/blog/2013/10/06/the-chorder-prototype.html), I started thinking about other systems that I might be able to model, and the rubiks cube seemed perfect. It is visual, easy to conceptualize, and completely contained- any possible combination can be arrived at by starting at the solved cube (the "base case") and shuffling. All I had to do was model the state of the cube in some sort of data structure and implement the various transformations accurately and the program would be accurate. Easy, right?!
 
 <!--break-->
 
