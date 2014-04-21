@@ -56,6 +56,8 @@ pre {
 
 .quarters {
   height: 15%;
+  font-family: monospace, serif;
+  font-size: 13px;
 }
 .quarters-txt {
   height: 5%;
@@ -63,10 +65,9 @@ pre {
   padding: 0 0 0 0;
   font-family: monospace, serif;
   font-size: 13px;
-  color: gray;
 }
 .quarters-txt a{
-  color: gray;
+  color:black;
   text-decoration: none;
 }
 
