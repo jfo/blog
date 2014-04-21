@@ -2,10 +2,10 @@
 title: One hundred days
 date: 2014-04-21 16:37 UTC
 layout: post
-tags:
+tags: hs
 ---
 
-Today is the one hundredth consecutive day that I have pushed to github. In fact, this very post is the push that ticked that box. My original plan was to grow my gnarly beard until I made it...
+Today is the one hundredth consecutive day that I have pushed [to github](https://github.com/urthbound). In fact, this very post is the push that ticked that box. My original plan was to grow my gnarly beard until I made it...
 
 ![beardo!](https://d29xw0ra2h4o4u.cloudfront.net/assets/people/jeff_fowler_150-6674f354d62963d6a2a48c0d658c8069.jpg)
 
