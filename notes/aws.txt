@@ -1,0 +1,17 @@
+aws web services,
+sign up for new account (even if you already have an amazon account) it will associate with it but be a different thing 
+free tier
+ignore all the stuff upselling you
+
+launch the aws management console
+sign in
+
+EC2
+create instance / launch instance
+review and launch
+create new key pair, save file for later (pem)
+security groups
+actions / edit inbound rules
+connect gives you instructions to connect via ssh
+
+
