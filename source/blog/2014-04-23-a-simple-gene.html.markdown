@@ -103,6 +103,13 @@ Hmmm... good, but not exactly what we want just yet. We now have a list of the f
       generation))
 ```
 
+Or, even better:
+
+```clojure
+(defn evaluate-generation [generation]
+  (sort-by fitness > generation))
+```
+
 Now we're getting somewhere.
 
 Since we have an ordered-by-fitness list of genes, we want to cull away the least fit and allow the most fit to procreate forward. A good way to accomplish this is to simply discard the bottom half, and since this is a lazy sequence we can take just the first half of it to achieve the desired effect:
@@ -111,10 +118,7 @@ Since we have an ordered-by-fitness list of genes, we want to cull away the leas
 (defn evaluate-generation [generation]
   (take
     (/ (count generation) 2)
-      (reverse
-        (sort-by
-          fitness
-          generation)))))
+    (sort-by fitness > generation)))
 ```
 
 Once again, English: "Take the top half of the generation of genes sorted by fitness."
