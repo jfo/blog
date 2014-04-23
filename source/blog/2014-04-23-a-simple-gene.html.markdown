@@ -2,7 +2,7 @@
 title: a simple gene
 date: 2014-04-23 00:14 UTC
 layout: post
-tags:
+tags: hs
 ---
 
 I had a goodly and productive day today, by which I mean that I:
