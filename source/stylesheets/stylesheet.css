@@ -60,7 +60,7 @@ pre {
   font-size: 13px;
 }
 .quarters-txt {
-  height: 5%;
+  height: 8%;
   margin: 0 0 0 0;
   padding: 0 0 0 0;
   font-family: monospace, serif;
@@ -83,7 +83,6 @@ pre {
 }
 
 .sidebar {
-  padding: 2% 0 0 0;
   position: absolute;
   left: 0;
   top: 0;
@@ -121,9 +120,6 @@ pre {
 
 .quarters {
   height: 15%;
-}
-.quarters-txt {
-  height: 
 }
 
 
