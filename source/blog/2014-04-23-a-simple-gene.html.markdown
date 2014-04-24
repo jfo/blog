@@ -130,7 +130,8 @@ To start- a function to perform that action on a single bit:
 ```clojure
 (defn mutate [g]
   (if (= (rand-int 100) 1)
-      (bit-flip g 0)))
+      (bit-flip g 0)
+      g))
 ```
 
 Paraphrased: "If the result of calling a random number between 1 and 100 is 1, then "bit-flip" the input. If it is a 1, it becomes a 0. If it is a 0, it becomes a 1."
