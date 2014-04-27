@@ -5,7 +5,7 @@ date: 2014-03-31 21:49 UTC
 tags: hs
 ---
 
-I spent a huge chunk of my time today fussing over this site design. Back and forth and back and forth... writing everything from scratch or using a static generator or going back to wordpress... [(HAHA J/K LOL!)](http://blog.codinghorror.com/content/images/uploads/2012/06/6a0120a85dcdae970b017742d249d5970d-800wi.jpg)
+I spent a huge chunk of my time today fussing over this site design. Back and forth and back and forth... writing everything from scratch or using a static generator or going back to wordpress... 
 
 And aaaaah it was **so frustrating**. But __why__?? What do I __want__ out of the design of this site that I haven't quite yet been able to achieve? I have some thoughts...
 

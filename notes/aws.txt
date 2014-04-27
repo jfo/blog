@@ -15,3 +15,4 @@ actions / edit inbound rules
 connect gives you instructions to connect via ssh
 
 
+> [(HAHA J/K LOL!)](http://blog.codinghorror.com/content/images/uploads/2012/06/6a0120a85dcdae970b017742d249d5970d-800wi.jpg)
