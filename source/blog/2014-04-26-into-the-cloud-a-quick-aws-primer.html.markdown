@@ -2,7 +2,7 @@
 title: Into the cloud- a quick AWS primer
 date: 2014-04-26 17:54 UTC
 layout: post
-tags:
+tags: hs
 ---
 
 Amazon Web Services used to scare the hell out of me.
@@ -53,7 +53,7 @@ So launch! Boom!
 
 On the left side of the page, click "Instances." You'll have a list of your running instances, which right now is just the one that you just launched. Select the instance with the little box next to it to get some info. Again, there is lot of info there, but right now, the only thing we need is the **Public IP**. Take out a pen and paper and write that down. Just kidding. Or do that, if you want. Just, hold on. We're going to need that number in a second.
 
-Now comes the commandlinefu part. Open a terminal and type "which ssh." Did it say /usr/bin/ssh? Or something like that? Great, you've got SSH already. I thought you might! If you don't you can brew install it, or apt-get install it. 
+Now comes the commandlinefu part. Open a terminal and type "which ssh." Did it say /usr/bin/ssh? Or something like that? Great, you've got SSH already. I thought you might! If you don't you can brew install it, or apt-get install it, or google how to do those things.
 
 Type this:
 
@@ -61,4 +61,71 @@ Type this:
 yourawesomeprompt$ ssh [your public IP]
 ```
 
-Did it work? No? Haha, fooled you! that was a learning experience! What kind of service would it be if you could just ssh willy nilly into where ever all the time? That would be sub-optimal, from a network security standpoint.
+Did it work? No? Haha, fooled you! that was a learning experience! What kind of service would let just anyone ssh willy nilly into whereever any time? That would be sub-optimal, from a network security standpoint. Also, we didn't specify a user.
+
+So, you're going to need a public/private key pair. Amazon is actually pretty helpful on this one! Under the "instances" tab we were just looking at, click on the "Connect" tab at the top. It will let you generate a new key pair, the private of which you will download. Follow the instructions to ssh into your client- but they'll probably look something like this:
+
+```
+To access your instance:
+
+Open an SSH client.
+
+Locate your private key file ([thenameyouchose].pem). The wizard automatically detects the key you used to launch the instance.
+```
+
+and
+
+```
+Your key must not be publicly viewable for SSH to work. Use this command if needed:
+
+chmod 400 [thenameyouchose].pem
+
+Connect to your instance using its Public IP:
+
+54.186.183.175
+```
+
+and
+
+```
+ssh -i [thenameyouchose].pem ubuntu@54.186.183.175
+```
+
+The key file referred to above must reside in your working directory, or be given an absolute path, of course. And the permissions thing is a necessary step almost always, despite what they said.
+
+If you ran those commands, then you probably get a server prompt! Congratulations, you now have what amounts to a free virtual computer! You can install whatever you want and `sudo` to your hearts content! You can spin up a new VM and destroy the old ones as much as you'd like! Pretty rad.
+
+Oh, but one more
+
+<h4>Step Four: making step three easier.</h4>
+
+So, yeah, that last bit is a lot of typing, and keeping track of a keyfile explicitly is a little bit not great. Let's fix that part now. You should have already changed permissions, so that's taken care of, so it's only a couple more steps from here.
+
+Move your .pem keyfile into the .ssh folder in your home directory. If you don't have one yet, make one and then move the file into it. Now make a file in that directory called `config`. Just `config`, and add these four lines to it:
+
+```
+Host (an alias, can be anything you want)
+HostName (your public ip)
+User (your username, probably "ubuntu" or whatever came before "@")
+IdentityFile (path to the keyfile, probably ~/.ssh/[nameoffile].pem)
+```
+
+Take out the parens, as well. That's the kind of little thing that can stick you, you know?
+
+Now, anytime you want to connect to your server, just type:
+
+```
+yoursuperradprompt$ ssh (whatever sweet alias you chose)
+```
+
+And that's it!
+
+Let's try
+
+<h4>Step Five: connecting to your webserver</h4>
+
+Now go back to the instances page on the console, and click on the running instance again. We have the Public IP- but we also have the public DNS. You can drop either of them into an address bar of a web browser to connect to your server. Try it now!
+
+Are you back? Yeah, that didn't work either, did it? Sry, lol. You don't have a webserver **because you haven't set one up yet!** But we have to have something to look forward to in life.
+
+That's where I'll leave it for now. Next time- permissions and simple web server configs. Hope this helped somebody out! If I made any grievous errors, feel free to let me know. Ok bye!
