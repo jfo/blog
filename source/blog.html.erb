@@ -8,17 +8,18 @@ hide_footer: true
   <p class="quarters-txt">see all posts</p>
 </a>
 
-<% newest = blog.articles[0] %>
-  <article>
-    <h2>
-      <a href="<%= newest.url %>" style="text-decoration: none; color:#333;"><%= newest.title %></a>
-      <time><%= newest.date.strftime('%b %e %Y') %></time>
-    </h2>
-    <%= newest.body %>
-  </article>
+<%# <% newest = blog.articles[0] %1> %>
+<%#   <article> %>
+<%#     <h2> %>
+<%#       <a href="<%= newest.url %1>" style="text-decoration: none; color:#333;"><%= newest.title %1></a> %>
+<%#       <time><%= newest.date.strftime('%b %e %Y') %1></time> %>
+<%#     </h2> %>
+<%#     <%= newest.body %1> %>
+<%#   </article> %>
 
-  <hr></hr>
-<% blog.articles[1..5].each do |article| %>
+<%#   <hr></hr> %>
+
+<% blog.articles[0..5].each do |article| %>
   <article>
     <h2>
       <a href="<%= article.url %>" style="text-decoration: none; color:#333;"><%= article.title %></a>
