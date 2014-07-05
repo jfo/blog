@@ -67,7 +67,7 @@ end
 
 # Activate Disqus extension
 activate :disqus do |d|
-  d.shortname = "your_shortname"
+  d.shortname = "jefffowler"
 end
 
 # Build-specific configuration
