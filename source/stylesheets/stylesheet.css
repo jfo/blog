@@ -18,7 +18,7 @@ pre {
 }
 
 .sidebar {
-  /* padding:  0 0 0; */
+  padding:  0 0 0;
   transition: 1.5s ease;
   position: absolute;
   left: 0;
@@ -59,18 +59,23 @@ pre {
   height: 15%;
   font-family: monospace, serif;
   font-size: 13px;
+  border-style: dotted 1px black;
 }
 .quarters-txt {
   height: 8%;
   margin: 0 0 0 0;
   padding: 0 0 0 0;
-  font-family: monospace, serif;
+  /* font-family: monospace, serif; */
   font-size: 13px;
 }
 .quarters-txt a{
   color:black;
   text-decoration: none;
 }
+
+.prevnext { overflow:hidden; }
+.prevnext a:last-child { float: right; }
+.prevnext a:first-child { float: left; }
 
 p, li {
   line-height: 1.6;
@@ -128,6 +133,10 @@ pre {
     max-height: 100%;
     max-width: 100%;
 }
+
+.inactive {
+    -webkit-filter: blur(2px);
+  }
 
 .blur {
     -webkit-filter: blur(2px);

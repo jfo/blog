@@ -7,7 +7,7 @@ tags: hs
 
 Today is the one hundredth consecutive day that I have pushed [to github](https://github.com/urthbound). In fact, this very post is the push that ticked that box. My original plan was to grow my gnarly beard until I made it...
 
-![beardo!](https://d29xw0ra2h4o4u.cloudfront.net/assets/people/jeff_fowler_150-6674f354d62963d6a2a48c0d658c8069.jpg)
+<a href="https://www.flickr.com/photos/monkeywithamirror/14578033991" title="Beardo by Jeff Fowler, on Flickr"><img src="https://farm4.staticflickr.com/3858/14578033991_26e8210480_q.jpg" width="150" height="150" alt="Beardo"></a>
 
 ...but I couldn't stick to that one; it's probably for the best.
 

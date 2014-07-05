@@ -65,6 +65,11 @@ activate :blog do |blog|
   blog.prefix = "blog"
 end
 
+# Activate Disqus extension
+activate :disqus do |d|
+  d.shortname = "your_shortname"
+end
+
 # Build-specific configuration
 configure :build do
   # For example, change the Compass output style for deployment
