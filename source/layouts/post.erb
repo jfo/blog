@@ -11,6 +11,10 @@
   <%= yield %>
 
   <br>
+    <a href="https://twitter.com/intent/tweet?text=<%= current_article.title %> : &url=http://jefffowler.io<%= current_article.url.to_query('').slice(1..-1) %>" >
+      <img style="margin: 0 8px; vertical-align: middle;" alt="Twitter button" src="/images/twitter_32.png">
+      Share on Twitter
+    </a>
   <br>
   <hr>
 
