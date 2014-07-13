@@ -82,13 +82,13 @@ chmod 400 [thenameyouchose].pem
 
 Connect to your instance using its Public IP:
 
-54.186.183.175
+[your public IP]
 ```
 
 and
 
 ```
-ssh -i [thenameyouchose].pem ubuntu@54.186.183.175
+ssh -i [thenameyouchose].pem ubuntu@[your public IP]
 ```
 
 The key file referred to above must reside in your working directory, or be given an absolute path, of course. And the permissions thing is a necessary step almost always, despite what they said.
