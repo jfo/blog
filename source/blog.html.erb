@@ -10,7 +10,7 @@ hide_footer: true
 
 <% blog.articles[0..5].each do |article| %>
   <article>
-  <hr>
+  <%# <hr> %>
     <h2>
       <a href="<%= article.url %>" style="text-decoration: none; color:#333;"><%= article.title %></a>
       <time><%= article.date.strftime('%b %e %Y') %></time>
