@@ -11,7 +11,7 @@ Today is the one hundredth consecutive day that I have pushed [to github](https:
 
 ...but I couldn't stick to that one; it's probably for the best.
 
-![nonbeardo!](https://d29xw0ra2h4o4u.cloudfront.net/assets/people/jeff_fowler_150-b3393fc2e6003fe31acd3b8e6209618d.jpg)
+![nonbeardo!](http://d29xw0ra2h4o4u.cloudfront.net/assets/people/jeff_fowler_150-e79009c1986456efb0dc9ca35318d6e3.jpg)
 
 One hundred days! A sea of green!! Coming in to Hacker School, this was one of the only concrete goals I had- I didn't know for sure what I would be focusing on, but I knew I wanted to remain productive. Even though some of those days are nothing more than setting up a repo for a project I had been thinking about, I did managed to keep to my goal- and most of them are full of real, productive commits.
 
