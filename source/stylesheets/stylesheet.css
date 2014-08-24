@@ -61,7 +61,8 @@ pre {
 
 @media (min-width : 800px) {
     #container {
-        width: 700px;
+        /* width: 700px; */
+        max-width: 600px ;
     }
 }
 
