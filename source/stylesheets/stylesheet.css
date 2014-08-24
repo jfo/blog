@@ -64,6 +64,8 @@ pre {
         /* width: 700px; */
         max-width: 600px ;
     }
+    .prevnext a:first-child { float: left; }
+    .prevnext a:last-child { float: right; }
 }
 
 .inactive {
@@ -85,8 +87,6 @@ time {
 }
 
 .prevnext { overflow:hidden; }
-/* .prevnext a:last-child { float: right; } */
-/* .prevnext a:first-child { float: left; } */
 
 
 /* homepage stuff */
