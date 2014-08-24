@@ -1,104 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title></title>
-    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="/stylesheets/all.css">
-    <%# <link href='http://fonts.googleapis.com/css?family=Alegreya:400italic,400,700' rel='stylesheet' type='text/css'> %>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  </head>
-  <body>
+    <head>
+        <title></title>
+        <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="/stylesheets/all.css">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
+    </head>
 
-  <div class='sidebar'>
+    <body>
 
-    <div class='quarters-txt'>
-      <div class="v-cent"></div>
-      <%# <a href="/">jeff fowler</a> %>
-    </div>
+        <div class='sidebar'>
+            <div class='navitem'>
+                <a href="/about"> <img class="blur about" src="http://www.gravatar.com/avatar/78359dd9d3cf59abacfa85565edc1eb2?s=250" /></a>
+            </div>
 
+            <div class='navitem'>
+                <a href="/blog"> <img class="blur blog" src="/images/compex.png"/></a>
+            </div>
 
-    <%# <div class="name"> %>
-    <%#   <a href="/"><img class="blur index" src="/images/logo.svg"/></a> %>
-    <%# </div> %>
+            <div class='navitem'>
+                <img class="inactive music" src="/images/guitar.png"/>
+            </div>
 
-    <a href="/">
-    <div class='quarters'>
-      <a href="/about"> <img class="blur about" src="http://www.gravatar.com/avatar/78359dd9d3cf59abacfa85565edc1eb2?s=500" /></a>
-    </div>
+            <div class='navitem'>
+                <img class="inactive photo" src="/images/cam.png"/>
+            </div>
+        </div>
 
-    <div class='quarters-txt'>
-      <div class="v-cent"></div>
-      <%# <a href="/about"> %>
-      <%# about %>
-      <%# </a> %>
-    </div>
+        <%= yield %>
 
-    <div class='quarters'>
-      <a href="/blog"> <img class="blur blog" src="/images/compex.png"/></a>
-    </div>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script>
 
-    <div class='quarters-txt'>
-      <div class="v-cent"></div>
-      <%# <a href="/blog"> %>
-      <%# blog %>
-      <%# </a> %>
-    </div>
+            var thing = (window.location.pathname=='/') ? "index" : window.location.pathname.match(/(\w+)/)[1];
+            $('.' + thing).addClass('activepage')
 
-    <div class='quarters'>
-      <%# <a href="https://www.youtube.com/watch?v=6UXmt6iiMkQ" target="blank"> %>
-        <img class="inactive music" src="/images/guitar.png"/>
-      <%# </a> %>
-    </div>
-
-    <div class='quarters-txt'>
-      <%# <div class="v-cent"></div> %>
-      <%# <a href="https://www.youtube.com/watch?v=6UXmt6iiMkQ" target="blank">music</a> %>
-    </div>
-
-    <div class='quarters'>
-     <%# <a href="https://www.flickr.com/photos/monkeywithamirror/sets/72157640600878703/" target="blank"> %>
-       <img class="inactive photo" src="/images/cam.png"/>
-     <%# </a> %>
-    </div>
-
-    <div class='quarters-txt'>
-      <%# <div class="v-cent"></div> %>
-      <%# <a href="https://www.flickr.com/photos/monkeywithamirror/sets/72157640600878703/" target="blank">photo</a> %>
-    </div>
-
-  </div>
-
-  <%# <div class='side'> %>
-  <%#   <div class='name'> %>
-  <%#     <div class="v-cent"></div> %>
-  <%#   </div> %>
-  <%#   <div class='quarters'> %>
-  <%#     <div class="v-cent"></div> %>
-  <%#   </div> %>
-  <%#   <div class='quarters'> %>
-  <%#     <div class="v-cent"></div> %>
-  <%#   </div> %>
-  <%#   <div class='quarters'> %>
-  <%#     <div class="v-cent"></div> %>
-  <%#   </div> %>
-  <%#   <div class='quarters'> %>
-  <%#     <div class="v-cent"></div> %>
-  <%#   </div> %>
-  <%#   <div style="height: 5%;"></div> %>
-  <%# </div> %>
-
-  <%= yield %>
-
-      <script>
-
-        if (window.location.pathname=='/')
-          var thing = 'index';
-        else
-          var thing = window.location.pathname.match(/(\w+)/)[1];
-
-        $('.' + thing).addClass('activepage')
-
-      </script>
-  </body>
+        </script>
+    </body>
 </html>

@@ -3,13 +3,15 @@
   <br>
   <%# <hr> %>
   <article>
-    <h1><%= current_article.title %>
-    <time><%= current_article.date.strftime('%b %e %Y') %></time> </h1>
+    <h2><%= current_article.title %>
+    <time><%= current_article.date.strftime('%b %e %Y') %></time> </h2>
   </article>
   <hr>
 
   <%= yield %>
 
+  <br>
+  <hr>
 
   <div class="prevnext">
     <% if current_article.previous_article %>
@@ -27,9 +29,9 @@
   <hr>
   <br>
 
-   <%# <a href="/allposts"> %>
-   <%#  <p class="quarters-txt">see all posts</p> %>
-  <%# </a> %>
+   <a href="/allposts">
+    <p class="quarters-txt">see all posts</p>
+  </a>
 
 
   <%# <%= disqus %1> %>
