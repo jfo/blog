@@ -87,7 +87,7 @@ pre {
 .blur {
     -webkit-filter: blur(2px);
     transition: 0.5s ease;}
-.blur:hover { -webkit-filter: blur(0px) }
+.blur:hover { -webkit-filter: none }
 
 time {
   font-size: 0.6em;
@@ -95,7 +95,7 @@ time {
 }
 
 .activepage {
-  -webkit-filter: blur(0px);
+  -webkit-filter: none;
 }
 
 .prevnext { overflow:hidden; }
