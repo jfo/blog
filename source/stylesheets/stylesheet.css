@@ -38,6 +38,18 @@ pre {
     max-width: 100%;
 }
 
+.prot { position:relative; }
+.prot:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: red;
+    z-index: 2;
+}
+
 @media (min-width : 550px) {
 
     .sidebar {
