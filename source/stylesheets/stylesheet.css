@@ -23,14 +23,19 @@ pre {
     padding: 0 1.5em;
 }
 
-.sidebar {
-  text-align: center;
+
+.banner {
+    height: 3em;
+    /* margin: 30px; */
+    display:block;
+    float:left;
 }
 
 .navitem {
-    width: 50%;
-    padding: 6%;
-    float:left;
+    height: 10px;
+    width: 10px;
+    /* padding: 6%; */
+    /* float:left; */
 }
 
 .navitem img {
@@ -52,21 +57,18 @@ pre {
 
 @media (min-width : 550px) {
 
-    .sidebar {
-        float: left;
-        width: 15%;
-        max-width: 150px ;
-    }
-
     #container {
-        width: 65%;
-        margin-left: 5%;
+        width: 68%;
+        margin-left: 20%;
+        margin-left: 26%;
+        margin-right: 26%;
         float: left;
     }
 
     .navitem {
-        padding: 15%;
-        width: auto;
+        padding: 1%;
+        margin: 4;
+        width: 25%;
         float: none;
     }
 }
