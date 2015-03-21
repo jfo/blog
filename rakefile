@@ -1,6 +1,6 @@
 SSH_USER = 'ubuntu'
 SSH_HOST = 'aws'
-SSH_DIR  = 'jeffo.io'
+SSH_DIR  = 'blog'
 RSYNC    = true
 
 desc "Run the preview server at http://localhost:4567"
