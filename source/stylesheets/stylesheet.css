@@ -61,8 +61,7 @@ pre {
 
 @media (min-width : 800px) {
     #container {
-        /* width: 700px; */
-        max-width: 600px ;
+        width: 700px;
     }
     .prevnext a:first-child { float: left; }
     .prevnext a:last-child { float: right; }
