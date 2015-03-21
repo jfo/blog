@@ -8,7 +8,7 @@ hide_footer: true
   <p class="quarters-txt">see all posts</p>
 </a>
 
-<% blog.articles[0..5].each do |article| %>
+<% blog.articles[0..0].each do |article| %>
   <article>
   <%# <hr> %>
     <h2>
@@ -22,20 +22,20 @@ hide_footer: true
   <br>
 <% end %>
 
+<i>Older posts:</i>
+<hr>
 
-<%# <% blog.articles[0..5].each do |article| %1> %>
-<%#   <article> %>
-<%#     <h2> %>
-<%#       <a href="<%= article.url %1>" style="text-decoration: none; color:#333;"><%= article.title %1></a> %>
-<%#       <time><%= article.date.strftime('%b %e %Y') %1></time> %>
-<%#     </h2> %>
-<%#     <%= article.summary %1> %>
-<%#     <a href="<%= article.url %1>" style="text-align:center;">more</a> %>
-<%#   </article> %>
-<%#   <hr></hr> %>
-<%# <% end %1> %>
+<% blog.articles[1..5].each do |article| %>
+    <article>
+        <h3>
+            <a href="<%= article.url %>" style="text-decoration: none; color:#333;"><%= article.title %></a>
+            <time><%= article.date.strftime('%b %e %Y') %></time>
+        </h3>
+        <hr>
+    </article>
+<% end %>
 
 <a href="/allposts">
-  <h3 class="quarters-txt">see all posts</h3>
+  <p class="quarters-txt">see all posts</p>
 </a>
 
