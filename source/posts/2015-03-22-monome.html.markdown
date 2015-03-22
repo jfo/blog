@@ -2,8 +2,121 @@
 title: monome
 date: 2015-03-22 00:52 UTC
 published: false
+layout: post
 tags:
 ---
+
+I got a monome recently. It looks like this:
+
 ![Alt text](https://scontent.cdninstagram.com/hphotos-xfa1/t51.2885-15/11033021_390158761163593_1296814895_n.jpg)
 
+[stuff about the monome]
 
+I'm never going to know less about this piece of equipment than I do right now; it's a great opportunity to try to reverse engineer the protocol.
+
+Special thanks to my coworker Fred, who I totally nerd sniped into helping me computer at this thing.
+
+I know from working with arduinos recently that a serial device will [appear](http://en.wikipedia.org/wiki/Device\_file) in the `/dev` directory as a normal looking file. When I plug the monome in, a new file appears there called `tty.usbserial-m1000065`.
+
+So I `cat /dev/tty.usbserial-m1000065` and just start mashing buttons, and this is what I get:
+
+```
+!!!!
+    !!!!   !
+
+       !
+          !
+              !  !
+
+
+                            ! !!
+                            !!!!!!
+
+                                 ! !      !
+```
+
+Which tells me two things:
+
+* The monome is very excited, too! And more importantly,
+* _Something is coming through._
+
+Next, let's write some of this output to a file. I run
+
+```
+$ cat /dev/tty.usbserial-m1000065 > afilename
+```
+and press _the top left button one time_. Nothing comes out for reasons I might figure out later, but when I close the connection and cat the resulting file, it looks like this:
+
+```
+!
+```
+
+Not much there, but that's ok. Next, I used the `xxd` utility to view this data as a hex dump (xxd is super awesome and useful, by the way, if you didn't know about it!) ...
+
+```
+$ cat afilename | xxd
+
+0000000: 2100 0020 0000                           !.. ..
+```
+
+The contents of the file have been made into those bytes:
+
+```
+2100 0020 0000
+```
+
+_what does it mean?_ Well, since it's hex, each digit represents one of 16 values, which is 4 bits. Each two digit pair, then, is a single byte. From one button press, then, I've gotten six bytes:
+
+```
+21 00 00 20 00 00 00 00
+```
+
+This might be a good time to point out that `21` is the hex code for the ascii char `!`.
+
+Just out of curiousity, let's see the `-b` flag on xxd, which outputs binary instead of hex.
+
+```
+00100001 00000000 00000000 00100000 00000000 00000000
+```
+
+Let me try the same thing again, but this time I will press the _second_ button once instead of the first. This outputs the following:
+
+```
+2101 0020 0100
+```
+
+So... _a lot of that is the same._ What's happening?
+
+Each button event on the device sends three bytes: a signal byte, and two address bytes that correspond to the coordinate of the button the signal belongs to. I press the button once, and I get six bytes... three for the _press_ and three for the _release_. Let's see what a hex dump looks like if I press the buttons sequentially across the top row:
+
+```
+0000000: 2100 0020 0000 2101 0020 0100 2102 0020  !.. ..!.. ..!..
+0000010: 0200 2103 0020 0300 2104 0020 0400 2105  ..!.. ..!.. ..!.
+0000020: 0020 0500 2106 0020 0600 2107 0020 0700  . ..!.. ..!.. ..
+0000030: 2108 0020 0800 2109 0020 0900 210a 0020  !.. ..!.. ..!..
+0000040: 0a00 210b 0020 0b00 210c 0020 0c00 210d  ..!.. ..!.. ..!.
+0000050: 0020 0d00 210e 0020 0e00 210f 0020 0f00  . ..!..!.. .....
+```
+
+It's tough to parse this, visually, but if you look close at the groupings of threes, you can really see the pattern:
+
+```
+21 0000 20 0000
+21 0100 20 0100
+21 0200 20 0200
+21 0300 20 0300
+21 0400 20 0400
+21 0500 20 0500
+21 0600 20 0600
+21 0700 20 0700
+21 0800 20 0800
+21 0900 20 0900
+21 0a00 20 0a00
+21 0b00 20 0b00
+21 0c00 20 0c00
+21 0d00 20 0d00
+21 0e00 20 0e00
+21 0f00 20 0f00
+```
+
+There we go.
