@@ -2,7 +2,6 @@
 title: Into the cloud- a quick AWS primer
 date: 2014-04-26 17:54 UTC
 layout: post
-tags: hs
 ---
 
 Amazon Web Services used to scare the hell out of me.

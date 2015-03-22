@@ -2,7 +2,7 @@
 title: on keyboards
 date: 2014-04-01 23:45 UTC
 layout: post
-tags: hs
+tags:
 ---
 
 When you learn to play an instrument, you are learning about how to make music, and 'making music' is not a trivial task. One must first decide what exactly constitutes 'music.'  Many argument; much disagree. I'll leave that one alone.
