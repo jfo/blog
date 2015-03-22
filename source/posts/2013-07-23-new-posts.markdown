@@ -1,18 +1,10 @@
 ---
 layout: post
-status: publish
-published: true
 title: New Posts
-author: Jeff
-author_login: jeffowler
-author_email: jeffowler@gmail.com
-wordpress_id: 363
-wordpress_url: http://www.jeffalanfowler.com/?p=363
 categories:
 - Music
-tags: []
-comments: []
 ---
+
 I will not let this blog go to its grave with only a few posts. I can do this. I can find a reason to write something, and then something else, and then something else.
 
 What's been happening? So, so much. All at once. I have a million things in my head, project wise, and many of them are not even just unrelated but are in <em>completely unrelated fields.</em> That's a good thing; I've always been a fan of learning a lot of different things, and a huge critic of that stupid old "jack of all trades" chestnut (that would be a good post, actually...) - but it is also pretty hard to keep everything in my head all at once when it becomes tenuous and difficult to connect all the dots together. I can certainly have some sympathy for picking one thing and <a href="https://www.google.com/search?%7Bgoogle:acceptedSuggestion%7Doq=do+a+barrel+roll&amp;sourceid=chrome&amp;ie=UTF-8&amp;q=do+a+barrel+roll">barreling ahead</a> with it...
@@ -30,8 +22,6 @@ Lest I leave out one of the more exciting things done during the blog blackout..
 <iframe style="position: relative; display: block; width: 400px; height: 100px;" src="http://bandcamp.com/EmbeddedPlayer/v=2/album=1807630284/size=venti/bgcol=FFFFFF/linkcol=4285BB/transparent=true/" height="100" width="400" frameborder="0"></iframe>
 
 <object width="520" height="293" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="allowFullScreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="src" value="//www.youtube.com/v/ym4-ANTgYj4?version=3&amp;hl=en_US" /><param name="allowfullscreen" value="true" /><embed width="520" height="293" type="application/x-shockwave-flash" src="//www.youtube.com/v/ym4-ANTgYj4?version=3&amp;hl=en_US" allowFullScreen="true" allowscriptaccess="always" allowfullscreen="true" /></object>
-
-&nbsp;
 
 Re: photography, I've recently done a couple of photoshoots for excellent and talented friends' albums:
 

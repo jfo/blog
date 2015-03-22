@@ -185,7 +185,6 @@ And here is the last function, which recurs until a perfect output of all 1's is
     (println (first (evaluate-generation generation)))
     (do
       (println (first (evaluate-generation generation)))
-      ; (println (fitness (first (evaluate-generation generation))))
       (recur (tng generation)))))
 ```
 

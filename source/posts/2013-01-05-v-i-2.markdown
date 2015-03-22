@@ -1,11 +1,8 @@
 ---
-layout: post
 title: V-I
-author: Jeff
+layout: post
 categories:
 - Uncategorized
-tags: []
-comments: []
 ---
 
 

@@ -127,5 +127,3 @@ Let's try
 Now go back to the instances page on the console, and click on the running instance again. We have the Public IP- but we also have the public DNS. You can drop either of them into an address bar of a web browser to connect to your server. Try it now!
 
 Are you back? Yeah, that didn't work either, did it? Sry, lol. You don't have a webserver **because you haven't set one up yet!** But we have to have something to look forward to in life.
-
-That's where I'll leave it for now. Next time- permissions and simple web server configs. Hope this helped somebody out! If I made any grievous errors, feel free to let me know. Ok bye!

@@ -1,24 +1,20 @@
 ---
+title: How brainfuck works
 layout: post
 status: publish
-published: true
-title: How brainfuck works
 categories:
 - Programming
-tags: []
-comments: []
 ---
+
 I got some good advice from <a href="http://piablumenthal.com/" target="_blank">Pia</a>, who writes and makes such cool, cool  looking stuff, and that advice was to treat a blog not like a personal journal, really, but more like a way to provide your future self (at least) with documentation on and about the things that you work on, do, make, etc. etc. etc. I like that idea, thanks Pia.
 
 So here is part one of a two part post on brainfuck, an actual name of an actual <a href="http://en.wikipedia.org/wiki/Turing_completeness">Turing complete</a> programming language that people use for things. Sort of. Not really though.
 
-I lost my mind last weekend and learned the basics; I wrote a Ruby based interpreter and a FizzBuzz, and when I was done I was unable to focus my eyes which, according to Gabe, is "Totally a thing!".
+I lost my mind last weekend and learned the basics; I wrote a Ruby based interpreter and a FizzBuzz, and when I was done I was unable to focus my eyes which, according to Gabe, is "Totally a thing!"
 
 Also, <a href="https://soundcloud.com/dawn-of-midi">Dawn of Midi<em></em></a> is really good to listen to on day three of staring at something incomprehensible, FYI.
 
 Here's how it works:
-
-<!-- break -->
 
 brainfuck interpreters recognize only 8 characters (<em>sometimes</em> 9, but not really... back to that later):
 
@@ -27,8 +23,9 @@ brainfuck interpreters recognize only 8 characters (<em>sometimes</em> 9, but no
 ```
 
 Any and all spaces, extra characters, line breaks, etc, are completely ignored. 100%. The program really looks like a long string with no spaces consisting of just those 8.
-How the hell does it work? Well, before moving on, here are some interesting things I learned recently that will make it easier to explain. Also, just as a side note...<i> </i>I <em>loooove</em> little factoids like this, things that I "knew" before, but didn't  really <a href="http://en.wikipedia.org/wiki/Grok">grok</a>. Ok. So:
-A "bit" is the <em>smallest possible piece </em>of information. It is simply on or off: 1 or 0, true or false. Bit is short for "binary digit". One bit is one binary digit- and a binary digit, being binary and all that, only has those two possible states.
+Before moving on, here are some interesting things I learned recently that will make it easier to explain. Also, just as a side note...<i> </i>I <em>loooove</em> little factoids like this, things that I "knew" before, but didn't  really <a href="http://en.wikipedia.org/wiki/Grok">grok</a>. Ok. So:
+
+A "bit" is the <em>smallest possible piece </em>of information. It is simply on or off: 1 or 0, true or false. Bit is short for "binary digit". One bit is one binary digit- and a binary digit, being binary and all that, only has those two possible states. On or off.
 
 A "byte" is <em>eight</em> bits. In binary, eight digits provide you with 256 discrete values: 0-255 (0 counts as one of those). Any single byte can have a value anywhere in that range.
 
@@ -48,9 +45,9 @@ Here, I'll count to 10 in binary:
 ```
 You might be able to intuit that if 0 looks like the top number, then 255 will look like "1111 1111". Of course, there is no need to have all those leading zeroes, really, except to show that that would be the state of those bits in a byte of memory that was holding those values. We'll just use the decimal numbers for readability, but they can be represented either way and are equivalent. They could also be represented in hex...
 
-This is just like when you go from 0-9 in the ones place and then roll over back to 0 adding 1 to the tens place, except that maximum value in any single spot is "1". I get it now! Base 2! Also this led to an AHA! moment concerning the<a href="http://www.javascripter.net/faq/rgbtohex.htm"> RGB hexcodes</a> that I have been looking at for years in Photoshop- they are simply three concatenated two-digit <a href="http://en.wikipedia.org/wiki/Hexadecimal">hexadecimal numbers! </a>
+This is just like when you go from 0-9 in the ones place and then roll over back to 0 adding 1 to the tens place, except that maximum value in any single spot is "1". I get it now! Base 2! Also this led to an AHA! moment concerning the <a href="http://www.javascripter.net/faq/rgbtohex.htm"> RGB hexcodes</a> that I have been looking at for years in Photoshop- they are simply three concatenated two-digit <a href="http://en.wikipedia.org/wiki/Hexadecimal">hexadecimal numbers! </a>
 
-Traditionally, the brainfuck "workspace" (if I can call it that?) consists of two simple things: An array of 30,000 memory slots, each containing just one byte (8 bits, all initialized to hold 0), and a pointer that points to just one of those slots at any one time (initialized to the very first slot.) It's basically a straight software model of a <a href="http://en.wikipedia.org/wiki/Turing_machine">Universal Turing Machine.</a>
+The brainfuck "workspace" (if I can call it that?) consists of two simple things: An array of 30,000 memory slots, each containing just one byte (8 bits, all initialized to hold 0), and a cursor that points to just one of those slots at any one time (initialized to the very first slot.) It's basically a straight software model of a <a href="http://en.wikipedia.org/wiki/Turing_machine">Universal Turing Machine.</a>
 
 Now we can understand what the first four symbols do.
 
@@ -61,17 +58,15 @@ Now we can understand what the first four symbols do.
 
 Usually, the location of the pointer will "roll over" if it goes below 0 or above 30,000... (or above whatever the maximum number available is) effectively making the memory cells act like one long circular tape.
 
-c
 ```
 +   increments the value of the byte at the current slot
 -   decrements the value of the byte at the current slot
 ```
 
-So far so good. So here's a new brainfuck space, I'll only show 10 spots because I am not going to type 30,000:
+So far so good. So here's a new brainfuck space, I'll only show 10 spots because I am not going to type 30,000 (and the brackets surround where the cursor is):
 
 ```
 [0] 0 0 0 0 0 0 0 0 0 0 ...
- ^
 ```
 
 Pointer starts at one; everything is zero. Now if we ran this code:
@@ -112,7 +107,7 @@ Here's a super simple hello world:
 ```
 <a href="http://replit.com/K9B" target="_blank">Check it out here and run it.</a>
 
-Easy, right? You'll notice two things. It works great! and.. only the first time! Why is that? Well, we're only acting on a single cell changing that single value directly until we get to the appropriate ASCII character code for the letter or characterr we want to print, and the cell is not reset between times you run the program, unless you reload the page. Every time you run the code through the interpreter, it starts out at the number the previous instance left it at. In our case: 33 ... which is the value of the exclamation mark. Each time you run the code, that value goes up by 33, printing out gibberish. Notice also that it goes waaaaaaay above 255. This interpreter can hold way more than a single byte, and is printing out Unicode values instead. [Edit: Gabe tells me it's still ASCII, not Unicode...]
+Easy, right? You'll notice two things. It works great! and.. only the first time! Why is that? Well, we're only acting on a single cell changing that single value directly until we get to the appropriate ASCII character code for the letter or character we want to print, and the cell is not reset between times you run the program, unless you reload the page. Every time you run the code through the interpreter, it starts out at the number the previous instance left it at. In our case: 33 ... which is the value of the exclamation mark. Each time you run the code, that value goes up by 33, printing out gibberish. Notice also that it goes waaaaaaay above 255. This interpreter can hold way more than a single byte, and is printing out Unicode values instead. [Edit: Gabe tells me it's still ASCII, not Unicode...]
 
 Let's fix it!
 
@@ -123,10 +118,8 @@ Now the very first thing the program does is to move the pointer over just once 
 But we have two more symbols, and they are the really good ones:
 
 ```
-[
-if the value of current cell is zero, skip to the matching bracket without executing the code.
-]
-if the value of the current cell is NOT zero, go back to the opening bracket and execute the code again.
+[   if the value of current cell is zero, skip to the matching bracket without executing the code.
+]   if the value of the current cell is NOT zero, go back to the opening bracket and execute the code again.
 ```
 
 OMG! LOORPS!

@@ -1,38 +1,37 @@
 ---
-layout: post
-status: publish
-published: true
 title: Rubyks, a gem
-author: Jeff
+layout: post
 categories:
 - Programming
-tags: []
-comments: []
 ---
-After writing the initial iteration of the [The Chorder](/blog/2013/10/06/the-chorder-prototype.html), I started thinking about other systems that I might be able to model, and the rubiks cube seemed perfect. It is visual, easy to conceptualize, and completely contained- any possible combination can be arrived at by starting at the solved cube (the "base case") and shuffling. All I had to do was model the state of the cube in some sort of data structure and implement the various transformations accurately and the program would be accurate. Easy, right?!
 
-<!--break-->
+After writing the initial iteration of the [The Chorder](/2013/10/the-chorder-prototype.html), I started thinking about other systems that I might be able to model, and the rubiks cube seemed perfect. It is visual, easy to conceptualize, and completely contained- any possible combination can be arrived at by starting at the solved cube (the "base case") and shuffling. All I had to do was model the state of the cube in some sort of data structure and implement the various transformations accurately and the program would be accurate. Easy, right?!
+
 
 And actually, it was pretty easy... not at first, necessarily- there was a fair amount of head scratching about how, exactly, I was going to store the state of the cube at any one time (I'm not convinced I picked the best method, either... but more on that later...)
 
 I eventually settled on a two dimensional array containing 6 other arrays (one for each face of the whole cube) of 9 elements each (one for each square on each face.) More about the structure from the README:
 
-    @cube[0] - top
-    @cube[1] - left
-    @cube[2] - back
-    @cube[3] - right
-    @cube[4] - front
-    @cube[5] - bottom
+```
+@cube[0] - top
+@cube[1] - left
+@cube[2] - back
+@cube[3] - right
+@cube[4] - front
+@cube[5] - bottom
+```
 
-The first element @cube[x][0] in any array describes the center square of that face, and remains static in relation to the other sides, just as a real cube's center square would. 
+The first element @cube[x][0] in any array describes the center square of that face, and remains static in relation to the other sides, just as a real cube's center square would.
 
 The remaining array elements from [1] - [8] start at "12 o'clock" and move clockwise. Thus: Even numbers are middle cubies and odd numbers are always corner cubies.
 
 "12 o'clock" is constant amongst all sides of the cube, and refers to what "north" would be if the cube was unfolded into two dimensions like so:
 
+```
         1
     5,4,0,2
         3
+````
 
 When cube orientation procedures are applied, the "address" of each side remains consistent with the above diagram, even as the sides themselves represent different numbers. (The sides could just as easily be assigned any symbol or string or whatnott, just as long as each side started off all the same thing, the cube would be in a legal state).
 
@@ -77,9 +76,9 @@ def u
     cubetemp[0][7] = @cube[0][5]
     cubetemp[0][8] = @cube[0][6]
 
-    @hist &lt;&lt; 'u'
+    @hist << 'u'
     @cube = Marshal.load(Marshal.dump(cubetemp))
-    self  
+    self
   end
 ```
 
@@ -91,3 +90,5 @@ Marshal, by the way, is Ruby's serialization module... it takes any type of data
 You can see the entire source at the <a href="https://github.com/urthbound/rubyks" target="_blank">Github repo</a>. I also wrote a little interface to interact with the model.
 
 I packaged all this up as a Gem and made it available at <a href="https://rubygems.org/gems/rubyks" target="_blank">rubygems.org</a> for anyone who wants to make use of my data structure and transformation methods to write their own solver.
+
+<a href="http://github.com/urthbound/rubyks" target="_blank">Here is the source.</a>

@@ -1,17 +1,9 @@
 ---
 layout: post
-status: publish
-published: true
 title: The first post that I'm not going to write...
 author: Jeff
-author_login: jeffowler
-author_email: jeffowler@gmail.com
-wordpress_id: 326
-wordpress_url: http://www.jeffalanfowler.com/?p=326
 categories:
 - Uncategorized
-tags: []
-comments: []
 ---
 <span style="color: #0000ff;"><a href="http://tenfingerstentoes.blogspot.com/2006/11/ok.html"><span style="color: #0000ff;">...is this one.</span></a></span>
 

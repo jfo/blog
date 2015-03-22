@@ -1,22 +1,8 @@
 ---
 layout: post
-status: publish
-published: true
 title: Polaroids Story
-author: Jeff
-author_login: jeffowler
-author_email: jeffowler@gmail.com
-excerpt: "<a title=\"untitled-29.jpg by a monkey with a mirror, on Flickr\" href=\"http://www.flickr.com/photos/monkeywithamirror/8357026512/\"><img
-  alt=\"untitled-29.jpg\" src=\"http://farm9.staticflickr.com/8074/8357026512_684699eee9.jpg\"
-  width=\"500\" height=\"500\" /></a>\r\n\r\n&nbsp;\r\n\r\nClick through to see more...\r\n\r\nWell,
-  Mara, they're mine, from a series I did last year futzing with old polaroids. If
-  I had the inclination I would say \"distressing expired filmstock.\"\r\n\r\n"
-wordpress_id: 342
-wordpress_url: http://www.jeffalanfowler.com/?p=342
 categories:
 - Photography
-tags: []
-comments: []
 ---
 <a title="untitled-29.jpg by a monkey with a mirror, on Flickr" href="http://www.flickr.com/photos/monkeywithamirror/8357026512/"><img alt="untitled-29.jpg" src="http://farm9.staticflickr.com/8074/8357026512_684699eee9.jpg" width="500" height="500" /></a>
 

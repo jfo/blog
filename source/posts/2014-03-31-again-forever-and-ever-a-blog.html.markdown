@@ -2,10 +2,9 @@
 layout: post
 title: Again, and forever and ever, a blog.
 date: 2014-03-31 21:49 UTC
-tags: hs
 ---
 
-I spent a huge chunk of my time today fussing over this site design. Back and forth and back and forth... writing everything from scratch or using a static generator or going back to wordpress... 
+I spent a huge chunk of my time today fussing over this site design. Back and forth and back and forth... writing everything from scratch or using a static generator or going back to wordpress...
 
 And aaaaah it was **so frustrating**. But __why__?? What do I __want__ out of the design of this site that I haven't quite yet been able to achieve? I have some thoughts...
 
