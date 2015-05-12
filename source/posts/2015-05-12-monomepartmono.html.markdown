@@ -2,7 +2,7 @@
 title: monome part mono
 date: 2015-05-12
 layout: post
-tags:
+tags: hs, monome, music, programming
 ---
 
 I got a [monome](http://monome.org) kind of recently. It looks like this:
