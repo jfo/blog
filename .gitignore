@@ -2,5 +2,5 @@
 /build
 /Gemfile.lock
 /.sass-cache
-/.cache
+/.cache/*
 .DS_Store
