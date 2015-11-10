@@ -31,6 +31,6 @@ end
 desc "Build, commit, and push the website to github"
 task :push => :build do
   puts "-----> Committing website to github pages"
-  status = system("cd ~/code/jeffo/build && git add -A && git commit -m '#{Time.now}' && git push && cd ~/code/jeffo")
+  status = system("cd ~/code/blog/build && git add -A && git commit -m '#{Time.now}' && git push && cd ~/code/blog")
   puts status ? "OK" : "FAILED"
 end
