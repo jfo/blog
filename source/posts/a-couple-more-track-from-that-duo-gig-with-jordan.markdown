@@ -1,6 +1,7 @@
 ---
 layout: post
 title: A couple more tracks from that duo gig with Jordan
+date: 2013/9/11
 categories:
 - Music
 - Jazz

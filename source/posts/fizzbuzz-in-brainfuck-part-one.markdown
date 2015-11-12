@@ -1,5 +1,6 @@
 ---
 title: fizzbuzz in brainfuck, part one
+date: 2013/9/22
 layout: post
 author: Jeff
 categories:

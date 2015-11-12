@@ -1,5 +1,6 @@
 ---
 title: Jason Saltiel's "Wait Until the Night"
+date: 2013/9/19
 layout: post
 categories:
 - Music

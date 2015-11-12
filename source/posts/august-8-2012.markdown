@@ -1,5 +1,6 @@
 ---
 title: August 8, 2012
+date: 2013/9/21
 layout: post
 categories:
 - Music

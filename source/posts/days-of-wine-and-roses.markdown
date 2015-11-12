@@ -1,6 +1,7 @@
 ---
 title: Days of Wine and Roses
 layout: post
+date: 2013/9/10
 categories:
 - Music
 - Jazz

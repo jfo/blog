@@ -1,5 +1,6 @@
 ---
 layout: post
+date: 2014/3/31
 title: Again, and forever and ever, a blog.
 date: 2014-03-31 21:49 UTC
 ---

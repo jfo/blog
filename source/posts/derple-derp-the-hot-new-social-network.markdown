@@ -1,5 +1,6 @@
 ---
 title: 'Derple Derp: the hot new social network'
+date: 2013/11/11
 layout: post
 categories:
 - Programming

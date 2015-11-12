@@ -1,5 +1,6 @@
 ---
 title: The story so far
+date: 2013/9/20
 layout: post
 categories:
 - Programming

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Polaroids Story
+date: 2013/1/6
 categories:
 - Photography
 ---

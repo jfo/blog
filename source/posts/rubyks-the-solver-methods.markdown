@@ -1,5 +1,6 @@
 ---
 title: Rubyks, the solver methods
+date: 2013/11/13
 layout: post
 categories:
 - Programming

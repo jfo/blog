@@ -1,5 +1,6 @@
 ---
 title: Rubyks, a gem
+date: 2013/11/12
 layout: post
 categories:
 - Programming

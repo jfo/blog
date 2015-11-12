@@ -1,6 +1,7 @@
 ---
 title: I'll Come Back Someday
 layout: post
+date: 2013/9/12
 categories:
 - Music
 - Songs

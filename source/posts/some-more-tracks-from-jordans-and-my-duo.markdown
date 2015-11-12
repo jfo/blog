@@ -1,5 +1,6 @@
 ---
 title: Some more tracks from Jordan's and my duo
+date: 2013/11/18
 layout: post
 categories:
 - Uncategorized

@@ -1,5 +1,6 @@
 ---
 title: Doll
+date: 2013/9/23
 layout: post
 categories:
 - Music

@@ -1,5 +1,6 @@
 ---
 title: V-I
+date: 2013/1/5
 layout: post
 categories:
 - Uncategorized

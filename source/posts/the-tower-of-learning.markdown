@@ -1,5 +1,6 @@
 ---
 title: The Tower of Learning
+date: 2013/9/17
 layout: post
 categories:
 - Music

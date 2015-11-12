@@ -1,6 +1,7 @@
 ---
 title: How brainfuck works
 layout: post
+date: 2013/9/13
 status: publish
 categories:
 - Programming

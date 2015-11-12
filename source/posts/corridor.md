@@ -1,5 +1,6 @@
 ---
 layout: post
+date: 2014/2/09
 title: it is as a long corridor
 ---
 

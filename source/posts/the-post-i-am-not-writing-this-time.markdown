@@ -1,6 +1,7 @@
 ---
 layout: post
 title: The first post that I'm not going to write...
+date: 2013/1/6
 author: Jeff
 categories:
 - Uncategorized

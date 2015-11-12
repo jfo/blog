@@ -1,6 +1,7 @@
 ---
 layout: post
 title: New Posts
+date: 2013/7/23
 categories:
 - Music
 ---
