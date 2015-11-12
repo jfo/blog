@@ -1,21 +1,27 @@
 *, *:before, *:after {
-  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+    -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
 }
 
 body {
-  color: #333;
-  font: 15px 'Open sans', sans-serif;
+    color: #333;
+    font: 15px 'Open sans', sans-serif;
 }
 
 p, li {
-  line-height: 1.6;
+    line-height: 1.6;
 }
 
 pre {
-  padding: 1em;
-  border: 1px dashed gray;
-  line-height: 1.3;
-  font-size: 0.9em;
+    padding: 1em;
+    border: 1px dashed gray;
+    line-height: 1.3;
+    font-size: 0.9em;
+    overflow: scroll;
+    overflow-y: hidden
+}
+
+img {
+    width: 100%;
 }
 
 
@@ -23,82 +29,29 @@ pre {
     padding: 0 1.5em;
 }
 
-.sidebar {
-  text-align: center;
-}
-
-.navitem {
-    width: 50%;
-    padding: 6%;
-    float:left;
-}
-
-.navitem img {
-    max-height: 100%;
-    max-width: 100%;
-}
-
 @media (min-width : 550px) {
-
-    .sidebar {
-        float: left;
-        width: 15%;
-        max-width: 150px ;
-    }
-
     #container {
-        width: 65%;
-        margin-left: 5%;
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
         float: left;
-    }
-
-    .navitem {
-        padding: 15%;
-        width: auto;
-        float: none;
     }
 }
 
 @media (min-width : 800px) {
     #container {
-        width: 700px;
+        width: 60%;
+        margin-left: 20%;
+        margin-right: 20%;
+        float: left;
     }
     .prevnext a:first-child { float: left; }
     .prevnext a:last-child { float: right; }
 }
 
-.inactive {
-    -webkit-filter: blur(2px);
-  }
-
-.blur {
-    -webkit-filter: blur(2px);
-    transition: 0.5s ease;}
-.blur:hover { -webkit-filter: blur(0px) }
-
 time {
-  font-size: 0.6em;
-  opacity:0.4;
-}
-
-.activepage {
-  -webkit-filter: blur(0px);
+    font-size: 0.6em;
+    opacity:0.4;
 }
 
 .prevnext { overflow:hidden; }
-
-
-/* homepage stuff */
-
-#background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  transition: 1.5s ;
-  z-index: -1;
-}

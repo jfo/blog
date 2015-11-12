@@ -10,6 +10,6 @@ set :markdown_engine, :redcarpet
 activate :directory_indexes
 
 activate :blog do |blog|
-  blog.sources = "posts/:year-:month-:day-:title.html"
-  blog.permalink = "/{year}/{month}/{title}.html"
+  blog.sources = "posts/:title.html"
+  blog.permalink = "/{title}.html"
 end
