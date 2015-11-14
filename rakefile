@@ -27,20 +27,12 @@ desc "Build, commit, and push the website to github"
 task :push => :build do
   puts "-----> Committing website to github pages"
 
-  puts "- Moving into build directory"
-  `cd ~/code/blog/build`
-
-  puts "- Checking for repo and making a new one if it doesn't exist"
-  `git init`
-  if !system("git log -0")
-      `git remote add origin https://github.com/urthbound/urthbound.github.io.git`
+  Dir.chdir('build') do
+      sh 'git init'
+      if !system("git log -0")
+          sh "git remote add origin https://github.com/urthbound/urthbound.github.io.git"
+      end
+      status = sh "git add -A && git commit -m '#{Time.now}' && git push -u origin master"
+      puts status ? "OK" : "FAILED"
   end
-
-  puts "committing and pushing"
-  status = `git add -A && git commit -m '#{Time.now}' && git push -u origin master && cd ~/code/blog`
-
-  puts "- Moving into root directory"
-  `cd ..`
-
-  puts status ? "OK" : "FAILED"
 end
