@@ -3,6 +3,13 @@ SSH_HOST = 'aws'
 SSH_DIR  = 'blog'
 RSYNC    = true
 
+desc "Build the website from source"
+task :build do
+  puts "-----> Building website"
+  status = system("middleman build --clean")
+  puts status ? "OK" : "FAILED"
+end
+
 desc "Build and deploy the website to aws"
 task :deploy => :build do
   if RSYNC
@@ -19,6 +26,21 @@ end
 desc "Build, commit, and push the website to github"
 task :push => :build do
   puts "-----> Committing website to github pages"
-  status = system("cd ~/code/blog/build && git add -A && git commit -m '#{Time.now}' && git push && cd ~/code/blog")
+
+  puts "- Moving into build directory"
+  `cd ~/code/blog/build`
+
+  puts "- Checking for repo and making a new one if it doesn't exist"
+  `git init`
+  if !system("git log -0")
+      `git remote add origin https://github.com/urthbound/urthbound.github.io.git`
+  end
+
+  puts "committing and pushing"
+  status = `git add -A && git commit -m '#{Time.now}' && git push -u origin master && cd ~/code/blog`
+
+  puts "- Moving into root directory"
+  `cd ..`
+
   puts status ? "OK" : "FAILED"
 end
