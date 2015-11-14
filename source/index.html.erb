@@ -1,9 +1,11 @@
 <% if drafts.any? %>
+    <h1>Drafts</h2>
     <ul>
         <% drafts.each do |draft| %>
             <li><%= link_to draft.title, draft.path %></li>
         <% end %>
     </ul>
+    <h1>Posts</h2>
 <% end %>
 
 <ul>
