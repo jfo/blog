@@ -1,10 +1,10 @@
-<% wrap_layout :standard do %>
-
+<% wrap_layout :layout do %>
   <br>
-  <%# <hr> %>
   <article>
-    <h2><%= current_article.title %>
-    <time><%= current_article.date.strftime('%b %e %Y') %></time> </h2>
+      <h2>
+          <%= current_article.title %>
+          <time><%= current_article.date.strftime('%b %e %Y') %></time>
+      </h2>
   </article>
   <hr>
 
@@ -14,26 +14,20 @@
   <hr>
 
   <div class="prevnext">
-    <% if current_article.previous_article %>
-      <a href=<%= current_article.previous_article.url %> >
-        <p> <-     <%= current_article.previous_article.title %></p>
-    </a>
-    <% end %>
-    <% if current_article.next_article %>
-      <a href=<%= current_article.next_article.url %> >
-        <p> <%= current_article.next_article.title %>     -> </p>
-    </a>
-    <% end %>
+      <% if current_article.previous_article %>
+          <a href=<%= current_article.previous_article.url %> >
+              <p> <-     <%= current_article.previous_article.title %></p>
+          </a>
+      <% end %>
+      <% if current_article.next_article %>
+          <a href=<%= current_article.next_article.url %> >
+              <p> <%= current_article.next_article.title %>     -> </p>
+          </a>
+      <% end %>
   </div>
 
   <hr>
   <br>
 
-  <a href="/allposts">
-      <p class="quarters-txt">see all posts</p>
-  </a>
-
-
-  <%# <%= disqus %1> %>
-
+  <a href="/allposts">see all posts</a>
 <% end %>

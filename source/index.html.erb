@@ -1,42 +1,20 @@
----
-title: Blog Posts
-layout: standard
-hide_footer: true
----
-
-<a href="/allposts">
-  <p class="quarters-txt">see all posts</p>
-</a>
-
-
-<% blog.articles[0..0].each do |article| %>
-  <article>
-  <%# <hr> %>
-    <h2>
-      <a href="<%= article.url %>" style="text-decoration: none; color:#333;"><%= article.title %></a>
-      <time><%= article.date.strftime('%b %e %Y') %></time>
-    </h2>
-  <hr>
-    <%= article.body %>
-  </article>
-  <br>
-  <br>
+<% if drafts.any? %>
+    <ul>
+        <% drafts.each do |draft| %>
+            <li><%= link_to draft.title, draft.path %></li>
+        <% end %>
+    </ul>
 <% end %>
 
-<i>Older posts:</i>
-<hr>
-
-<% blog.articles[1..5].each do |article| %>
-    <article>
-        <h3>
-            <a href="<%= article.url %>" style="text-decoration: none; color:#333;"><%= article.title %></a>
-            <time><%= article.date.strftime('%b %e %Y') %></time>
-        </h3>
-        <hr>
-    </article>
-<% end %>
-
-<a href="/allposts">
-  <p class="quarters-txt">see all posts</p>
-</a>
-
+<ul>
+  <% blog.articles.group_by {|a| a.date.year }.each do |year, articles| %>
+    <li>
+      <h5><%= year %></h5>
+      <ul>
+        <% articles.each do |article| %>
+          <li><a href="<%= article.url %>"><%= article.title %></a></li>
+        <% end %>
+      </ul>
+    </li>
+  <% end %>
+</ul>
