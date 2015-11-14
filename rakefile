@@ -32,7 +32,7 @@ task :push => :build do
       if !system("git log -0")
           sh "git remote add origin https://github.com/urthbound/urthbound.github.io.git"
       end
-      status = sh "git add -A && git commit -m '#{Time.now}' && git push -u origin master"
+      status = sh "git add -A && git commit -m '#{Time.now}' && git push -uf origin master"
       puts status ? "OK" : "FAILED"
   end
 end
