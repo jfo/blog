@@ -16,12 +16,12 @@
   <div class="prevnext">
       <% if current_article.previous_article %>
           <a href=<%= current_article.previous_article.url %> >
-              <p> <-     <%= current_article.previous_article.title %></p>
+              <p><small>&#x25C0;</small> <%= current_article.previous_article.title %></p>
           </a>
       <% end %>
       <% if current_article.next_article %>
           <a href=<%= current_article.next_article.url %> >
-              <p> <%= current_article.next_article.title %>     -> </p>
+              <p> <%= current_article.next_article.title %><small> &#9654;</small></p>
           </a>
       <% end %>
   </div>

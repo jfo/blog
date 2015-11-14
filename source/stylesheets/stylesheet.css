@@ -29,6 +29,14 @@ img {
     width: 100%;
 }
 
+hr {
+    border: none;
+    border-top: 1px solid gray;
+}
+
+a {
+    text-decoration:none;
+}
 
 #container {
     padding: 0 1.5em;

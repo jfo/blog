@@ -10,13 +10,14 @@
 
 <ul>
   <% blog.articles.group_by {|a| a.date.year }.each do |year, articles| %>
-    <li>
-      <h5><%= year %></h5>
-      <ul>
+      <h3><%= year %></h3>
         <% articles.each do |article| %>
-          <li><a href="<%= article.url %>"><%= article.title %></a></li>
+            <div>
+                <time><%= article.date.strftime('%b %e') %></time>
+            </div>
+            <div>
+                <a href="<%= article.url %>"><%= article.title %></a>
+            </div>
         <% end %>
-      </ul>
-    </li>
   <% end %>
 </ul>
