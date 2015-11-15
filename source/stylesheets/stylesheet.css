@@ -44,6 +44,9 @@ a {
     padding: 0 1.5em;
 }
 
+.prevnext a:last-child { float: right; }
+.prevnext a:first-child { float: left; }
+
 @media (min-width : 550px) {
     #container {
         width: 80%;
@@ -58,8 +61,6 @@ a {
         margin-left: 15%;
         margin-right: 15%;
     }
-    .prevnext a:first-child { float: left; }
-    .prevnext a:last-child { float: right; }
 }
 
 @media (min-width : 1000px) {
