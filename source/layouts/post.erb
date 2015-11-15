@@ -1,12 +1,9 @@
 <% wrap_layout :layout do %>
   <br>
-  <hr>
-  <article>
-      <h2 style="display:table-cell;"><%= current_article.title %></h2>
-      <time><%= current_article.date.strftime('%b %e %Y') %></time>
+  <article style="margin: 2em 0em;">
+      <h2 style="display:inline;"><%= current_article.title %></h2> <time><%= current_article.date.strftime('%b %e %Y') %></time>
   </article>
   <hr>
-  <br>
 
   <%= yield %>
 
