@@ -13,7 +13,9 @@ p, li {
 
 pre {
     padding: 1em;
-    border: 1px dashed gray;
+    border-style: dashed;
+    border-width: 1px;
+    border-color: #bbb;
     line-height: 1.3;
     font-size: 0.9em;
     overflow: scroll;
