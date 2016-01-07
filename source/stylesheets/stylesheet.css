@@ -24,6 +24,21 @@ pre code {
     white-space: pre;
 }
 
+code {
+    padding: 0.2em;
+    margin: 0;
+    font-size: 85%;
+    background: #f7f7f7;
+    border-radius: 3px;
+}
+
+blockquote {
+    margin: 0;
+    padding: 0 15px;
+    color: #777;
+    border-left: 4px solid #ddd;
+}
+
 img {
     max-width: 100%;
     display: block;
