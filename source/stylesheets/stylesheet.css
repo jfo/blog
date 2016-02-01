@@ -4,17 +4,18 @@
 
 body {
     color: #333;
-    font: 15px 'Open sans', sans-serif;
+    font: 16px sans-serif;
+    font-weight: 100;
 }
 
 p, li {
-    line-height: 1.6;
+    line-height: 1.8;
 }
 
 pre {
     padding: 16px;
     overflow: auto;
-    font-size: 85%;
+    font-size: 95%;
     line-height: 1.45;
     border-radius: 3px;   overflow-x: auto;
 }
@@ -27,7 +28,7 @@ pre code {
 code {
     padding: 0.2em;
     margin: 0;
-    font-size: 85%;
+    font-size: 95%;
     background: #f7f7f7;
     border-radius: 3px;
 }
