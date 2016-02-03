@@ -23,10 +23,11 @@ pre {
 pre code {
     overflow-wrap: normal;
     white-space: pre;
+    padding: 0;
 }
 
 code {
-    padding: 0.2em;
+    padding: 0 0.2em;
     margin: 0;
     font-size: 95%;
     background: #f7f7f7;
