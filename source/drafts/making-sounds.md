@@ -276,13 +276,84 @@ float halfCycleDelay(float freq) {
 I'm returning a float just to retain that precision, though
 `delayMicroseconds()` casts it to an int anyway. NBD.
 
+
+THIS IS THE SPLIT
+
+
 ```c
-float delay_time = halfCycleDelay(440.0);
+
+void square_wave(float freq){
+    float delay_time = halfCycleDelay(freq);
+    digitalWrite(OUTPIN, HIGH);
+    delayMicroseconds(delay_time);
+    digitalWrite(OUTPIN, LOW);
+    delayMicroseconds(delay_time);
+}
 
 void loop() {
-    digitalWrite(13, HIGH);
-    delayMicroseconds(delay_time);
-    digitalWrite(13, LOW);
-    delayMicroseconds(delay_time);
+    square_wave(440.0);
+}
+```
+
+This would make a great summer single: "The indefinite square wave", by Katy
+Perry. You could pick a frequency and it would just go forever. It's got hit
+written all over it. To do anything useful, we need to come up with a way to
+play a note for some definite amount of time. Let's start with.... one second.
+
+Arduino provides a nice little function to check the number of milliseconds
+since the board started running: `millis()`. By comparing the return value of
+this function when we call it in different places, we can keep track of
+relative time inside a function. Dig it:
+
+```c
+void square_wave(float freq){
+    float delay_time = halfCycleDelay(freq);
+    unsigned long start_time = millis();
+
+    while(millis() < start_time + 1000) {
+        digitalWrite(OUTPIN, HIGH);
+        delayMicroseconds(delay_time);
+        digitalWrite(OUTPIN, LOW);
+        delayMicroseconds(delay_time);
+    }
+}
+
+void loop() {
+    square_wave(440.0);
+    delay(1000);
+}
+```
+
+This one just beeps an A 440 for one second, and then waits for one second. Now
+we're getting somewhere... now we can make some music.
+
+There is no reason to hard code the length of the note, though, so lets change that function a little bit:
+
+```c
+void square_wave(float freq, int duration){
+    float delay_time = halfCycleDelay(freq);
+    unsigned long start_time = millis();
+
+    while(millis() < start_time + duration) {
+        digitalWrite(OUTPIN, HIGH);
+        delayMicroseconds(delay_time);
+        digitalWrite(OUTPIN, LOW);
+        delayMicroseconds(delay_time);
+    }
+}
+```
+
+`duration` here is in milliseconds. Let's play a scale; recall that frequency
+chart from before... let's enter all the natural notes into an array.
+
+This code plays two octaves of a C major scale:
+
+```c
+float notes[15] = {130.813, 146.832, 164.841, 174.614, 195.998, 220.000, 246.942, 261.626, 293.665, 329.628, 349.228, 391.995, 440.0, 493.883, 523.251};
+
+void loop() {
+    for (int i = 0, i < 15, i++) {
+        square_wave(notes[i], 500);
+    }
 }
 ```
