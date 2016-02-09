@@ -93,6 +93,21 @@ that we want to treat that pin as an output pin. It's purely digital, off and
 on, 0v or 5v, and nothing in between, but we have precise control over when it
 is switched, up to the limits of the speed of the processor.
 
+The arduino has other output pins, it doesn't have to be 13. And we hates us
+some magic numbers, so might as well make that into a constant:
+
+```c
+#define OUTPIN 13
+
+void setup() {
+    pinMode(OUTPIN, OUTPUT);
+}
+
+void loop() {
+    digitalWrite(OUTPIN, HIGH);
+}
+```
+
 What does this program do? It writes `HIGH` to the output pin as fast as it
 can, forever. `HIGH` is an arduino constant that resolves to the maximum output
 voltage of the model of board you have, so for this one, 5v)
@@ -106,8 +121,8 @@ to the minimum output of our board, which is 0v):
 
 ```c
 void loop() {
-    digitalWrite(13, HIGH);
-    digitalWrite(13, LOW);
+    digitalWrite(OUTPIN, HIGH);
+    digitalWrite(OUTPIN, LOW);
 }
 ```
 This does more... I mean, it makes a ... sound. :\
@@ -122,9 +137,9 @@ pretty close to white noise.
 void loop() {
     int no_whammies = random(100);
     if (no_whammies > 50) {
-        digitalWrite(13, HIGH);
+        digitalWrite(OUTPIN, HIGH);
     } else {
-        digitalWrite(13, LOW);
+        digitalWrite(OUTPIN, LOW);
     }
 }
 ```
@@ -148,8 +163,8 @@ Let's make this speaker "flash" at once per second:
 
 ```c
 void loop() {
-    digitalWrite(13, HIGH);
-    digitalWrite(13, LOW);
+    digitalWrite(OUTPIN, HIGH);
+    digitalWrite(OUTPIN, LOW);
     delay(1000);
 }
 ```
@@ -165,9 +180,9 @@ But recall that the speaker cone clicks when it goes in, AND when it goes out.
 
 ```c
 void loop() {
-    digitalWrite(13, HIGH);
+    digitalWrite(OUTPIN, HIGH);
     delay(500);
-    digitalWrite(13, LOW);
+    digitalWrite(OUTPIN, LOW);
     delay(500);
 }
 ```
@@ -192,9 +207,9 @@ just 1 millisecond.
 
 ```c
 void loop() {
-    digitalWrite(13, HIGH);
+    digitalWrite(OUTPIN, HIGH);
     delay(1);
-    digitalWrite(13, LOW);
+    digitalWrite(OUTPIN, LOW);
     delay(1);
 }
 ```
@@ -215,9 +230,9 @@ Super. We're almost to something useful. This is as fast as we can go using
 
 ```c
 void loop() {
-    digitalWrite(13, HIGH);
+    digitalWrite(OUTPIN, HIGH);
     delayMicroseconds(1000);
-    digitalWrite(13, LOW);
+    digitalWrite(OUTPIN, LOW);
     delayMicroseconds(1000);
 }
 ```
@@ -248,9 +263,9 @@ of 2272μs is 1136μs, so:
 
 ```c
 void loop() {
-    digitalWrite(13, HIGH);
+    digitalWrite(OUTPIN, HIGH);
     delayMicroseconds(1136);
-    digitalWrite(13, LOW);
+    digitalWrite(OUTPIN, LOW);
     delayMicroseconds(1136);
 }
 ```
@@ -276,13 +291,22 @@ float halfCycleDelay(float freq) {
 I'm returning a float just to retain that precision, though
 `delayMicroseconds()` casts it to an int anyway. NBD.
 
+```c
+void loop() {
+    float delay_time = halfCycleDelay(440.0);
+    digitalWrite(OUTPIN, HIGH);
+    delayMicroseconds(delay_time);
+    digitalWrite(OUTPIN, LOW);
+    delayMicroseconds(delay_time);
+}
+```
 
-THIS IS THE SPLIT
-
+This is a nice little thing to encapsulate, so I'm going to do that, and there
+is no reason not to make the frequency that I'm computing the delay time for
+into a variable that is passed into the function:
 
 ```c
-
-void square_wave(float freq){
+void square_wave(float freq) {
     float delay_time = halfCycleDelay(freq);
     digitalWrite(OUTPIN, HIGH);
     delayMicroseconds(delay_time);
@@ -294,6 +318,30 @@ void loop() {
     square_wave(440.0);
 }
 ```
+
+So, a couple of things here... first, that name. I'm calling that function
+`square_wave()` because that's the type of wave that is being produced. More on
+that in a moment. Also, notice that every loop is calling `square_wave()`,
+which is calling `halfCycleDelay()`, which is doing some computations. I don't
+really need to do that on every loop, it would seem better to do something like
+this:
+
+```c
+void square_wave(float delay_time) {
+    digitalWrite(OUTPIN, HIGH);
+    delayMicroseconds(delay_time);
+    digitalWrite(OUTPIN, LOW);
+    delayMicroseconds(delay_time);
+}
+
+float delay = halfCycleDelay(440.0)
+
+void loop() {
+    square_wave(delay);
+}
+```
+
+But I'm not going to do that, for reasons that will be clear in a moment.
 
 This would make a great summer single: "The indefinite square wave", by Katy
 Perry. You could pick a frequency and it would just go forever. It's got hit
@@ -357,3 +405,4 @@ void loop() {
     }
 }
 ```
+
