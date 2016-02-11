@@ -513,13 +513,75 @@ void play_melody(melody melody) {
 
 Now that we have this little function, we can just feed it a "melody" in the correct format, and it will play it!
 
-How about [boring old song]
+How about "My Bonnie Lies Over the Ocean":
 
 ```c
-song
+//                  C        D        E        F        G        A        B        C        D        E        F        G        A      B        C
+//                  0        1        2        3        4        5        6        7        8        9        10       11       12     13       14
+float notes[15] = { 130.813, 146.832, 164.841, 174.614, 195.998, 220.000, 246.942, 261.626, 293.665, 329.628, 349.228, 391.995, 440.0, 493.883, 523.251 };
+
+float my_bonnie_lies_over_the_ocean[][2] = {
+    {notes[4], 500},
+    {notes[9], 750},
+    {notes[8], 250},
+    {notes[7], 500},
+    {notes[8], 500},
+    {notes[7], 500},
+    {notes[5], 500},
+    {notes[4], 500},
+    {notes[2], 1000},
+    {0.0,      1000},
+    {notes[4], 500},
+    {notes[9], 750},
+    {notes[8], 250},
+    {notes[7], 500},
+    {notes[7], 500},
+    {notes[6], 500},
+    {notes[7], 500},
+    {notes[8], 1500},
+    {0,        1500},
+    {notes[4], 500},
+    {notes[9], 750},
+    {notes[8], 250},
+    {notes[7], 500},
+    {notes[8], 500},
+    {notes[7], 500},
+    {notes[5], 500},
+    {notes[4], 500},
+    {notes[2], 1000},
+    {0.0,      1000},
+    {notes[4], 500},
+    {notes[5], 500},
+    {notes[8], 500},
+    {notes[7], 500},
+    {notes[6], 500},
+    {notes[5], 500},
+    {notes[6], 500},
+    {notes[7], 1500},
+    {0.0,      1000}
+}
+
+void loop() {
+    play_melody(my_bonnie_lies_over_the_ocean);
+}
 ```
 
-How about [funny but good and underrated song]
+Here, I'm indexing against the array of natural notes from earlier. This is
+pretty unwieldy, and I'm missing the chromatic notes, which is very limiting.
+Instead, I can define numerical constants that will be interpolated by the
+preprocessor as the floats that I want to pass in. That will look something like this:
+
+```c
+#define C1 213.383
+#define Cb1 243.383
+// etc...
+```
+
+I'm not going to paste all this in there, but I am going to make a header file
+for this and include it in my arduino sketch to allow me to use all of these
+semantic labels in my song code. It's here, if you're curious:
+
+link to header file on github.
 
 ```c
 song
