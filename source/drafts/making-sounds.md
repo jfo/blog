@@ -174,9 +174,9 @@ void loop() {
 You can hear it clicking, once per second, but it is very quiet. Look close at
 what this is doing: it writes `HIGH` and then writes `LOW` as fast as it can,
 and then waits a second before doing it again. There might be a better way; the
-cone might not be getting all the way out before being pulled back in.
+cone likely isn't even getting all the way out before being pulled back in.
 
-But recall that the speaker cone clicks when it goes in, AND when it goes out.
+Recall that the speaker cone clicks when it goes in, AND when it goes out.
 
 ```c
 void loop() {
@@ -192,18 +192,51 @@ metronome!
 
 > Why 500ms on each delay, instead of 1000ms? A cycle means that we end where
 > we started. Even though this clicks twice a second, it is still only
-> completely one cycle per second, and so is still 1Hz
+> completely one cycle per second, and so is still 1Hz. Out, in, and back again.
 
 A 440hz
 -------
 
-A musical note is pitched. There is a lot that goes into what it actually
-*sounds* like, tonally, but the fundamental frequency of the sound wave is what
-defines the pitch that we perceive.
+A musical note is pitched. A pitch is denoted by a frequency, and a frequency
+is denoted by a hertz value. There is a lot that goes into what it actually
+*sounds* like, tonally, but the fundamental frequency of the wave, usually the
+lowest or perceived frequency in a sound,is what defines the pitch that we
+hear. Take another look at this chart:
 
-We've made the speaker move in and out once per second. If we can make it move
-faster than that, we can make real, pitched sounds. Let's try having it wait
-just 1 millisecond.
+![img](http://www.sengpielaudio.com/FrequenzenKlavier09.jpg)
+
+This is a handy chart mapping a couple of octaves of notes in the middle of the
+keyboard with their corresponding frequencies. A pitch is the pitch it is
+because it has a specific frequency; in many ways "pitch" and "frequency"
+describe the exact same thing! *
+
+> * these frequencies are only valid as these notes in a single type of tuning
+>   system, which is arbitrary. Also, it's all based on starting with A at
+>   440hz, which is also arbitrary. Many european orchestras conventionally
+>   tune to 439 or even 442 as an A natural in that octave, which would change
+>   all of these frequencies, which are arbitrary. \</caveats\> Historical and
+>   alternative tuning systems are way outside the scope of this post. Maybe
+>   I'll write another post sometime about that, it's really fascinating. Did
+>   you know old harpsichords were sometimes constructed with a separate Eb and
+>   D# key? I know, wild, right? They are in all actuality different notes, as
+>   it turns out. Really good choirs and string sections adjust for this. If
+>   you play a piano you're SOL though. Sorry pianists, only one tuning system
+>   at a time. Guitar isn't much better, what with the frets and all, but at
+>   least we can adjust upwards a little bit. \</digression\>
+
+
+We've made the speaker move in and out once per second, and we can hear a
+percussive click. If we can make it move faster than that, we can make real,
+pitched sounds.
+
+To really hear this transformation from rhythm (those percussive clicks) to
+pitch (where the pace of the clicking rhythm is fast enough to be perceived as
+a pitched note) take a second to check out this excellent post by pianist Dan
+Tepfner:
+
+link to post
+
+Let's try having it wait just 1 millisecond between `HIGH` and `LOW`...
 
 ```c
 void loop() {
@@ -215,18 +248,13 @@ void loop() {
 ```
 
 This is one cycle every two milliseconds, which is 500 cycles per second, which
-is 500Hz.
+is 500Hz. Cross referencing with the chart above, our speaker should be
+producing a note about 6.12Hz faster than a B above middle C. Let's see:
 
-Here is a handy chart showing the frequencies of a couple of octaves of notes
-in the middle of the keyboard:
-
-![img](http://www.sengpielaudio.com/FrequenzenKlavier09.jpg)
-
-According to this, our speaker should be producing a note about 6.12Hz faster
-than a B above middle C. Let's see:
-
-Super. We're almost to something useful. This is as fast as we can go using
-`delay()` because it takes milliseconds, but never fear.
+Super. We're almost to something musically useful. This is as fast as we can go
+using `delay()` because it takes milliseconds. In order to delay a smaller
+amount between `HIGH` and `LOW` we would need to delay for a shorter period
+than 1ms. Luckily, we can:
 
 ```c
 void loop() {
@@ -239,7 +267,7 @@ void loop() {
 
 This code is a refactor of the loop above. A millisecond is 1/1000th of a
 second, but a microsecond is 1/1000th of a millisecond. We're in the
-millionth's of a second here, and can be a lot more precise now!
+millionth's of a second here, and so can be a lot more precise!
 
 We want to produce a tone at 440Hz, which means we will complete 440
 cycles per second, and that each single cycle will take 1/440 of a second.
@@ -248,14 +276,18 @@ cycles per second, and that each single cycle will take 1/440 of a second.
 1/440 = 0.0022727...
 ```
 
-But a second has a million microseconds in it, so this is equal to
+Or more descriptively: One second divided into 440 sections is equal to
+0.002227... seconds. That is equal to 2.227... milliseconds.
+
+But a millisecond has a thousand microseconds in it, so this is equal to
 
 ```
-0.0022727... * 1000000 = 2272.7272...
+2.2727... * 1000 = 2272.7272...
 ```
 
-Since we can't do floats I'll floor that to 2272μs. (The symbol for
-microseconds is `μs`, which I didn't know until just now.)
+Since we can't pass floats into `delayMicroseconds`, I'll floor that to 2272μs.
+(The symbol for microseconds is `μs`, which I didn't know until just now when I
+looked it up.)
 
 Remember that to complete one complete cycle, we have to write `HIGH`, then
 wait for 1/2 a cycle, then write `LOW`, then wait for the remaining half. Half
@@ -270,7 +302,7 @@ void loop() {
 }
 ```
 
-Will produce a tone at precisely 440Hz.
+Will produce a tone at _precisely_ 440Hz.
 
 This is begging to be made into a function that takes a frequency and returns a
 discrete number of microseconds that are equal to have of one cycle. Here it is:
@@ -303,7 +335,7 @@ void loop() {
 
 This is a nice little thing to encapsulate, so I'm going to do that, and there
 is no reason not to make the frequency that I'm computing the delay time for
-into a variable that is passed into the function:
+into a argumanet that is passed into the function:
 
 ```c
 void square_wave(float freq) {
@@ -321,7 +353,7 @@ void loop() {
 
 So, a couple of things here... first, that name. I'm calling that function
 `square_wave()` because that's the type of wave that is being produced. More on
-that in a moment. Also, notice that every loop is calling `square_wave()`,
+that in a bit. Also, notice that every loop is calling `square_wave()`,
 which is calling `halfCycleDelay()`, which is doing some computations. I don't
 really need to do that on every loop, it would seem better to do something like
 this:
@@ -345,13 +377,17 @@ But I'm not going to do that, for reasons that will be clear in a moment.
 
 This would make a great summer single: "The indefinite square wave", by Katy
 Perry. You could pick a frequency and it would just go forever. It's got hit
-written all over it. To do anything useful, we need to come up with a way to
-play a note for some definite amount of time. Let's start with.... one second.
+written all over it.
+
+Clearly, to do anything useful, we need to come up with a way to
+play a note for some definite amount of time, then maybe play a different note?
+I don't know, just a thought. Variety is the spice of life. Let's start
+with.... one second.
 
 Arduino provides a nice little function to check the number of milliseconds
 since the board started running: `millis()`. By comparing the return value of
 this function when we call it in different places, we can keep track of
-relative time inside a function. Dig it:
+relative time inside a function.
 
 ```c
 void square_wave(float freq){
@@ -372,8 +408,21 @@ void loop() {
 }
 ```
 
-This one just beeps an A 440 for one second, and then waits for one second. Now
-we're getting somewhere... now we can make some music.
+This one just beeps an A 440 for one second, and then waits for one second so
+that we can hear when the notes stops and starts. This is very exciting,
+actually! Let's review what we have now:
+
+- A reliable way to produce discrete, variable pitches
+- for a defined amount of time.
+
+In other words:
+
+- a very simple
+- very shrill
+- monophonic (only one note at a time)
+- _musical instrument._
+
+Now we can make some music.
 
 There is no reason to hard code the length of the note, though, so lets change that function a little bit:
 
@@ -392,12 +441,12 @@ void square_wave(float freq, int duration){
 ```
 
 `duration` here is in milliseconds. Let's play a scale; recall that frequency
-chart from before... let's enter all the natural notes into an array.
+chart from before... let's enter all the _natural notes_ (white keys) into an array.
 
 This code plays two octaves of a C major scale:
 
 ```c
-float notes[15] = {130.813, 146.832, 164.841, 174.614, 195.998, 220.000, 246.942, 261.626, 293.665, 329.628, 349.228, 391.995, 440.0, 493.883, 523.251};
+float notes[15] = { 130.813, 146.832, 164.841, 174.614, 195.998, 220.000, 246.942, 261.626, 293.665, 329.628, 349.228, 391.995, 440.0, 493.883, 523.251 };
 
 void loop() {
     for (int i = 0, i < 15, i++) {
@@ -406,3 +455,102 @@ void loop() {
 }
 ```
 
+Not very beautiful, but recognizably _musical_.
+
+We can represent notes as tight little frequency/duration tuples, packed into an array.
+
+```c
+look up how to initialize 2d arrays, make a few songs!
+```
+
+This is an ugly. verbose way to represent melodic information, and there are
+many many better and more semantic ways to do so, but for now it has the
+advantage of being very straightforward and very simple, based on what we've
+talked about so far. A melody is an array consisting of tuples. Each tuple
+represents a "note", where the first value represents the frequency of the note
+and the second value represents the duration of the note.
+
+We do have a problem - how do we represent rests? It kind of makes
+sense to pass `0` into the `square_wave()` function to represent a rest,
+because a frequency of `0hz` would indeed be silence. This is a nice
+coincidence, because we need to prevent the failure case of division by
+zero in the `halfCycleDelay()` call, which would trigger a runtime error if we
+passed `0` into `square_wave()` currently.
+
+Let's tweak `square_wave()` to simply delay for the duration in the event of a
+`0` frequency being passed in.
+
+```c
+void square_wave(float freq, int duration){
+    if (freq == 0) {
+        delay(duration);
+    } else {
+        float delay_time = halfCycleDelay(freq);
+        unsigned long start_time = millis();
+
+        while(millis() < start_time + duration) {
+            digitalWrite(OUTPIN, HIGH);
+            delayMicroseconds(delay_time);
+            digitalWrite(OUTPIN, LOW);
+            delayMicroseconds(delay_time);
+        }
+    }
+}
+```
+
+Now we have an easy way to trigger silence, and we've accounted for that edge
+case, as well.
+
+Let's abstract a function that accepts a "melody" and "plays" it!
+
+```c
+void play_melody(melody melody) {
+    for (int i = 0; i < length(melody); i++) {
+        square_wave(melody[i][0], melody[i][1]);
+    }
+}
+```
+
+Now that we have this little function, we can just feed it a "melody" in the correct format, and it will play it!
+
+How about [boring old song]
+
+```c
+song
+```
+
+How about [funny but good and underrated song]
+
+```c
+song
+```
+
+or this?
+```c
+Never gonna give you up = 
+```
+
+This little instrument never gets tired. It doesn't need to breath, and it can play notes faster than we can hear them:
+```c
+nonsense white noise notes with duration at 1μs or something.
+```
+
+Here's a wicked fast flight of the bumblebee,
+```c
+flight of the bumble bee
+```
+
+Here's Van Halen's sick masterpiece, Eruption:
+
+```c
+```
+
+Not bad for a couple wires and a couple chips.
+
+I've made a repo of all of the code and music from this post here:
+
+github.com balhablah
+
+Next time: [brief synopsis of next time]
+
+fuck yeah mother fucker.
