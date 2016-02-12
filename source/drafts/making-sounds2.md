@@ -1,3 +1,7 @@
+---
+title: Dynamics
+layout: post
+---
 
 here is where we will have to write about the nyquist theorum, sample rates,
 and what all that shit means.
