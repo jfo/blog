@@ -513,7 +513,6 @@ void play_melody(melody melody) {
 
 Now that we have this little function, we can just feed it a "melody" in the correct format, and it will play it!
 
-How about "My Bonnie Lies Over the Ocean":
 
 ```c
 //                  C        D        E        F        G        A        B        C        D        E        F        G        A      B        C
@@ -583,21 +582,69 @@ semantic labels in my song code. It's here, if you're curious:
 
 link to header file on github.
 
+Here's another melody, using those constants:
+
 ```c
-song
 ```
 
-or this?
+If you'll notice, we're passing in absolute durations in milliseconds for each
+note. This is also kind of unwieldy, unmusical, and hard to change. A more
+musical way of approaching this would be to set a global `tempo` variable, like this:
+
 ```c
-Never gonna give you up = 
+int tempo = 120; // 120 beats per minute
 ```
 
-This little instrument never gets tired. It doesn't need to breath, and it can play notes faster than we can hear them:
+Let's write a function that computes the duration in milliseconds of a quarter
+note at a given tempo:
+
+```c
+int quarter_note_duration(tempo) {
+    return ((60 / tempo) / 4) * 1000;
+}
+```
+
+Or, if you're a _math genius_:
+
+```c
+int quarter_note_duration(tempo) {
+    return 15000 / tempo;
+}
+```
+
+Now we can define a few constants in _relation to_ the quarter note to define
+some basic units of rhythm.
+
+```c
+int tempo = [whatever tempo];
+int quarter = quarter_note_duration(tempo);
+int dotted_quarter = quarter * 1.5
+
+int eighth = quarter / 2;
+int dotted_eighth = eighth * 1.5
+
+int sixteenth = eighth / 2;
+
+int half = quarter * 2;
+int dotted_half = quarter * 3 ;
+int whole = quarter * 4;
+```
+
+This makes everything a lot more semantic! Here's Weezer's 1994 hit single, 'Buddy Holly'.
+
+```c
+buddy holly
+```
+
+This little instrument never gets tired. It doesn't need to breath, and it can
+play notes faster than we can hear them:
+
 ```c
 nonsense white noise notes with duration at 1μs or something.
 ```
 
-Here's a wicked fast flight of the bumblebee,
+Here's a wicked fast flight of the bumblebee:
+
 ```c
 flight of the bumble bee
 ```
@@ -607,7 +654,7 @@ Here's Van Halen's sick masterpiece, Eruption:
 ```c
 ```
 
-Not bad for a couple wires and a couple chips.
+Not bad for a couple wires and a few chips.
 
 I've made a repo of all of the code and music from this post here:
 
