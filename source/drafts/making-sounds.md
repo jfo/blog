@@ -60,10 +60,10 @@ much really, but it's enough to drive the speaker, and the code is hellah
 simple.
 
 If you've never worked with the Arduino language before: it's C++, basically,
-but the IDE / Compiler / toolchain takes care of all the heavy lifting wrt
-linking libraries and compiling binaries and flashing the chip on the board
-with the new firmware and all that.  We just need to worry about a single `.ino`
-file that implements two functions:
+but the IDE / Compiler / toolchain takes care of all the heavy lifting with
+regard to linking libraries and compiling binaries and flashing the chip on the
+board with the new firmware and all that.  We just need to worry about a single
+`.ino` file that implements two functions:
 
 ```c
 void setup();
@@ -108,9 +108,31 @@ void loop() {
 }
 ```
 
-What does this program do? It writes `HIGH` to the output pin as fast as it
-can, forever. `HIGH` is an arduino constant that resolves to the maximum output
-voltage of the model of board you have, so for this one, 5v)
+The C preprocessor will now replace every instance of `OUTPIN` with the value
+`13`. This looks similar to variable assignment, but the mechanism underlying
+it is very different. All of those replacements happen at compile time, and so
+a constant should never be redefined after it has been given a value.
+
+Consider:
+
+```c
+#define MYAWESOMECONSTANT "this is what I want my constant to be!"
+#define MYAWESOMECONSTANT "wait I changed my mind!"
+```
+
+Gives us this compile time warning:
+
+```c
+/private/tmp/const.c:2:9: warning: 'MYAWESOMECONSTANT' macro redefined
+#define MYAWESOMECONSTANT "wait I changed my mind!"
+        ^
+        /private/tmp/const.c:1:9: note: previous definition is here
+#define MYAWESOMECONSTANT "this is what I want my constant to be!"
+```
+
+What does the program above do? It writes `HIGH` to the output pin as fast as
+it can, forever. `HIGH` is an arduino constant just like the that resolves to
+the maximum output voltage of the model of board you have, so for this one, 5v)
 
 This doesn't really do that much, but you can indeed here the telltale click:
 
@@ -154,7 +176,7 @@ Hertz so good
 >Rudolf Hertz, the first person to provide conclusive proof of the existence of
 >electromagnetic waves.
 
-[Thanks Wikipedia!](https://en.wikipedia.org/wiki/Hertz)
+[Wikipedia!](https://en.wikipedia.org/wiki/Hertz)
 
 Using hertz (symbol Hz) as a unit is agnostic; it can refer to anything.
 A light that flashes once a second is flashing at 1Hz.
@@ -234,7 +256,7 @@ pitch (where the pace of the clicking rhythm is fast enough to be perceived as
 a pitched note) take a second to check out this excellent post by pianist Dan
 Tepfner:
 
-link to post
+http://dantepfer.com/blog/?p=277
 
 Let's try having it wait just 1 millisecond between `HIGH` and `LOW`...
 
@@ -285,9 +307,9 @@ But a millisecond has a thousand microseconds in it, so this is equal to
 2.2727... * 1000 = 2272.7272...
 ```
 
-Since we can't pass floats into `delayMicroseconds`, I'll floor that to 2272μs.
-(The symbol for microseconds is `μs`, which I didn't know until just now when I
-looked it up.)
+Since we can't pass floats (numbers with decimal places) into
+`delayMicroseconds`, I'll floor that to 2272μs.  (The symbol for microseconds
+is `μs`, which I didn't know until just now when I looked it up.)
 
 Remember that to complete one complete cycle, we have to write `HIGH`, then
 wait for 1/2 a cycle, then write `LOW`, then wait for the remaining half. Half
@@ -353,7 +375,7 @@ void loop() {
 
 So, a couple of things here... first, that name. I'm calling that function
 `square_wave()` because that's the type of wave that is being produced. More on
-that in a bit. Also, notice that every loop is calling `square_wave()`,
+that later. Also, notice that every loop is calling `square_wave()`,
 which is calling `halfCycleDelay()`, which is doing some computations. I don't
 really need to do that on every loop, it would seem better to do something like
 this:
@@ -457,10 +479,18 @@ void loop() {
 
 Not very beautiful, but recognizably _musical_.
 
-We can represent notes as tight little frequency/duration tuples, packed into an array.
+We can represent notes as tight little frequency/duration tuples, packed into
+an array. When initializing such a `2d` array, the first number in brackets
+represents the number of elements in the array and the second the number of
+elements in each subarray. All of the sub arrays must have the same number of
+elements in them.
 
 ```c
-look up how to initialize 2d arrays, make a few songs!
+float c_major_trid[3][2] = {
+    {261.626, 500.0},
+    {329.628, 750.0},
+    {391.995, 250.0}
+}
 ```
 
 This is an ugly. verbose way to represent melodic information, and there are
@@ -477,8 +507,8 @@ coincidence, because we need to prevent the failure case of division by
 zero in the `halfCycleDelay()` call, which would trigger a runtime error if we
 passed `0` into `square_wave()` currently.
 
-Let's tweak `square_wave()` to simply delay for the duration in the event of a
-`0` frequency being passed in.
+Let's tweak `square_wave()` to simply delay for the passed in duration in the
+event of a `0` frequency.
 
 ```c
 void square_wave(float freq, int duration){
@@ -501,18 +531,21 @@ void square_wave(float freq, int duration){
 Now we have an easy way to trigger silence, and we've accounted for that edge
 case, as well.
 
-Let's abstract a function that accepts a "melody" and "plays" it!
+Let's abstract a function that accepts a "melody" and "plays" it! We also have
+to explicitly pass in the size of the array that is holding the melody, because
+of the way C treats local bindings. That gets a little hairy, just know right
+now that `size_of_melody` is telling `play_melody` how many notes and rests in
+total to play before exiting the `for` loop.
 
 ```c
-void play_melody(melody melody) {
-    for (int i = 0; i < length(melody); i++) {
+void play_melody(float melody[][2], size_t size_of_melody) {
+    for (int i = 0; i < size_of_melody / (sizeof(float) * 2); i++) {
         square_wave(melody[i][0], melody[i][1]);
     }
 }
 ```
 
 Now that we have this little function, we can just feed it a "melody" in the correct format, and it will play it!
-
 
 ```c
 //                  C        D        E        F        G        A        B        C        D        E        F        G        A      B        C
@@ -561,7 +594,7 @@ float my_bonnie_lies_over_the_ocean[][2] = {
 }
 
 void loop() {
-    play_melody(my_bonnie_lies_over_the_ocean);
+    play_melody(my_bonnie_lies_over_the_ocean, sizeof(my_bonnie_lies_over_the_ocean));
 }
 ```
 
@@ -571,69 +604,132 @@ Instead, I can define numerical constants that will be interpolated by the
 preprocessor as the floats that I want to pass in. That will look something like this:
 
 ```c
-#define C1 213.383
-#define Cb1 243.383
+#define _C1 213.383
+#define _Db1 243.383
 // etc...
 ```
 
-I'm not going to paste all this in there, but I am going to make a header file
-for this and include it in my arduino sketch to allow me to use all of these
-semantic labels in my song code. It's here, if you're curious:
+We have the note letter name, the octave (0-8) that it is in, and the
+frequency that the constant will map to. I'm prefixing them with an `_` to
+avoid conflicts with predefined constants in the Arduino standard library.
 
-link to header file on github.
+I'm not going to paste all this in there, but I am going to make a header file
+for it and include it in my arduino sketch to allow me to use all of these
+labels in my song code.
+
+<a href="https://github.com/urthbound/soundfromnowhere/blob/master/player/notes.h" target="_blank">It's here, if you're curious!</a>
 
 Here's another melody, using those constants:
 
 ```c
+float buddy_holly[49][2] = {
+    {_Ab3,    500.0}, {_F4,    500.0}, {_Eb4,   500.0}, {_C4,     250.0},
+    {_Ab3,    250.0}, {_Bb3,   250.0}, {_C4,    250.0}, {_Bb3,    250.0},
+    {_Ab3,    250.0}, {_F3,    500.0}, {_Eb3,   500.0}, {_REST,   500.0},
+    {_F4,     500.0}, {_Eb4,   500.0}, {_C4,    250.0}, {_Ab3,    250.0},
+    {_Bb3,    250.0}, {_C4,    250.0}, {_Bb3,   250.0}, {_Ab3,    250.0},
+    {_Bb3,    500.0}, {_REST,  500.0}, {_F3,    500.0}, {_G3,     500.0},
+    {_Ab3,    500.0}, {_Bb3,   250.0}, {_C4,    250.0}, {_F3,     250.0},
+    {_F3,     250.0}, {_Eb3,   250.0}, {_Eb3,   250.0}, {_Eb3,    125.0},
+    {_F3,     125.0}, {_Ab3,   250.0}, {_REST,  500.0}, {_Ab3,    500.0},
+    {_F4,     500.0}, {_Eb4,   250.0}, {_C4,    500.0}, {_REST,   250.0},
+    {_Ab3,    500.0}, {_REST, 1500.0}, {_Ab3,   500.0}, {_F4,     500.0},
+    {_Eb4,    250.0}, {_C4,    500.0}, {_REST,  250.0}, {_Ab3,    500.0},
+    {_REST,  1500.0}
+};
 ```
 
 If you'll notice, we're passing in absolute durations in milliseconds for each
 note. This is also kind of unwieldy, unmusical, and hard to change. A more
-musical way of approaching this would be to set a global `tempo` variable, like this:
+musical way of approaching this would be to mark each note with a constant
+representing a duration, and then modifying the existing ancillary functions to
+process that into the appropriate duration given a global tempo.
+
+I can define an `enum` in one of my header files to provide me with the 'marks':
 
 ```c
-int tempo = 120; // 120 beats per minute
+enum durs = { SIXTEENTH, EIGHTH, DOTTED_EIGHTH, QUARTER, DOTTED_QUARTER, HALF, WHOLE }
 ```
 
-Let's write a function that computes the duration in milliseconds of a quarter
-note at a given tempo:
+An `enum` is a shorthand way to define numerical constants in C/C++. The above
+could be written as:
 
 ```c
-int quarter_note_duration(tempo) {
-    return ((60 / tempo) / 4) * 1000;
+#define SIXTEENTH       0
+#define EIGHT           1
+#define DOTTED_EIGHT    2
+#define QUARTER         3
+#define DOTTED_QUARTER  4
+#define HALF            5
+#define WHOLE           6
+```
+
+As with the note macros defined above, the C preprocessor interpolates these
+integer values wherever it sees its associated token. So `EIGHTH` becomes `0`,
+and `0` is what the compiler actually sees.
+
+Now I can add a `tempo` argument to the `play_melody()` function, and define a
+helper function that computes the value of a rhythmic duration at a given
+tempo. Lickity split!
+
+```c
+int note_duration(int rhythmic_value, int tempo) {
+    // 60000ms in a minute, divided by the tempo in beats per minutes, gives us
+    // the absolute duration of a single beat. From there, dividing and
+    // multiplying the beat will return the durations of related rhythmic values.
+
+    int one_beat = 60000 / tempo
+
+    switch (rhythmic_value) {
+        case : SIXTEENTH
+            return one_beat / 4;
+        case : EIGHTH
+            return one_beat / 2;
+        case : DOTTED_EIGHTH
+            return (one_beat / 2) * 1.5;
+        case : QUARTER
+            return one_beat;
+        case : DOTTED_QUARTER
+            return one_beat * 1.5;
+        case : HALF
+            return one_beat * 2;
+        case : WHOLE
+            return one_beat * 4;
+    }
+}
+
+void play_melody(float melody[][2], size_t size_of_melody, int tempo) {
+
+    int dur = note_duration(melody[i][1], tempo)
+
+    for (int i = 0; i < size_of_melody / (sizeof(float) * 2); i++) {
+        square_wave(melody[i][0], dur);
+    }
 }
 ```
 
-Or, if you're a _math genius_:
+Now we can represent these notes as a collection of tuples, that semantically
+make a little more sense.
+
+instead of `{440.0, 500.0}` to represent an A natural quarter note, we can
+write something like `{_A4, QUARTER}` and pass in a global tempo instead of
+doing each note duration by hand.
+
+Here's how a melody looks in these tuples:
 
 ```c
-int quarter_note_duration(tempo) {
-    return 15000 / tempo;
+float happy_birthday[26][2] = {
+    { _Db3, DOTTED_EIGHTH }, { _Db3, SIXTEENTH }, { _Eb3, QUARTER }, { _Db3, QUARTER }, { _Gb3, QUARTER }, { _F3, HALF },
+    { _Db3, DOTTED_EIGHTH }, { _Db3, SIXTEENTH }, { _Eb3, QUARTER }, { _Db3, QUARTER }, { _Ab3, QUARTER }, { _Gb, HALF },
+    { _Db3, DOTTED_EIGHTH }, { _Db3, SIXTEENTH }, { _Db4, QUARTER }, { _Bb3, QUARTER }, { _Gb3, QUARTER }, { _F3, QUARTER }, { _Eb3, QUARTER },
+    { _B3, DOTTED_EIGHTH }, { _B3, SIXTEENTH }, { _Bb3, QUARTER }, { _Gb3, QUARTER }, { _Ab3, QUARTER }, { _Gb3, HALF }, { REST, QUARTER }
 }
-```
 
-Now we can define a few constants in _relation to_ the quarter note to define
-some basic units of rhythm.
-
-```c
-int tempo = [whatever tempo];
-int quarter = quarter_note_duration(tempo);
-int dotted_quarter = quarter * 1.5
-
-int eighth = quarter / 2;
-int dotted_eighth = eighth * 1.5
-
-int sixteenth = eighth / 2;
-
-int half = quarter * 2;
-int dotted_half = quarter * 3 ;
-int whole = quarter * 4;
-```
-
-This makes everything a lot more semantic! Here's Weezer's 1994 hit single, 'Buddy Holly'.
-
-```c
-buddy holly
+loop() {
+    play_melody(happy_birthday, sizeof(happy_birthday), 120);
+    play_melody(happy_birthday, sizeof(happy_birthday), 160);
+    delay(1000);
+}
 ```
 
 This little instrument never gets tired. It doesn't need to breath, and it can
