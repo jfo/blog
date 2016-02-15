@@ -3,6 +3,20 @@ title: Dynamics
 layout: post
 ---
 
+There is a problem with our design! We can't control the relative volume of the
+notes that we are producing. This is not ideal; dynamics are responsible a huge
+amount of the expressivity of music, and if we're trying to make something that
+can produce music, we should be very concerned about that.
+
+Computer music isn't often thought of as "expressive", and usually for good
+reasons. But I'd invite you to consider the fact that when you listen to a
+recording of a piece that really gets to you, you are really hearing a
+representation of an event produced by the same electronics that, in a vacuum,
+invite criticism of unemotional-ness.
+
+So, we need to figure out a way to modulate how much energy is being sent to
+the speaker! If you'll recall, the 
+
 here is where we will have to write about the nyquist theorum, sample rates,
 and what all that shit means.
 

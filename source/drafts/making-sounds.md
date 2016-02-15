@@ -735,7 +735,7 @@ loop() {
 This little instrument never gets tired. It doesn't need to breath, and it can
 play notes faster than we can hear them:
 
-```c
+```
 nonsense white noise notes with duration at 1μs or something.
 ```
 
