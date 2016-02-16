@@ -134,7 +134,7 @@ What does the program above do? It writes `HIGH` to the output pin as fast as
 it can, forever. `HIGH` is an arduino constant just like the that resolves to
 the maximum output voltage of the model of board you have, so for this one, 5v)
 
-This doesn't really do that much, but you can indeed here the telltale click:
+This doesn't really do that much, but you can indeed hear the telltale click:
 
 ... which means that a current is being applied.
 
@@ -214,7 +214,7 @@ metronome!
 
 > Why 500ms on each delay, instead of 1000ms? A cycle means that we end where
 > we started. Even though this clicks twice a second, it is still only
-> completely one cycle per second, and so is still 1Hz. Out, in, and back again.
+> completing one cycle per second, and so is still 1Hz. Out, in, and back again.
 
 A 440hz
 -------
@@ -733,7 +733,9 @@ loop() {
 ```
 
 This little instrument never gets tired. It doesn't need to breath, and it can
-play notes faster than we can hear them:
+play notes faster than we can hear them, because you know, it's a computer:
+
+![Hey kid!](https://media.giphy.com/media/5fBH6zxifuuoKgTKB3O/giphy.gif)
 
 ```
 nonsense white noise notes with duration at 1μs or something.
