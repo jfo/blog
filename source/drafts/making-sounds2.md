@@ -78,7 +78,7 @@ Why this doesn't work
 Arduino's `analogWrite()`-able pins use a technique called 'pulse width
 modulation', or PWM, to approximate analog output. If you send `0` or `255` as
 the value, it does the same this that `digitalWrite()` does for `HIGH` and
-`LOW`.  any number in between, though, and it oscillates between 0 and 255...
+`LOW`, respectively.  any number in between, though, and it oscillates between 0 and 255...
 
 explain the rest of PWM.
 
@@ -88,9 +88,19 @@ are manually doing when we are creating a square wave!
 490hz. is the standard carrier wave, so if we just `analogWrite(127);`
 continuously, we can hear that frequency come out of the speaker:
 
-This works great for lights, which are too fast for our senses to detect the
-flicker, and for motors, which move too slowly to react to the the rapid
-oscillations. 
+This works great for lights,
+
+Lights
+
+which are too fast for our senses to detect the flicker, and for motors,
+
+which move too slowly to react to the the rapid oscillations, but our ears are
+particularly sensitive to oscillations in this range, and the speaker itself is
+extremely sensitive to the changes as well. There are extremely clever ways to
+get around this... you can set the carrier wave frequency to be high above
+human hearing range (~20Hz to ~20000Hz) for example. At 60000Hz, the pulse
+width effect can be achieved without being audible. This is awesome! But I'm
+interested in achieving true digital to analog conversion
 
 here is where we will have to write about the nyquist theorum, sample rates,
 and what all that shit means.
