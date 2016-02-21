@@ -53,8 +53,8 @@ hr {
     border-top: 1px solid gray;
 }
 
-a {
-    text-decoration:none;
+.content hr {
+    width: 40%;
 }
 
 #container {
