@@ -1,6 +1,6 @@
 ---
 title: fizzbuzz in brainfuck, part two
-date: 2014/9/24
+date: 2013/9/24
 layout: post
 categories:
 - Programming

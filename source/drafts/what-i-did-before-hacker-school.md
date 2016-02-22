@@ -101,8 +101,13 @@ at the [curriculum](http://www.appacademy.io/curriculum), I saw a _whole bunch
 of idk_. But I had told myself that I was at least going to try it. I had been
 asked to do a second test, so I must not be abysmal, right?
 
-It was also during this period that I experienced my first real nerd snipe. On
-some message board or another, I found a link to the [Cue programming challenge](http://techcrunch.com/2013/03/08/programming-challenges-benefit-job-seekers-and-employers/). I had been tackling little puzzles using my nascent ruby, and as I read the first problem, I remember thinking "wow that seems really hard, but I guess if I started by..."
+It was also during this period that I experienced my first real [nerd
+snipe](https://xkcd.com/356/). On some message board or another, I found a link
+to the [Cue programming
+challenge](http://techcrunch.com/2013/03/08/programming-challenges-benefit-job-seekers-and-employers/).
+I had been tackling little puzzles using my nascent ruby, and as I read the
+first problem, I remember thinking "wow that seems really hard, but I guess if
+I started by..."
 
 I stayed up all night solving the three problems. Each solution would unlock
 the next tier. It was wicked fun! After putting in the last solution, I got a
@@ -245,10 +250,7 @@ still struggling financially, but I didn't have to work too many _hours_. I had
 a _lot_ of time, and I spent it at the Wix lounge, drinking their free coffee
 and learning to program.
 
-I spent a few weeks doing the Ruby Koans.
-
-http://rubykoans.com/
-https://github.com/urthbound/koans
+<hr>
 
 I had this idea that Rails was the "way in". That's what most of the bootcamps
 taught, after all, and I had already invested a relatively significant amount
@@ -259,7 +261,8 @@ https://www.railstutorial.org/
 
 This was interesting and I learned a lot, but I didn't have a way to
 contextualize anything yet. By the end I felt like I was just typing things in
-until they worked. That's... _a_ way to learn things?
+until they worked. That's... _a_ way to learn things, but it's not ideal, and
+not very sticky.
 
 The page that I hosted the final product on is still up, as it turns out! You
 can sign up for an account
@@ -272,10 +275,65 @@ in giant letters while I was working on it.
 Sometime in here I read
 [Code](http://www.amazon.com/Code-Language-Computer-Hardware-Software/dp/0735611319)
 which was a seminal step. Please read this book, at least the first half, it is
-amazing. It starts from nothing, from `1` and `0`, and explains what code _is_
-and how it _works_ and it's just really good and it made me understand a lot of
-things that I didn't think were accessible to me, is all. Fundamental things
-about computing and about encoding and about logic. I wrote a
+amazing. It starts from nothing, from `1`'s and `0`'s, and explains what code
+_is_ and how it _works_ and it's just really good and it made me understand a
+lot of things that I didn't think were accessible to me, is all. Fundamental
+things about computing and about encoding and about logic. I wrote a
 [post](/the-story-so-far) around this time about where I was at, and going back
 and reading it now makes me appreciate the value of writing posts at all if
-only for my future self. I'll never have access to that perspective again!
+only for my future self. I'll never have access to that particular perspective
+again.
+
+<hr>
+
+As I did these more structured things, I was also trying to stay open to small
+projects and nerd snipes as they occured to me. This can be hard to do,
+sometimes, because going off on a tangent to try some random thing out can feel
+off focus, it can feel like you're not making real progress, and just faffing
+about. But in cases where it was really something I wanted to do, and in light
+of Mary's feedback, I listened to myself. I wrote a [ruby
+gem](https://rubygems.org/gems/rubyks/versions/0.0.5) that models a
+rubik's cube, and that could solve it from an arbitrary position, and tried to
+turn it into a webapp of some sort. It became (quickly
+obvious)[https://github.com/urthbound/rubyksonrails] that rails was completely
+overkill for what I was trying to do, so I swtiched to a lightweight framework
+called [Sinatra](http://www.sinatrarb.com/) that I had read about in Peter
+Cooper's Beginning Ruby book.
+
+Using a combination of the generated 3d css from a nifty tool a friend of mine
+showed me ([tridiv](http://tridiv.com/)), Sinatra, the ruby gem I made, and a
+willingness to bang my head against something for a really long time until it
+kind of worked, I managed to make a 3d online rubik's cube simulation:
+
+http://rubykscube.herokuapp.com/
+
+I had so much fun doing this project that I followed the white rabbit straight
+into [esolang](https://esolangs.org/wiki/Main_Page)_ territory, and wrote my Fizzbuzz for my second application in
+Brainfuck, which I wrote about extensively
+[here](/fizzbuzz-in-brainfuck-part-one/), and which to this very day wins the
+prize for most pointless thing I'm most proud of accomplishing in my
+programming life.
+
+At some point a little after that I got an email about applications being open
+again at Hacker School, and I applied again. I was interviewed by
+[Allison](http://akaptur.com/) for the first round. We talked about my
+fizzbuzz; it went well. I was interviewed by Mary again for the second, pairing
+round. I was very nervous, after all, she had rejected me the first time! But
+this also put her in an excellent position to triangulate my progress. We
+looked at my Rubyks cube webapp together. I remember Mary interrupting me to
+say "Jeff, you've just improved _so much_, it's really remarkable!" and I was
+so, so happy to hear that. I still hadn't told almost anyone about what I was
+doing. It had been many months at this point; I was becoming exhausted.
+
+<hr>
+
+And that was that. A few days later, the night before my first holiday trip
+to Denmark in 2013, on the way to teaching a lesson in Soho, I got an email
+telling me I had gotten in. I was ecstatic, I may have cried a little, because
+I was being told that I was good enough, and that my work was worth something,
+and that everything was going to turn out ok, and it did.
+
+<hr>
+
+My batch started in mid-February the next year. I 
+
