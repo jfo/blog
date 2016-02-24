@@ -65,9 +65,7 @@ no way I could afford a 10-15 thousand dollar course up front, but this seemed
 doable. The very next day I applied, and they wrote back promptly with
 instructions on preparing for and taking an initial coding challenge. What they
 sent wasn't _quite_ as fleshed out as what they have available now, but basically
-it was this:
-
-http://prepwork.appacademy.io/coding-test-1/
+it was [this stuff](http://prepwork.appacademy.io/coding-test-1/).
 
 I spent a couple of weeks going through those materials and completed the
 challenge. They again got back promptly, this time asking me to do a
@@ -75,31 +73,30 @@ second one. At this point, I was pretty chuffed! I had begun to start
 thinking about this path as something that might be not only _possible_ but
 _really fun_. I hadn't told anyone but Yuri about _any_ of this yet.
 
-I went through the materials for the second challenge:
+I went through the [materials](http://prepwork.appacademy.io/coding-test-2/)
+for the second challenge.
 
-http://prepwork.appacademy.io/coding-test-2/
+I bought the books they recommended: Chris Pine's
+[Learn to Program](https://pine.fm/LearnToProgram/) and Peter Cooper's
+[Beginning Ruby](http://peterc.org/beginningruby/)
 
-I bought the books they recommended:
+I worked through them voraciously. I think they also recommended
+[tryruby.com](http://tryruby.com),
+and I found that to be really helpful, as well. And at some point I found
+[Why's Poignant Guide](http://poignant.guide), which is a little dated now but
+is still a really sweet and weird book.
 
-https://pine.fm/LearnToProgram/
 
-http://peterc.org/beginningruby/
-
-I worked through them voraciously. I think they also recommended tryruby.com,
-and I found that to be really helpful, as well. As was Why's poignant guide,
-which is still a really sweet anomaly of a pedagogical sugar cube.
-
-http://poignant.guide/
-
-> it is particularly awesome that this is still available, as the author has
+> It is particularly awesome that this is still available, as the author has
 > since disappeared from public (internet public, at least), life. There is a
 > longform article about it
 > [here](http://www.slate.com/articles/technology/technology/2012/03/ruby_ruby_on_rails_and__why_the_disappearance_of_one_of_the_world_s_most_beloved_computer_programmers_.html)_
 
 It was a lot all at once, and it was very overwhelming at times. When I looked
 at the [curriculum](http://www.appacademy.io/curriculum), I saw a _whole bunch
-of idk_. But I had told myself that I was at least going to try it. I had been
-asked to do a second test, so I must not be abysmal, right?
+of idk_ and quite a bit of _wtf_. But I had told myself that I was at least
+going to try it. I had been asked to do a second test, so I must not be
+abysmal, right?
 
 It was also during this period that I experienced my first real [nerd
 snipe](https://xkcd.com/356/). On some message board or another, I found a link
@@ -107,13 +104,14 @@ to the [Cue programming
 challenge](http://techcrunch.com/2013/03/08/programming-challenges-benefit-job-seekers-and-employers/).
 I had been tackling little puzzles using my nascent ruby, and as I read the
 first problem, I remember thinking "wow that seems really hard, but I guess if
-I started by..."
+I started by doing _x_ and then did _y_..."
 
 I stayed up all night solving the three problems. Each solution would unlock
 the next tier. It was wicked fun! After putting in the last solution, I got a
-prompt asking me to send in my resume. This is when I really decided that being
-a programmer was something that I was capable of, and that it was something
-that I would enjoy.
+prompt asking me to send in my resume; I had had no idea it was a job screen,
+at all! This is when I realized that being a programmer was something
+that I was capable of, and that it was something that I would enjoy, and that
+it was something that I could do for a job.
 
 There was no deadline for the second challenge, so I spent about 3 months
 working through all those resources. I didn't want to half ass it.
@@ -121,11 +119,7 @@ working through all those resources. I didn't want to half ass it.
 > I want to note here that all of this was Ruby. That's why I learned Ruby first.
 > I really like Ruby. I still like Ruby; it's still the first thing I reach for
 > when just sketching out ideas. I would recommend Python or Ruby as a
-> great first language to anyone. Certainly not Java. What are CS programs
-> thinking, with Java as a first language? That's awful. It's like learning to
-> ride a bike by building a motorcycle. I mean, sure the motorcycle is faster
-> and better for driving on enterprise freeways and all, but ffs just ride a
-> trike around the cul-de-sac for a little while first, you know?
+> great first language to anyone.
 
 Finally, I took the second challenge, and though I don't think I _bombed_ it,
 exactly, I didn't do that great, either. I wasn't invited to an interview. This
@@ -135,34 +129,23 @@ been my understanding.
 
 I had been doing research about other bootcamps and programs this whole time.
 Most of them were pay up front, which made them impossible for me to attend.
-But one of them wasn't, because one of them was Hacker School.
+But one of them wasn't, because one of them was Hacker School, and Hacker
+School is free, completely and no strings attached _free_ to attend.
 
 I don't remember how I found them first. There aren't _that_ many things
-online. I do remember finding this video:
+online. I do remember finding this [video](https://www.youtube.com/watch?v=Jds52EW1yzM)
+and being really inspired by it.
 
-https://www.youtube.com/watch?v=Jds52EW1yzM
+And then I read their [manual](https://www.recurse.com/manual), which really,
+really resonated, and I decided to apply.
 
-And being really inspired by it.
-
-> Yay Bethany! I work with her now, Isn't that a hoot?
-
-And then I read their manual:
-
-https://www.recurse.com/manual
-
-Which really, really resonated.
-
-RC has (and had) very different application criteria.
-
-https://www.recurse.com/apply/retreat
+RC has (and had) very different [application criteria](https://www.recurse.com/apply/retreat).
 
 Some semi-open ended get to know you prompts, a basic Fizzbuzz code screen, and
 linking to a project that you built from scratch. I hadn't built any projects
 from scratch, so I spent a few weeks building a program that could compute some
 of the chord structures that Yuri's bash one liner could output, and display
-them via ASCII art.
-
-https://github.com/urthbound/chorder
+them via ASCII art. I called it [Chorder](https://github.com/urthbound/chorder).
 
 RC at the time had a three step process.  Initial application screening, and
 then two skype interviews- the first just a chat about your background and
@@ -335,5 +318,5 @@ and that everything was going to turn out ok, and it did.
 
 <hr>
 
-My batch started in mid-February the next year. I 
+My batch started in mid-February the next year. I
 
