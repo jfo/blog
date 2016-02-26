@@ -80,6 +80,8 @@ wasn't worth working on it when I was so much more interested in other things,
 so I let it lie. I had gotten an enormous amount out of it, and most of what I
 wanted from it was in the low level parts anyway.
 
+<hr>
+
 The second week I spent a day or so worrying about whether or not I should
 switch to Python. There were really only a few other Ruby people in my batch-
 it seemed like everyone else did python, and it was stressing me out. How could
@@ -183,7 +185,9 @@ There was some more Euler solving, and some more pairing, and even some just
 plain old hanging out. It was an amazing group of people from an impressively
 wide array of backgrounds, many if not most of which had very little to do with
 programming. There were at least half a dozen Phd's, including one who had been
-a tenured professor before, I can only assume, catching a wild hair for the
+a tenured professor before.
+
+> I can only assume, catching a wild hair for the
 programming bug, to mix my 隐喻
 
 I was still teaching music throughout all of this; I had _just enough_ students
@@ -194,5 +198,5 @@ those, but there was nothing I could do about it. The presentations are so fun
 and so interesting and for some people it is the only time that they _really_
 put themselves out there.
 
-I was also lucky to 
+<hr>
 

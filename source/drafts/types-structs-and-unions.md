@@ -33,8 +33,8 @@ perspective, this memory is it's entire universe.
 
 There isn't much you can represent with binary atomic values like 1 and 0. In
 fact, you can only represent like, max 2 things. Hamburgers (1) and hotdogs (0)
-maybe, or donuts (0) and jetskis (1), or, idk, true (1) and false (0). Whatever. We need to be able to represent
-_way_ more than two things.
+maybe, or donuts (0) and jetskis (1), or, idk, true (1) and false (0).
+Whatever. We need to be able to represent _way_ more than two things.
 
 if we group bits together and look at them as little contiguous units, we can
 do that. If we always read them two at a time, suddenly we can represent 4
@@ -90,7 +90,7 @@ hand, for a total of 8 fingers?
 10 11 12 13 14 15 16 17 20
 ```
 
-That would be a base of 8. Or how about 2 fingers on one hand and 1 on the other?
+That would be a base of 8. Or how about 3 fingers on one hand and 0 on the other?
 
 ```
  0  1  2 10
@@ -111,7 +111,7 @@ the empty count on the next set up, like when you get to the 10s and 20s and
 
 > It's important to pause here to point out again that what a collection of
 bits represents really is arbitrary, we can map it to anything we want, as long
-as we all agree on that mapping. MAYBE LINK TO ASCII SOMETHING Just keep this
+as we all agree on that [mapping](http://www.asciitable.com/). Just keep this
 in mind when we talk about types.
 
 You might notice that which each added bit, we double the amount of things we could
@@ -129,12 +129,12 @@ represent.
 64 = 2^64 = 18446744073709551616 things!!!!!! ZOMG  . * ･ ｡ﾟ☆━੧༼ •́ヮ•̀ ༽୨
 ```
 
-Remember, these are _bits_. A bit is one tiny piece of information: 1 or 0. A lot
-of times we will also talk about _bytes_, which are chunks of 8 bits. 2 bytes are 16
-bits, 8 bytes are 64 bits, etc. _One_ byte is 8 bits, which can represent 256
-things (`2^8`). If that rings a bell, maybe you've worked with digital imagry,
-where often the most saturated value in an RGB channel is represented as `255`
-(the `256th` value is `0`!)
+Remember, these are _bits_. A bit is one tiny piece of information: 1 or 0. A
+lot of times we will also talk about _bytes_, which are chunks of 8 bits. 2
+bytes are 16 bits, 8 bytes are 64 bits, etc. _One_ byte is 8 bits, which can
+represent 256 things (`2^8`). If that number rings a bell, maybe you've worked
+with digital imagry, where often the most saturated value in an RGB channel is
+represented as `255` (the `256th` value is `0`!)
 
 Let's look at a little C program.
 
@@ -148,10 +148,11 @@ int main() {
 }
 ```
 
-Notice the variable declaration `int x;`. This program sets aside some space in the memory for `x`, which we are telling
-the program is an `int`. That's what declaring a variable does; whether or not
-you assign it any value (this program does not do that, `x` has not been
-initialized to any value, and so is _uninitialized_), it sets aside that space.
+Notice the variable declaration `int x;`. This program sets aside some space in
+the memory for `x`, which we are telling the program is an `int`. That's what
+declaring a variable does; whether or not you assign it any value (this program
+does not do that, `x` has not been initialized to any value, and so is
+_uninitialized_), it sets aside that space.
 
 In C, the typing of a variable determines an appropriate amount of memory to
 use for that variable's value. In the above example, the `sizeof` operator
@@ -207,4 +208,4 @@ like this, with a bunch of leading zeroes:
 00000000000000000000000000000111 Seven
 ```
 
-We never write it down that way.
+We never write it down that way, of course.
