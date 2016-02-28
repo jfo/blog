@@ -8,10 +8,10 @@ notes that we are producing. This is not ideal; dynamics are responsible a huge
 amount of the expressivity of music, and if we're trying to make something that
 can produce music, we should be concerned about that.
 
-Computer music isn't often thought of as "expressive", but I'd invite you to
-consider the fact that when you listen to a recording of a piece that really
-gets to you, you are actually hearing a representation of an event produced by
-the same electronics that, in a vacuum, invite criticism of unemotional-ness.
+> Computer music isn't often thought of as "expressive", but I'd invite you to
+> consider the fact that when you listen to a recording of a piece that really
+> gets to you, you are actually hearing a representation of an event produced by
+> the same electronics that, in a vacuum, invite criticism of unemotional-ness.
 
 So, we need to figure out a way to modulate how much energy is being sent to
 the speaker! Up until now we have been using a digital output pin which can
@@ -78,46 +78,53 @@ Why this doesn't work
 Arduino's `analogWrite()`-able pins use a technique called 'pulse width
 modulation', or PWM, to approximate analog output. If you send `0` or `255` as
 the value, it does the same this that `digitalWrite()` does for `HIGH` and
-`LOW`, respectively.  any number in between, though, and it oscillates between 0 and 255...
+`LOW`, respectively.  any number in between, though, and it oscillates between
+0 and 255 very very quickly, and adjusts the _duty cycle_ of the output to
+approximate an analog value.
 
-explain the rest of PWM.
+So, if I output a steady `analogWrite(127)` like this:
+
+```c
+void loop() {
+    analogWrite(OUTPIN, 127);
+}
+```
+
+I'm actually outputting `255`, or `HIGH`, half the time, and `LOW`, or `0`, the
+other half of the time. Similarly, some value like `analogWrite(50)` would be
+`HIGH` _about_ 1/5th of the time and `LOW` 4/5ths of the time. They would look like this:
+
+PHOTO
 
 If this sounds familiar, it's because it is doin exactly the same thing as we
-are manually doing when we are creating a square wave!
+are manually doing when we are creating a wave!  The 'pulse' in 'pulse width
+modulation' _is a square wave itself_. You might be able to guess now, why the
+"analog" output of out wave above wasn't working, because the wave we're trying
+to output is interfering with the _carrier wave_ of the pulse width modulation.
 
-490hz. is the standard carrier wave, so if we just `analogWrite(127);`
-continuously, we can hear that frequency come out of the speaker:
+On an arduino uno's 'analog' pins, 490hz. is the standard carrier wave, so if
+we just `analogWrite(127);` continuously, like above, we can hear that
+frequency come out of the speaker:
 
-This works great for lights,
+This works great for lights, because our eyes aren't sensitive enough to notice
+the flickering, and we perceive it as a dimmed light.
 
-Lights
+It also works for motors:
 
-which are too fast for our senses to detect the flicker, and for motors,
+which move too slowly to physically react to the the rapid oscillations.
 
-which move too slowly to react to the the rapid oscillations, but our ears are
-particularly sensitive to oscillations in this range, and the speaker itself is
-extremely sensitive to the changes as well. There are extremely clever ways to
-get around this... you can set the carrier wave frequency to be high above
-human hearing range (~20Hz to ~20000Hz) for example. At 60000Hz, the pulse
-width effect can be achieved without being audible. This is awesome! But I'm
-interested in achieving true digital to analog conversion
+Our ears, though, are particularly sensitive to oscillations in this range, and
+the speaker itself is extremely sensitive to the changes as well. There are
+clever ways to get around this... you can set the carrier wave frequency to be
+high above human hearing range (which is, at most, ~20Hz to ~20000Hz) for
+example.  At 60000Hz, the pulse width effect can be achieved without being
+audible. This is awesome! But I'm interested in true digital to analog
+conversion, so I'm going to do something else.
 
-here is where we will have to write about the nyquist theorum, sample rates,
-and what all that shit means.
+<hr>
 
 how are we going to send a variable amount of energy through the speaker at
 such an amazingly controlled rate> HOW?
-
-At first I tried puls width modulation. This would work fine for a led, but
-because the CARRIER WAVE frequency actually interacts destructively with the
-output frequency, it sounds like absoulute ASS! Some solutions to this include
-making a circuit that have a band filter on it, and the carrier freq would be
-filtered out of that way, but if our goal is hi-fi audio. this is leass than
-ideal.
-
-a note here is that we have been using just the output voltage of the arduino,
-which is also kind of silly. Normally we would want a high-Z output that was
-consistent and send it through an amplifier, we will probably get to that.
 
 instead of a PWM, which works fine for motors and other things like that, let's
 explore a concept called an R2R resistance ladder. Incredibly, we get a really

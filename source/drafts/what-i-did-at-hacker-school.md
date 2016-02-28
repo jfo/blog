@@ -69,7 +69,7 @@ old. I hadn't done too much pairing before RC and it was something I wanted to
 get a lot better at, so this was an auspicious start. We didn't win the
 contest, but if I recall correctly we came in a respectably in the middle of the pack.
 More importantly, it was a lot of fun, and it was the first time I went out _in
-public_ and looked a stranger right in the _eye_ and told them I was a programmer.
+public_ and looked a stranger _right in the eyes_ and told them I was a programmer.
 That was a pretty big step.
 
 The rest of that first week I waffled between trying to decide what to work on
@@ -143,7 +143,7 @@ sizable subgroup of my batch that was into it. It is a lisp, and traditionally,
 lisps have been used in generative music research. Also lisp was very exotic
 and seemed really hard, and trying things that would normally seem too hard is
 one of the things they told us to do in our batch. Unlike my hemming and hawing
-about python and ruby, clojure is _actually_ different from anything I had donec\w
+about python and ruby, clojure is _actually_ different from anything I had done
 before... a completely different paradigm- both syntactically (zomg parens
 amirite?) and functionally (functionally). The ruby koans worked for me, and I
 found the [Clojure Koans](http://clojurekoans.com/) pretty approachable as
@@ -184,11 +184,7 @@ popular project as they are of a pretty contained scope and immediately useful.
 There was some more Euler solving, and some more pairing, and even some just
 plain old hanging out. It was an amazing group of people from an impressively
 wide array of backgrounds, many if not most of which had very little to do with
-programming. There were at least half a dozen Phd's, including one who had been
-a tenured professor before.
-
-> I can only assume, catching a wild hair for the
-programming bug, to mix my 隐喻
+programming. There were at least half a dozen Phd's.
 
 I was still teaching music throughout all of this; I had _just enough_ students
 to keep my rent paid. But it meant that I usually had to miss most if not all
@@ -196,7 +192,7 @@ of the Thursday night presentations, where my co-recursers would talk about
 what they were working on and what they had made. I really regretted missing
 those, but there was nothing I could do about it. The presentations are so fun
 and so interesting and for some people it is the only time that they _really_
-put themselves out there.
+put themselves out there and share the cool things they've been learning.
 
 <hr>
 

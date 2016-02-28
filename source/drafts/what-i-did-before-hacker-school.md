@@ -1,5 +1,5 @@
 ---
-title: What I did before Hacker School
+title: What I did before Recurse Center
 layout: post
 ---
 
@@ -9,6 +9,12 @@ But I never wrote about _how I got there_. Which, if I were me reading my own
 post a year prior, I would, like, you know, really wanted to have known _that_. I've been
 meaning to write this post for _years_ now, which is ridiculous, but better
 late than never?
+
+This is written very procedurally: I did this, then this happened, then I did
+that. I don't mean to give the impression that it wasn't difficult, or that I never
+questioned what I was doing, because I did, a lot. And it was one of the more
+difficult things I've done in my life, most likely. But this post isn't about
+that part of the process, it's just about _what_ I did in that almost a year.
 
 <hr>
 
@@ -20,7 +26,7 @@ Qbasic class I took in probably 4th grade, and the only program I could remember
 20 GOTO 10
 ```
 
-Or something.
+Or something like that.
 
 The very first thing that got my wheels turning on this- it was around January
 of 2013 or so, maybe... I was working on permutations of different four voiced
@@ -90,7 +96,7 @@ is still a really sweet and weird book.
 > It is particularly awesome that this is still available, as the author has
 > since disappeared from public (internet public, at least), life. There is a
 > longform article about it
-> [here](http://www.slate.com/articles/technology/technology/2012/03/ruby_ruby_on_rails_and__why_the_disappearance_of_one_of_the_world_s_most_beloved_computer_programmers_.html)_
+> [here](http://www.slate.com/articles/technology/technology/2012/03/ruby_ruby_on_rails_and__why_the_disappearance_of_one_of_the_world_s_most_beloved_computer_programmers_.html)
 
 It was a lot all at once, and it was very overwhelming at times. When I looked
 at the [curriculum](http://www.appacademy.io/curriculum), I saw a _whole bunch
@@ -116,10 +122,13 @@ it was something that I could do for a job.
 There was no deadline for the second challenge, so I spent about 3 months
 working through all those resources. I didn't want to half ass it.
 
-> I want to note here that all of this was Ruby. That's why I learned Ruby first.
+> I want to note here that _all of this_ was Ruby. That's why I learned Ruby first.
 > I really like Ruby. I still like Ruby; it's still the first thing I reach for
 > when just sketching out ideas. I would recommend Python or Ruby as a
-> great first language to anyone.
+> great first language to anyone, but between the two of them I started with
+> Ruby because almost all the bootcamps taught Ruby and App Academy taught Ruby
+> and all of their preperation materials were in Ruby. It would probably have
+> been Python if not for these factors. It doesn't really matter.
 
 Finally, I took the second challenge, and though I don't think I _bombed_ it,
 exactly, I didn't do that great, either. I wasn't invited to an interview. This
@@ -129,25 +138,28 @@ been my understanding.
 
 I had been doing research about other bootcamps and programs this whole time.
 Most of them were pay up front, which made them impossible for me to attend.
-But one of them wasn't, because one of them was Hacker School, and Hacker
-School is free, completely and no strings attached _free_ to attend.
+But one of them wasn't, because one of them was the Recurse Center, and the
+Recurse Center is free, completely and no strings attached _free_ to attend.
 
 I don't remember how I found them first. There aren't _that_ many things
 online. I do remember finding this [video](https://www.youtube.com/watch?v=Jds52EW1yzM)
 and being really inspired by it.
 
 And then I read their [manual](https://www.recurse.com/manual), which really,
-really resonated, and I decided to apply.
+really resonated for me, and I decided to apply.
+
+<hr>
 
 RC has (and had) very different [application criteria](https://www.recurse.com/apply/retreat).
 
-Some semi-open ended get to know you prompts, a basic Fizzbuzz code screen, and
+Some semi-open ended get to know you prompts, a Fizzbuzz code screen, and
 linking to a project that you built from scratch. I hadn't built any projects
 from scratch, so I spent a few weeks building a program that could compute some
 of the chord structures that Yuri's bash one liner could output, and display
-them via ASCII art. I called it [Chorder](https://github.com/urthbound/chorder).
+them via ASCII art. I called it [Chorder](https://github.com/urthbound/chorder)
+and it used a GUI library that I found out later was by why the lucky stiff.
 
-RC at the time had a three step process.  Initial application screening, and
+At the time, RC had a three step process.  Initial application screening, and
 then two skype interviews- the first just a chat about your background and
 goals and the second a pairing session with one of the facilitators on
 something that you were working on.
@@ -158,9 +170,9 @@ on while I was there, and waited. I got a first interview. I talked to
 wasn't invited to do a second interview. I was even more disappointed this
 time, I had started to develop an attachment to the idea of this possibility.
 
-I had asked explicitly if it was possible to reapply, and she had said that
-people often do improve and get in on a second attempt, so I sent Mary a follow
-up email, asking for feedback.
+While talking to Mary, I had asked explicitly if it was possible to reapply,
+and she had said that people often do improve and get in on a second attempt.
+So I sent Mary a follow up email, asking for feedback.
 
 A few days later she wrote back. Posted with her permission:
 
@@ -181,7 +193,8 @@ _way_ out of my way to emphasize the projects I had ideas about working on, beca
 I thought that that would show that I had direction, and plans! The truth is
 that when I _really_ get interested in something, I just kind of want to dive in and
 meander around in it and try to learn about it through trial and error, but I
-had spent so many years in institutions where this approach is looked down on!
+had spent so many years in institutions where this approach is looked down on,
+that I thought it would better to deemphasize that.
 
 I decided then that I would reapply for both App Academy and the Recurse Center
 for their next cohorts. I figured I had about 4 or 6 months to focus on
@@ -210,19 +223,21 @@ the overhead of providing focused, thoughtful feedback for _every single
 application_ was not possible. This is a bummer, yes, but I do understand it.
 
 Third, and most importantly, this timeline allowed me to set aside the myriad
-doubts and worries I had about the whole endeavor for a few months, and to just
+doubts and worries I had about the whole thing for a few months, and to just
 focus on programming _only_. I decided that I would spend that time, that 4-6
 months, learning as much as I could, and if I didn't get in again, well, then
-I'd reassess. Normally I wouldn't have been able to do this!
+I'd reassess, at at least I would have learned some new skills. Normally I
+wouldn't have been able to do this, normally I would waffle back and forth
+about what the point of it was.
 
 <hr>
 
-And so I spent those 4 months _working my ass off_. I treated it very much like
-a job, I spent at least 8 hours a day studying. I found out about the [Wix
-lounge](http://www.wix.com/lounge/new-york) which, at the time, was free to
-anyone anytime working on pretty much anything. This was pretty wild, but such
-a godsend! To have a place to go to for this expressed purpose was so helpful
-to help me focus!
+And so I spent what turned out to be those 4 months _working my ass off_. I
+treated it very much like a job, I spent at least 8 hours a day studying. I
+found out about the [Wix lounge](http://www.wix.com/lounge/new-york) which, at
+the time, was free to anyone anytime working on pretty much anything. This was
+pretty wild, but such a godsend! To have a place to go to for this expressed
+purpose was so helpful to help me focus!
 
 Nobody was supporting me during this period. I had no trust fund, and no
 savings, and no work save the work I made or found for myself. I did random
@@ -237,20 +252,16 @@ and learning to program.
 
 I had this idea that Rails was the "way in". That's what most of the bootcamps
 taught, after all, and I had already invested a relatively significant amount
-of time learning Ruby, so  I spent a month or so working through Michael
-Hartl's Rails tutorial
-
-https://www.railstutorial.org/
+of time learning Ruby, so  I spent a month or so working through [Michael
+Hartl's Rails tutorial](https://www.railstutorial.org/).
 
 This was interesting and I learned a lot, but I didn't have a way to
-contextualize anything yet. By the end I felt like I was just typing things in
-until they worked. That's... _a_ way to learn things, but it's not ideal, and
-not very sticky.
+contextualize anything yet. It moves pretty fast, so by the end I felt like I
+was just typing things in until they worked. That's... _a_ way to learn things,
+but it's not ideal, and not very sticky.
 
 The page that I hosted the final product on is still up, as it turns out! You
-can sign up for an account
-
-https://derplederp.herokuapp.com/
+can sign up for an account [here](https://derplederp.herokuapp.com/).
 
 I named it "Derple Derp" so that my screen didn't just always say "SAMPLE APP"
 in giant letters while I was working on it.
@@ -270,7 +281,7 @@ again.
 <hr>
 
 As I did these more structured things, I was also trying to stay open to small
-projects and nerd snipes as they occured to me. This can be hard to do,
+projects and nerd snipes as they occured to me. This can be hard to do
 sometimes, because going off on a tangent to try some random thing out can feel
 off focus, it can feel like you're not making real progress, and just faffing
 about. But in cases where it was really something I wanted to do, and in light
@@ -286,16 +297,14 @@ Cooper's Beginning Ruby book.
 Using a combination of the generated 3d css from a nifty tool a friend of mine
 showed me ([tridiv](http://tridiv.com/)), Sinatra, the ruby gem I made, and a
 willingness to bang my head against something for a really long time until it
-kind of worked, I managed to make a 3d online rubik's cube simulation:
-
-http://rubykscube.herokuapp.com/
+kind of worked, I managed to make a 3d online rubik's cube [simulation](http://rubykscube.herokuapp.com/)
 
 I had so much fun doing this project that I followed the white rabbit straight
-into [esolang](https://esolangs.org/wiki/Main_Page)_ territory, and wrote my Fizzbuzz for my second application in
-Brainfuck, which I wrote about extensively
-[here](/fizzbuzz-in-brainfuck-part-one/), and which to this very day wins the
-prize for most pointless thing I'm most proud of accomplishing in my
-programming life.
+into [esolang](https://esolangs.org/wiki/Main_Page)_ territory, and wrote my
+Fizzbuzz for my second application in Brainfuck, which I wrote about
+extensively [here](/fizzbuzz-in-brainfuck-part-one/), and which to this very
+day wins the prize for most pointless thing I'm most proud of accomplishing in
+my programming life.
 
 At some point a little after that I got an email about applications being open
 again at Hacker School, and I applied again. I was interviewed by
@@ -318,5 +327,6 @@ and that everything was going to turn out ok, and it did.
 
 <hr>
 
-My batch started in mid-February the next year. I
-
+My batch started in mid-February the next year. I never did reapply to App
+Academy.  I think it would have been good, but I'm glad things worked out the
+way they did.
