@@ -123,15 +123,43 @@ conversion, so I'm going to do something else.
 
 <hr>
 
-how are we going to send a variable amount of energy through the speaker at
-such an amazingly controlled rate> HOW?
+Instead of a PWM, let's explore a thing called an R2R resistance ladder, which looks like this:
 
-instead of a PWM, which works fine for motors and other things like that, let's
-explore a concept called an R2R resistance ladder. Incredibly, we get a really
-clean way to turn binary output into an apporpriate amount of voltage anywhere
-between 0-1 with an arbitrary max value. the resolution of that is limited only
-by the bit depth. Right now we're going to use 8 bits, so we should be able to
-quite easily make sounds that sound like nintendo shit.
+
+This turns out to be a really clean way to turn multiple-bit binary output into
+an _actually analog_ amount of voltage between whatever `HIGH` and `LOW` is.
+
+Here's how it works. It has 8 digital inputs, and 1 analog output. The first
+input goes through three resistors, effectively halving it's output. So if it's
+outputting a steady stream of 5v, after going through those two resistors it
+would be outputting 2.5v. The next input goes through these same 3 resistors,
+but _also_ goes through two more, halving that as well, _again_. The first, or
+_most significant bit_ input is worth 2.5v, and the second most significant bit
+input is worth 1.25v. Stopping there, with a two bit version, we could
+potentially output any of these 4 values:
+
+```
+00 = 0v
+01 = 1.25v
+10 = 2.5v
+11 = 3.75v
+```
+
+The more bits we have, the higher the resolution of our output and the more
+precise we can be, by using different combinations of the output pins. I'm
+attempting an 8 bit analog output, which would mean the eight pins would be
+worth about this much each (zero indexed):
+
+```
+0 = 2.5 volts
+1 = 1.25 volts
+2 = 0.625 volts
+3 = 0.3125 volts
+4 = 0.15625 volts
+5 = 0.078125 volts
+6 = 0.0390625 volts
+7 = 0.01953125 volts
+```
 
 but we have to either compute the next sample in a series, OR use a wavetable,
 OR send in values from an external source (need to use buffers, etc)

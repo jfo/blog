@@ -132,9 +132,9 @@ represent.
 Remember, these are _bits_. A bit is one tiny piece of information: 1 or 0. A
 lot of times we will also talk about _bytes_, which are chunks of 8 bits. 2
 bytes are 16 bits, 8 bytes are 64 bits, etc. _One_ byte is 8 bits, which can
-represent 256 things (`2^8`). If that number rings a bell, maybe you've worked
+represent 256 things (2<sup>8</sup>). If that number rings a bell, maybe you've worked
 with digital imagry, where often the most saturated value in an RGB channel is
-represented as `255` (the `256th` value is `0`!)
+represented as `255` (the `1st` value is `0`, so the last is 1 less than 2<sup>8</sup>!)
 
 Let's look at a little C program.
 
@@ -143,7 +143,7 @@ Let's look at a little C program.
 
 int main() {
     int x;
-    printf("%lu", sizeof x);
+    printf("%d", sizeof x);
     return 0;
 }
 ```
@@ -174,24 +174,27 @@ maximum of `4294967296` things.
 > bit_ as a flag to mark a number as negative (1) or positive (0). In our above
 > example, as a signed int, x can be initialized to a value between -2147483648
 > and 2147483647 (they are one off of each other to account for 0), which is
-> 1/2 of 4294967296 and also is equal to 2^31 (because that one bit is used as
+> 1/2 of 4294967296 and also is equal to 2<sup>31</sup> (because that one bit is used as
 > the sign: 32 - 1 = 31).
 
 `int`s, on my machine, are 4 bytes long.
 
-Remember- `x` here is still _uninitialized_ If you try to actually _use_ an
-uninitialized variable, you'll get a warning, something like this:
+Remember- `x` here is _declared_ but still _uninitialized_ If you try to
+actually _use_ an uninitialized variable, you'll get a warning, something like
+this:
 
 ```
 filename.c:6:19: warning: variable 'x' is uninitialized when used here
-    printf("%i", x);
+    printf("%d", x);
 ```
 
 Though you haven't assigned `x` to anything, that line _will_ print out a
 value. That value is junk data; it's whatever happened to be in the slot that
 was set aside for x, but since x was not initialized, that slot had residual,
-junk data inside of it. It will also be different each time you run the
+junk data inside of it. It will also likely be different each time you run the
 program, since memory allocation occurs at runtime.
+
+<hr>
 
 Knowing that an int is 32 bits long is valuable information. Remember before,
 when we looked at our 3 bit possibilities? Well, that actually would look more
@@ -208,4 +211,3 @@ like this, with a bunch of leading zeroes:
 00000000000000000000000000000111 Seven
 ```
 
-We never write it down that way, of course.

@@ -34,10 +34,50 @@ value, and a pointer to the location of the next node.
 
 In C
 
+
+sections notes;
+
+what is a list.
+a string is a kind of a list, as is an array when we declare it, but that always
+assumes consecutive memory spaces, which is also why they have to be the same
+size. We want to malloc our own list.
+
+a linked list has two things in it, a value, ad a pointer to the next cell. If
+the pointer to the next cell is null, then that is the end of the list.
+
+make out of a struct.
+
 ```c
-struct node {
-    int value;
-    struct node * next;
+struct cell {
+    char value;
+    struct cell * cell;
 }
 ```
 
+Now this looks something like
+
+```
+[1][->]
+```
+
+Let's start by ingesting a list of chars. It seems like it would be simpler to
+start with numbers, but really because we are starting from a string, we are
+already dealing with chars, we just want to get them into a linked list from a
+C string.
+
+`a b c d`
+
+we want a function that reads each character, and copies it into our linked
+list structure.
+
+that's nice, but we want more than just the basic character set by itself. it
+would be better if the value in our cell could be a raw c string, and let's
+also change the name of the value to `label`, since we are only dealing with
+strings right now and that is more accurate.
+
+```c
+struct cell {
+    char* label;
+    struct cell * next;
+}
+```
