@@ -33,8 +33,9 @@ perspective, this memory is it's entire universe.
 
 There isn't much you can represent with binary atomic values like 1 and 0. In
 fact, you can only represent like, max 2 things. Hamburgers (1) and hotdogs (0)
-maybe, or donuts (0) and jetskis (1), or, idk, true (1) and false (0).
-Whatever. We need to be able to represent _way_ more than two things.
+maybe, or donuts (0) and jetskis (1), true (1) and false (0), or hell...
+true(0) and false(1).  Whatever. We need to be able to represent _way_ more
+than two things.
 
 if we group bits together and look at them as little contiguous units, we can
 do that. If we always read them two at a time, suddenly we can represent 4
@@ -112,29 +113,30 @@ the empty count on the next set up, like when you get to the 10s and 20s and
 > It's important to pause here to point out again that what a collection of
 bits represents really is arbitrary, we can map it to anything we want, as long
 as we all agree on that [mapping](http://www.asciitable.com/). Just keep this
-in mind when we talk about types.
+in mind.
 
 You might notice that which each added bit, we double the amount of things we could
-represent.
+represent. Here, `**` means "to the nth power"
 
 ```
-1 = 2^1 = 2 things
-2 = 2^2 = 4 things
-3 = 2^3 = 8 things
+1 = 2**1 = 2 things
+2 = 2**2 = 4 things
+3 = 2**3 = 8 things
 .
-8 = 2^8 = 256 things!
+8 = 2**8 = 256 things!
 .
-32 = 2^32 = 4294967296 things!!!
+32 = 2**2 = 4294967296 things!!!
 .
-64 = 2^64 = 18446744073709551616 things!!!!!! ZOMG  . * ･ ｡ﾟ☆━੧༼ •́ヮ•̀ ༽୨
+64 = 2**64 = 18446744073709551616 things!!!!!! ZOMG  . * ･ ｡ﾟ☆━੧༼ •́ヮ•̀ ༽୨
 ```
 
 Remember, these are _bits_. A bit is one tiny piece of information: 1 or 0. A
-lot of times we will also talk about _bytes_, which are chunks of 8 bits. 2
-bytes are 16 bits, 8 bytes are 64 bits, etc. _One_ byte is 8 bits, which can
-represent 256 things (2<sup>8</sup>). If that number rings a bell, maybe you've worked
-with digital imagry, where often the most saturated value in an RGB channel is
-represented as `255` (the `1st` value is `0`, so the last is 1 less than 2<sup>8</sup>!)
+lot of times we will also talk about _bytes_, which are chunks of 8 bits. This
+means that 2 bytes are 16 bits, 8 bytes are 64 bits, etc. _One_ byte is 8 bits,
+which can represent 256 things (2<sup>8</sup>). If that number rings a bell,
+maybe you've worked with digital imagry, where often the most saturated value
+in an RGB channel is represented as `255` (the `1st` value is `0`, so the last
+is 1 less than 2<sup>8</sup>!)
 
 Let's look at a little C program.
 
@@ -143,7 +145,7 @@ Let's look at a little C program.
 
 int main() {
     int x;
-    printf("%d", sizeof x);
+    printf("%d", sizeof(x));
     return 0;
 }
 ```
@@ -151,7 +153,7 @@ int main() {
 Notice the variable declaration `int x;`. This program sets aside some space in
 the memory for `x`, which we are telling the program is an `int`. That's what
 declaring a variable does; whether or not you assign it any value (this program
-does not do that, `x` has not been initialized to any value, and so is
+does not do that, `x` has not been initialized to a value, and so is
 _uninitialized_), it sets aside that space.
 
 In C, the typing of a variable determines an appropriate amount of memory to
@@ -163,9 +165,9 @@ that an int uses, which in this case is:
 4
 ```
 
-4 bytes is 32 bits, so an `int` on my machine (this can vary by machine!) takes
-up 32 bits. looking at the table above, 32 bits (4 bytes) can represent a
-maximum of `4294967296` things.
+4 bytes is 32 bits, so a regular, run of the mill `int` on my machine (this can
+vary by machine!) takes up 32 bits. looking at the table above, 32 bits (4
+bytes) can represent a maximum of `4294967296` things.
 
 ><h4>Signed vs Unsigned Integers</h4>
 > Though 32 bits can represent `4294967296` things, it doesn't necessarily
@@ -211,3 +213,7 @@ like this, with a bunch of leading zeroes:
 00000000000000000000000000000111 Seven
 ```
 
+Types
+-----
+
+So, 

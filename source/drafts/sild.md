@@ -10,7 +10,7 @@ talk to you at parties... it really stuck with me. People who like lisp
 _really_ like lisp, and I wanted to see what all the fuss was about, but for a
 long time I just didn't know where to start. I've played around quite a bit
 with Scheme through a couple of abortive attempts at SICP, and I enjoyed those
-"the [thing]er schemer" books very much! I even implemented a toy interpreter
+"the little [thing]er" books very much! I even implemented a toy interpreter
 in Ruby a while back, which was edifying, but I've always found building your
 own data structures in a higher level language to feel kind of...  pointless?
 It's great for learning concepts, for sure, but you're building abstractions on
@@ -18,21 +18,28 @@ top of the (probably) better and (definitely) more efficient abstractions of
 your host language. I wanted to try to implement something on the bare metal of
 the machine; I wanted to build my own abstraction from the memory on up. Lisp,
 after all, is a pretty simple idea, at it's core... you're basically just
-writing human readable AST's!
+writing a human readable abstract syntax tree!
 
 <u>**Some history** : _wtf is LISP_</u>
-
 
 **Lisp ex nihil**
 
 Ok,so, Lisp stands for "LISt Processor." One day I was thinking about _just
-that_, and I decided I just needed to start from there.
+that_, and I decided I just needed to start from there, from a linked list.
 
-So! Making a list in C is pretty simple, actually. We need some type of data
-structure, we'll call it a node for now, that can hold only two things: a
-value, and a pointer to the location of the next node.
+So! Making a list in C is pretty simple, actually. We need a type of data
+structure, we'll call it a node for now, that can hold two things: a
+value, and a pointer to the location of the next node. We can make that out of
+a struct, like this:
 
-In C
+```c
+struct node {
+    int value;
+    struct node * node;
+}
+```
+
+
 
 
 sections notes;
@@ -47,12 +54,6 @@ the pointer to the next cell is null, then that is the end of the list.
 
 make out of a struct.
 
-```c
-struct cell {
-    char value;
-    struct cell * cell;
-}
-```
 
 Now this looks something like
 
