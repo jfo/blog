@@ -100,8 +100,8 @@ just the address of a thing but the _actual_ thing.
 
 If I try to run ```print_list(a_cell)``` though, this dies, because though it
 succeeds in passing the first  two cells through the function, when it tries to
-dereference the null pointer (`0x0`) that the second cell is still pointing to,it blows
-up. I can fix this for now by wrapping that recursive call in a check:
+dereference the null pointer (`0x0`) that the second cell is still pointing to, it blows
+up. I can fix this for now by wrapping that recursive call in a null pointer check:
 
 ```c
 void print_list(struct Cell car) {
@@ -115,7 +115,7 @@ void print_list(struct Cell car) {
 Now, I have a cell structure that I can build into a list, and I have a simple
 function that can do something with that list. Progress! :D
 
-> Did you know you can als initialize a struct in one line by passing a block
+> Did you know you can also initialize a struct in one line by passing a block
 > of constructor args to it? It's true! And it looks like this:
 
 > ```c
