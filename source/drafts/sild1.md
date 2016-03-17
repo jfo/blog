@@ -26,8 +26,8 @@ a cell like this:
 ```c
 int main() {
     struct Cell a_cell; // declare a_cell to be a Cell
-    a_cell.value = 1; // initialize the Cell's value
-    a_cell.next = 0x0; // point to the next Cell (in this case, the null pointer)
+    a_cell.value = 1;   // initialize the Cell's value
+    a_cell.next = 0x0;  // point to the next Cell (in this case, the null pointer)
 
     printf("a_cell's value is: %d\n", a_cell.value);
     printf("the next cell after a_cell is: %p", a_cell.next);
@@ -315,9 +315,9 @@ at that address for as long as I like.
 
 I'll need to modify `print_list()` to accept and operate on a pointer instead
 of an object, but everything pretty much stays the same other than adding some
-`*` and changing dots to arrows:
+`*`'s and changing dots to arrows:
 
-```
+```c
 void print_list(struct Cell *car) {
     printf("%d ", car->value);
     if (car->next) {
@@ -329,4 +329,52 @@ int main() {
     struct Cell *a_cell = makecell(1, makecell(2, 0x0));
     print_list(a_cell);
 }
+```
+
+<hr>
+
+I'll end by tightening things up a little bit. First, I'll add a typedef to the
+Cell struct and refer to it simply as C. This way, I can refer to it directly
+as `C` instead of `struct Cell`. This structure is used all over the place, and
+shortening it is an easy win for readibility. I'll also one line the member
+assignments in the `makecell()` function. I don't really have a good reason for
+this other than it feels good to me. I will likely split these up later on
+again, but for now, here's how the whole program looks so far, notice I've
+`#include`d `stdio.h` for `printf()` and `stdlib.h` for `malloc()`:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct C {
+    int val;
+    struct C * next;
+} C;
+
+
+void print_list(C *car) {
+    printf("%d ", car->val);
+    if (car->next) {
+        print_list(car->next);
+    }
+}
+
+C *makecell(int val, C *next) {
+    C *out = malloc(sizeof(C));
+    out->val = val; out->next = next;
+    return out;
+};
+
+
+int main() {
+    C *a_cell = makecell(1, makecell(2, NULL));
+    print_list(a_cell);
+    return 0;
+}
+```
+
+As written, this program prints out.
+
+```
+1 2
 ```
