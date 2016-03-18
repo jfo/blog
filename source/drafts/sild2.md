@@ -325,7 +325,7 @@ I'll use that `count_substring_length()` in a couple of places. Once in the
 another time in the succession call to `read()` at the tail of the switch
 statement, when I need to know how much to increment to pointer so that I'm
 starting at the _end_ of the substring that I just processed. This will make
-more sense with an example. Let's make a list out of `"big balloons"`.
+more sense with an example. Let's make a list out of `"red balloons"`.
 
 `read("red balloons")` will look at the first char it was given. It is the
 default case in the switch, so it will
