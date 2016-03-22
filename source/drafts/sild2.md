@@ -1,5 +1,5 @@
 ---
-title: Sild read
+title: Sild2 reading substrings
 layout: post
 ---
 
@@ -351,7 +351,10 @@ it counts ahead again, in the line
 return makecell(read_substring(s), read(s + count_substring_length(s) + 1));
 ```
 
-and adds one more to get past the terminating space. The next call to `read()` will then see `"balloons"` by itself, and then read in *that* substring, and finally we'll end up with a list of just two elements, instead of an element for each char as we had before.
+and adds one more to get past the terminating space. The next call to `read()`
+will then see `"balloons"` by itself, and then read in *that* substring, and
+finally we'll end up with a list of just two elements, instead of an element
+for each char as we had before.
 
 ```
 Address: 0x7ffb21c033f0, Value: red, Next: 0x7ffb21c033e0

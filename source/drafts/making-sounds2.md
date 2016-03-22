@@ -4,9 +4,9 @@ layout: post
 ---
 
 There is a problem with our design! We can't control the relative volume of the
-notes that we are producing. This is not ideal; dynamics are responsible a huge
-amount of the expressivity of music, and if we're trying to make something that
-can produce music, we should be concerned about that.
+notes that we are producing. This is not ideal; dynamics are responsible for a
+huge amount of the expressivity of music, and if we're trying to make something
+that can produce music, we should be concerned about that.
 
 > Computer music isn't often thought of as "expressive", but I'd invite you to
 > consider the fact that when you listen to a recording of a piece that really
@@ -14,7 +14,7 @@ can produce music, we should be concerned about that.
 > the same electronics that, in a vacuum, invite criticism of unemotional-ness.
 
 So, we need to figure out a way to modulate how much energy is being sent to
-the speaker! Up until now we have been using a digital output pin which can
+the speaker! Up until now I've been using a digital output pin which can
 only output `HIGH` and `LOW`, essentially 1 or 0, which on the Arduino Uno is 5
 volts for `HIGH` and 0 volts for `LOW`
 
@@ -23,7 +23,7 @@ Some cursory googling will reveal an arduino library function named
 appear to be _exactly_ what we need, so [spoiler alert, it is not what we need
 but] let's try it out [anyway]!
 
-We can adjust the code from the very first wave example from before from:
+I can adjust the code from the very first wave example from before from:
 
 ```c
 void loop() {
