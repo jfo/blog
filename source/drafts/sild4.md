@@ -93,7 +93,12 @@ NIL- Address: 0x104197028
 ```
 
 Ok, so that's not so so bad... I look at that char 3 separate times.
-Once in `read_substring()` when it calls `count_substring_length()` to figure out how much memory to `malloc` for the output, once when it actually copies over the substring to the memory that has been `malloc`'d, and one final time in the main read function when it calls `count_substring_length()` to know how far to jump ahead in the input string. That, I can live with. But what about `count_list_length()`?
+Once in `read_substring()` when it calls `count_substring_length()` to figure
+out how much memory to `malloc` for the output, once when it actually copies
+over the substring to the memory that has been `malloc`'d, and one final time
+in the main read function when it calls `count_substring_length()` to know how
+far to jump ahead in the input string. That, I can live with. But what about
+`count_list_length()`?
 
 
 ```c
@@ -166,7 +171,8 @@ be examined the same number of times!
 <hr>
 
 
-Well, it turns out that I can get rid of the `count_list_length()` function _completely_ by changing the way I approach the `read()` function itself!
+Well, it turns out that I can get rid of the `count_list_length()` function
+_completely_ by changing the way I approach the `read()` function itself!
 
 Right now, `read()` operates on a pointer to the head of a string.
 When you pass this pointer into the function, it creates a local copy
@@ -212,7 +218,7 @@ normally. But in the case of the `read()` function, because it is so
 recursive, it is much cleaner to have it operate on a _pointer to a
 pointer_ instead of the pointer itself. This way, instead of copying
 the pointer each time the function is called, it copies a _pointer_ to
-it, and you can operate _directly_ on the pointer itself, incrementing
+it, and you can operate _directly_ on the pointer value itself, incrementing
 it regardless of how many stack frames you are inside!
 
 So,
@@ -276,9 +282,9 @@ int main() {
 }
 ```
 
-with this new version of `read`, returns: 
+with this new version of `read`, returns:
 
-```
+```c
 LIST- Address: 0x7f8c0a403540, List_Value: 0x7f8c0a403520 Next: 0x10d94a028
 |   LIST- Address: 0x7f8c0a403520, List_Value: 0x7f8c0a403500 Next: 0x10d94a028
 |   |   LIST- Address: 0x7f8c0a403500, List_Value: 0x7f8c0a4034e0 Next: 0x10d94a028
@@ -349,3 +355,56 @@ O(3n), and I've completely eliminated the `count_substring_length()` function
 from the source. At this point, the source code is still only 116 lines long,
 and  fully 35 of those lines are devoted to the debugging code that lets me see
 what I am doing!
+
+<hr>
+
+I feel pretty good about having this in constant time, but I can do just one
+more better. I'm currently calling `count_substring_length()` twice- once in
+the `read_substring()` to malloc the right amount, and again in `read()` to
+jump ahead the right amount after reading a substring in. Why not just save
+that value somewhere so I only have to count once?
+
+```c
+int current_substring_length = 0;
+char *read_substring(char *s) {
+    current_substring_length = count_substring_length(s);
+    char *out = malloc(current_substring_length);
+    for (int i = 0; i < current_substring_length; i++) {
+        out[i] = s[i];
+    }
+    out[current_substring_length] = '\0';
+    return out;
+};
+```
+
+And then in the read function:
+
+```c
+C * read(char **s) {
+    switch(**s) {
+        case '\0': case ')':
+            (*s)++;
+            return &nil;
+        case ' ': case '\n':
+            (*s)++;
+            return read(s);
+        case '(':
+            (*s)++;
+            return makecell(LIST, (union V){.list = read(s)}, read(s));
+        default: {
+             char *label_val = read_substring(*s);
+             (*s) += current_substring_length;
+             //           HERE ^
+             return makecell(LABEL, (union V){.label = label_val}, read(s));
+        }
+    }
+}
+```
+
+Now I've saved a whole iteration and only need to look at each char a maximum
+of two times! This can really add up. I don't think I can go any lower than
+that- the initial lookahead is necessary to malloc appropriately, and I'd have
+to reallocate any temporary buffer that I might use to try and get around that,
+which would likely take more
+
+
