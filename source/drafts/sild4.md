@@ -405,6 +405,55 @@ Now I've saved a whole iteration and only need to look at each char a maximum
 of two times! This can really add up. I don't think I can go any lower than
 that- the initial lookahead is necessary to malloc appropriately, and I'd have
 to reallocate any temporary buffer that I might use to try and get around that,
-which would likely take more
+which would likely take more time to computer (and be more error prone!) than
+just looking ahead for the number on each substring.
 
+_But wait there's even more!_
 
+I am operating on the very same pointer that I have a pointer to in the
+`read()` function... why can't I use the same trick to get rid the global var
+that holds the substring length? Spoiler alert I totally can.
+
+```c
+char *read_substring(char **s) {
+    int current_substring_length = count_substring_length(*s);
+    char *out = malloc(current_substring_length);
+    for (int i = 0; i < current_substring_length; i++) {
+        out[i] = **s;
+        (*s)++;
+    }
+    out[current_substring_length] = '\0';
+    return out;
+};
+```
+
+I still have to pass a copy of the pointer into `count_substring_length()`, and
+it's good to assign the `current_substring_length` to a _local_ var, so I only
+have to count the length once for both the `malloc` and the `for` loop, but now
+when I increment the pointer with `(*s)++`, I am affecting the global state of
+that pointer. This means that I can remove the addition of
+`current_substring_length` in the main `read()` function.
+
+```c
+C * read(char **s) {
+    switch(**s) {
+        case '\0': case ')':
+            (*s)++;
+            return &nil;
+        case ' ': case '\n':
+            (*s)++;
+            return read(s);
+        case '(':
+            (*s)++;
+            return makecell(LIST, (V){.list = read(s)}, read(s));
+        default: {
+            return makecell(LABEL, (V){read_substring(s)}, read(s));
+        }
+    }
+}
+```
+
+Now every call to `read()` and `read_substring()` increments the global pointer
+as much as it needs to as soon as it can. I have a lot less global state to
+think about and don't have to worry about passing that information through all
+these recursive calls!
