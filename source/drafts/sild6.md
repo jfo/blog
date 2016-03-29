@@ -251,3 +251,23 @@ This is _very basic_ error handling. I've just guaranteed that in these cases
 of obvious catastrophic failures- syntax errors or malloc failures, the the
 program will stop running. It doesn't report any information to the user, it's
 not very helpful, but it is a step in the right direction.
+
+I can add at least a little bit of messaging before each exit to give some
+context as to the failue. `fprintf()` can be used to write a formatted string
+to an arbitrary stream, I'll pass in `stderr` as it is the appropriate standard
+stream for messaging errors.
+
+In `verify()`:
+
+```c
+fprintf(stderr, "Syntax Error: mismatched parens");
+exit(1);
+```
+
+and in `makecell()` and `read_substring()`, respectively:
+
+```c
+fprintf(stderr, "System Error: makecell failed to allocate memory.");
+fprintf(stderr, "System Error: read_substring failed to allocate memory.");
+```
+
