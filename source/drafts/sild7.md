@@ -14,10 +14,11 @@ C* eval(C* c) {
 }
 ```
 
-Further, a cell's evaluated version, if it has a `CONS` component (meaning the
+Further, a cell's evaluated version, if it has a cons component (meaning the
 `next` member of the cell struct is pointing to a cell that is not `NIL`)
 should be pointing to an evaluated cell. So before returning the cell that I
-passed in, I need to evaluate it's `next` member.
+passed in, I need to evaluate its `next` member and assign the output of
+that evaluation to the `next` member of the passed in cell.
 
 ```c
 C* eval(C* c) {
@@ -50,7 +51,7 @@ This is now a type of transparent pass through function. If I eval a cell right
 now, I get back exactly what I put in. The only interesting thing is that I'm
 necessarily evaluating all the elements that are linked to the cell I'm passing
 in. To see that this is actually working, I'll change all the `LABEL`s to
-["chicken"](chicken)
+"[chicken](https://youtu.be/yL_-1d9OSdk?t=37://youtu.be/yL_-1d9OSdk?t=37s)".
 
 ```c
 C *eval(C* c) {
@@ -70,7 +71,7 @@ C *eval(C* c) {
 Notice that the fall through from the LABEL case to the LIST case is desirable,
 here. I still do want to evaluate the next cell after a label.  It is good form
 to note when this kind of situation arises, because it is _very_ easy to miss
-it, and can result in pretty insidious bugs.
+that it's happening, and can result in pretty insidious bugs.
 
 ```c
 int main() {
@@ -93,7 +94,10 @@ NIL- Address: 0x10656d040
 
 Success!
 
-But how about this:
+But that is just a linked list of atoms. It's important to note here that
+reading in a string of atoms like that gives us an _internal_ representation of
+a linked list of atoms, but is _not_ a LIST in the context of the language
+space. You can see that the three atoms are linked in the same way, but the enclosing linked list is not itself the `val.list` member of a `LIST` cell. This is a subtle but important distinction. For example, how 'bout this:
 
 ```c
 int main() {
@@ -118,7 +122,7 @@ NIL- Address: 0x10b7ab040
 ```
 
 Hmm... the atoms at the top level have been evaluated accurately, but the atoms
-inside of the sublist have been left untouched. I need to evaluate sublists, as
+inside of the 'LIST' have been left untouched. I need to evaluate sublists, as
 well! The fall through is no longer desirable, since I'm treating the `LIST`
 and `LABEL` types differently now.
 
@@ -139,7 +143,7 @@ C *eval(C* c) {
 }
 ```
 
-And success! Again, `"a b (hi mom) c"` evals to:
+And success! Now, `"a b (hi mom) c"` evals to:
 
 ```c
 LABEL- Address: 0x7f9282c03af0, Value: chicken Next: 0x7f9282c03ad0
@@ -154,7 +158,8 @@ NIL- Address: 0x10219e040
 -------------------------------------------------------
 ```
 
-Now that I am evaluating sublists, it doesn't matter what depth I go to, every `LABEL` will be evaluated to 'chicken'. 
+Now that I am evaluating sublists, it doesn't matter what depth I go to, every
+`LABEL` will be evaluated to 'chicken'.
 
 What about
 
@@ -239,4 +244,233 @@ NIL- Address: 0x104310040
 
 <hr>
 
-You know, `debuglist()` is getting a little unwieldy, as far as output is concerned.
+You know, `debuglist()` is getting a little unwieldy, as far as output is
+concerned. It is useful for seeing how the linked list cells are stiched
+together internally in the memory space of the running C program, but I don't
+strictly need to see all those memory addresses all the time, do I? It is time
+to bring back `print_list`.
+
+It will have the same basic structure as `debug_list()`, but it will print different
+things. As a reminder of what `debug_list_inner()` looks like (remember that
+`debug_list()` is just a wrapper around `debug_list_inner()` that passes in an
+initial depth or `0`):
+
+```c
+void debug_list_inner(C *l, int depth) {
+    printtabs(depth);
+    switch (l->type) {
+        case LABEL:
+            printf("LABEL- Address: %p, Value: %s Next: %p\n", l, l->val.label, l->next);
+            debug_list_inner(l->next, depth);
+            break;
+        case LIST:
+            printf("LIST- Address: %p, List_Value: %p Next: %p\n", l, l->val.list, l->next);
+            debug_list_inner(l->val.list, depth + 1);
+            debug_list_inner(l->next, depth);
+            break;
+        case NIL:
+            printf("NIL- Address: %p\n", &nil);
+            printtabs(depth - 1);
+            printf("-------------------------------------------------------\n");
+            break;
+    }
+}
+```
+
+Let's strip out all the specifics and make a skeleton:
+
+```c
+void print_list(C *l) {
+    switch (l->type) {
+        case LABEL:
+        case LIST:
+        case NIL:
+    }
+}
+```
+
+And a first pass at what we'll want to see when we print a list, annotated:
+
+```c
+void print_list(C *l) {
+    switch (l->type) {
+        case LABEL:
+            printf("%s", l->val.label);
+            print_list(l->next);
+            break;
+        case LIST:
+            printf("(");
+            print_list(l->val.list);
+            print_list(l->next);
+            break;
+        case NIL:
+            printf(")");
+            break;
+    }
+}
+```
+
+Let's try it!
+
+```c
+int main() {
+    char *a_string = "(a b c d)";
+    C *a_list = read(&a_string);
+    print_list(a_list);
+    return 0;
+}
+```
+yields:
+
+```
+(abcd))
+```
+
+Not bad! Need to add some spaces between those labels, and deal with that
+trailing closing paren, as well! First, for the spaces, I simply need to print a space if the atom that I'm printing is _not_ the last cell in a list.
+
+```c
+void print_list(C *l) {
+    switch (l->type) {
+        case LABEL:
+            printf("%s", l->val.label);
+
+            if (l->next->type != NIL)
+                printf(" ");
+
+            print_list(l->next);
+            break;
+        case LIST:
+            printf("(");
+            print_list(l->val.list);
+
+            // also adding here to print space after a list ends!
+            if (l->next->type != NIL)
+                printf(" ");
+
+            print_list(l->next);
+            break;
+        case NIL:
+            printf(")");
+            break;
+    }
+}
+```
+
+This gives me:
+
+```
+(a b c d))
+```
+
+Which looks pretty good!
+
+Now, as for that trailing paren! If we look back at the read function, you can see that it is treating `')'` and `'\0'` the same way:
+
+```c
+etc...
+    switch(current_char) {
+        case ')': case '\0':
+            list_depth--;
+            (*s)++;
+            return &nil;
+...etc
+```
+
+This is functionally correct- the `NULL` byte in the string should return a
+`NIL` cell, but this highlights that we can't always treat it the same way
+(although we mostly want to!). I've batted around several solutions to this
+problem, but I think probably the simplest is to make another sentinel node in
+the global space and to assign it a label value, since this space is being unused.
+
+So, along with `nil`, I'll add another `NIL` typed cell named `term`:
+
+```c
+static C nil = { NIL, (V){ .label = ")" }, NULL };
+static C term = { NIL, (V){ .label = "" }, NULL };
+```
+
+In the read function, I'll assign that address only when I see a `'\0'` byte:
+
+```c
+C * read(char **s) {
+    char current_char = **s;
+
+    verify(current_char);
+
+    switch(current_char) {
+        case '\0':
+            return &term;
+        case ')':
+            list_depth--;
+            (*s)++;
+            return &nil;
+        case ' ': case '\n':
+            (*s)++;
+            return read(s);
+        case '(':
+            list_depth++;
+            (*s)++;
+            return makecell(LIST, (V){.list = read(s)}, read(s));
+        default: {
+            return categorize(s);
+        }
+    }
+}
+```
+
+And back up in `print_list()`, I can simply print the label value of the `NIL`
+typed cell. In the case of `nil`, this will be `')'`, and in the case of term,
+it will be an empty string `""`. 
+
+```c
+void print_list(C *l) {
+    switch (l->type) {
+        case LABEL:
+            printf("%s", l->val.label);
+            if (l->next->type != NIL)
+                printf(" ");
+            print_list(l->next);
+            break;
+        case LIST:
+            printf("(");
+            print_list(l->val.list);
+            print_list(l->next);
+            break;
+        case NIL:
+            printf("%s", l->val.label);
+            break;
+    }
+}
+```
+This achieves the desired effect!
+
+```c
+int main() {
+    char *a_string = "(a b c d)";
+    C *a_list = read(&a_string);
+    print_list(a_list);
+    return 0;
+}
+```
+
+Is now outputting `(a b c d)`, just like we wanted it to.
+
+I'm not conviced this is an optimal solution, but it is ok for now!
+
+How about:
+
+```c
+"(a b (c (c e f) g (h i j) k (l m n o p) q (r (s) t(u (v (w (x) y (and) (z)))))))"
+```
+
+Through the extra special `KFCeval`?
+
+```c
+(chicken chicken (chicken (chicken chicken chicken) chicken (chicken chicken chicken) chicken (chicken chicken chicken chicken chicken) chicken (chicken (chicken) chicken (chicken (chicken (chicken (chicken) chicken (chicken) (chicken)))))))
+```
+
+Good work team; this is real progress! I can imagine a much better way to print
+out deeply nested lists than this- this is just one long stream of cells with
+no newlines! But it looks a lot cleaner and terser than `debug_list()` does,
+and it's more familiar and easier to read.

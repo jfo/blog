@@ -229,7 +229,7 @@ Or implicitly, with a return statement, as I've done above with the `read` funct
 
 <hr>
 
-The `printlist()` function I've been using so far has been useful, but I'd like
+The `print_list()` function I've been using so far has been useful, but I'd like
 more information about the cells that a list is composed of. Here is a function
 called `debug_list()`, which has the same basic structure as `print_list`, but
 prints out all of the information for each cell.
