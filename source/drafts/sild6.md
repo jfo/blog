@@ -271,3 +271,60 @@ fprintf(stderr, "System Error: makecell failed to allocate memory.");
 fprintf(stderr, "System Error: read_substring failed to allocate memory.");
 ```
 
+<hr>
+
+Traditionally, a LISP cell is known as a `cons` cell, its value is referred to
+as `car`, and its `next` member is referred to as `cdr` (pronounced 'cutter').
+The reasons for this are [historical](https://en.wikipedia.org/wiki/CAR_and_CDR#Etymology):
+
+> Lisp was originally implemented on the IBM 704 computer, in the late 1950s.
+> The 704 hardware had special support for splitting a 36-bit machine word into
+> four parts, an "address part" and "decrement part" of 15 bits each and a
+> "prefix part" and "tag part" of three bits each.
+
+> Precursors[1] [2] to Lisp included functions:
+
+> ```
+> car (short for "Contents of the Address part of Register number"),
+> cdr ("Contents of the Decrement part of Register number"),
+> cpr ("Contents of the Prefix part of Register number"), and
+> ctr ("Contents of the Tag part of Register number"),
+> ```
+> each of which took a machine address as an argument, loaded the corresponding
+> word from memory, and extracted the appropriate bits.  A machine word could
+> be reassembled by cons, which took four arguments (a,d,p,t).  The prefix and
+> tag parts were dropped in the early stages of Lisp's design, leaving CAR,
+> CDR, and a two-argument CONS.
+
+I've eschewed this naming convention internally in the cell structure so far,
+because I want to avoid confusion with the functions of the same names that I
+will be implementing later on, but, the cell struct could easily have looked like
+this.
+
+```c
+typedef struct Cons {
+    enum CellType type;
+    union V car;
+    struct Cons * cdr;
+} Cons;
+```
+
+<hr>
+
+This program now does a pretty good job of turning a parenthetical abstract
+syntax tree expressed in traditional LISP syntax from a string of `char`s into
+a data structure that is easy to work with inside of the program. Let's recap a
+little bit.
+
+- All data is represented as a series of cells.
+- cells have two parts, a `value` and a pointer to the `next` cell in the list
+  (and a type signature, but I consider that metadata!).
+    - The value of a cell can be one of two things: an atom (currently just a
+      `LABEL`, represented as a string), or another `LIST` represented as a pointer
+      to the first cell of a sub list.
+        - lists can be nested to arbitrary depths and end when a cell inside of
+          it points to `NIL` as its next value. `NIL` is a special value that
+          only exists in one place in memory; since all `NIL` cells are the
+          same, we can point to the same location to represent `NIL` anywhere.
+
+

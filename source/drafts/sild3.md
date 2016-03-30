@@ -479,6 +479,20 @@ void debug_list(C *car) {
 }
 ```
 
+During some research, I discovered after implementing this that this is a known
+pattern, and it has a name! It's called a 'sentinel node'
+
+> Sentinel nodes
+> ----------------
+
+> Main article: [Sentinel node](https://en.wikipedia.org/wiki/Sentinel_node)
+
+> In some implementations an extra 'sentinel' or 'dummy' node may be added before
+> the first data record or after the last one. This convention simplifies and
+> accelerates some list-handling algorithms, by ensuring that all links can be
+> safely dereferenced and that every list (even one that contains no data
+> elements) always has a "first" and "last" node.
+
 To me, this looks a lot cleaner, and is a lot easier to reason about, which
 will be a big help when I start writing more complicated functions that operate
 on cells, like idk `eval` and `apply`... but that's for later.
