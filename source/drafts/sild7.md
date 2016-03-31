@@ -383,11 +383,11 @@ This is functionally correct- the `NULL` byte in the string should return a
 problem, but I think probably the simplest is to make another sentinel node in
 the global space and to assign it a label value, since this space is being unused.
 
-So, along with `nil`, I'll add another `NIL` typed cell named `term`:
+So, along with `nil`, I'll add another `NIL` typed cell named `terminal`:
 
 ```c
 static C nil = { NIL, (V){ .label = ")" }, NULL };
-static C term = { NIL, (V){ .label = "" }, NULL };
+static C terminal = { NIL, (V){ .label = "" }, NULL };
 ```
 
 In the read function, I'll assign that address only when I see a `'\0'` byte:
@@ -395,12 +395,9 @@ In the read function, I'll assign that address only when I see a `'\0'` byte:
 ```c
 C * read(char **s) {
     char current_char = **s;
-
-    verify(current_char);
-
     switch(current_char) {
         case '\0':
-            return &term;
+            return &terminal;
         case ')':
             list_depth--;
             (*s)++;
@@ -454,23 +451,24 @@ int main() {
 }
 ```
 
-Is now outputting `(a b c d)`, just like we wanted it to.
+Is now outputting `(a b c d)`, just like I wanted it to!
 
 I'm not conviced this is an optimal solution, but it is ok for now!
 
 How about:
 
 ```c
-"(a b (c (c e f) g (h i j) k (l m n o p) q (r (s) t(u (v (w (x) y (and) (z)))))))"
+"(a b (c (c e f) g (h i j) k (l m n o p) q (r (s) t (u (v (w (x) y (and) (z)))))))"
 ```
 
-Through the extra special `KFCeval`?
+Through the extra special `eval()` that turns everything into chickens, and
+then through this improved `print_list()` function
 
 ```c
 (chicken chicken (chicken (chicken chicken chicken) chicken (chicken chicken chicken) chicken (chicken chicken chicken chicken chicken) chicken (chicken (chicken) chicken (chicken (chicken (chicken (chicken) chicken (chicken) (chicken)))))))
 ```
 
-Good work team; this is real progress! I can imagine a much better way to print
+This is real progress! I can imagine a much better way to print
 out deeply nested lists than this- this is just one long stream of cells with
 no newlines! But it looks a lot cleaner and terser than `debug_list()` does,
 and it's more familiar and easier to read.
