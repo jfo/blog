@@ -378,69 +378,47 @@ etc...
 ```
 
 This is functionally correct- the `NULL` byte in the string should return a
-`NIL` cell, but this highlights that we can't always treat it the same way
-(although we mostly want to!). I've batted around several solutions to this
-problem, but I think probably the simplest is to make another sentinel node in
-the global space and to assign it a label value, since this space is being unused.
+`NIL` cell to guarantee that the list it read in is a well formed one.
 
-So, along with `nil`, I'll add another `NIL` typed cell named `terminal`:
+The answer is to keep track of the depth of the list that has been passed in,
+and only print a closing paren if the depth is greater than `0`, similar to the way I handled indention in `debug_list()`.
 
 ```c
-static C nil = { NIL, (V){ .label = ")" }, NULL };
-static C terminal = { NIL, (V){ .label = "" }, NULL };
-```
-
-In the read function, I'll assign that address only when I see a `'\0'` byte:
-
-```c
-C * read(char **s) {
-    char current_char = **s;
-    switch(current_char) {
-        case '\0':
-            return &terminal;
-        case ')':
-            list_depth--;
-            (*s)++;
-            return &nil;
-        case ' ': case '\n':
-            (*s)++;
-            return read(s);
-        case '(':
-            list_depth++;
-            (*s)++;
-            return makecell(LIST, (V){.list = read(s)}, read(s));
-        default: {
-            return categorize(s);
-        }
-    }
-}
-```
-
-And back up in `print_list()`, I can simply print the label value of the `NIL`
-typed cell. In the case of `nil`, this will be `')'`, and in the case of term,
-it will be an empty string `""`. 
-
-```c
-void print_list(C *l) {
+void print_list_inner(C *l, int depth) {
     switch (l->type) {
         case LABEL:
             printf("%s", l->val.label);
+
             if (l->next->type != NIL)
                 printf(" ");
-            print_list(l->next);
+
+            print_list_inner(l->next, depth);
             break;
         case LIST:
             printf("(");
-            print_list(l->val.list);
-            print_list(l->next);
+            print_list_inner(l->val.list, depth + 1);
+
+            if (l->next->type != NIL)
+                printf(" ");
+
+            print_list_inner(l->next, depth);
             break;
         case NIL:
-            printf("%s", l->val.label);
+            if (depth > 0) {
+                printf(")");
+            }
             break;
     }
 }
+
+void print_list(C *l) {
+    print_list_inner(l, 0);
+};
+
 ```
-This achieves the desired effect!
+
+Just like `debug_list`, I've wrapped this in a helper function that always
+starts at 0 depth. This achieves the desired effect!
 
 ```c
 int main() {
