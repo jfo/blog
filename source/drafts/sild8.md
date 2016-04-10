@@ -802,8 +802,8 @@ C *apply(C* c) {
     switch (c->type) {
         case LABEL:
             if (!strcmp(c->val.label, "/dev/null")) {
-                    free_cell(c);
-                    return &nil;
+                free_cell(c);
+                return &nil;
             } else if (!strcmp(c->val.label, "concat")) {
                 return concat_two_labels(c);
             } else {
