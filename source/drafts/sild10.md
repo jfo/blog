@@ -207,14 +207,18 @@ C* categorize(char **s) {
 ```
 
 This is pretty dense and ugly, but it means I only have to check for these
-strings ONCE instead of _every single time_ I eval the builtin functions. If
+strings ONCE instead of _every single time_ I eval the builtin functions.
+Unfortunately, there is no easy way to map a string to its counterpart function
+without some sort of key/value expression, and this is the simplest way to do
+that. If this were a more introspective language, you could perhaps do
+something like `&asfunc(char *name)` or something... but this is C, so SOL. If
 you go check out the commits where this is happening, you'll notice some pretty
-haphazard forward declarations of these builtin functions so that the `reader` knows
-they exist. This is decidedly suboptimal, and I'll be cleaning up things like
-that aggressively when I refactor this into a proper program structure with
-headers and all that jazz. Up till about now though, it's just been simpler to
-keep everything in a single big file- and it's not even really that big! Only
-344 lines at this point!
+haphazard forward declarations of these builtin functions so that the `reader`
+knows they exist. This is decidedly suboptimal, and I'll be cleaning up things
+like that aggressively when I refactor this into a proper program structure
+with headers and all that jazz. Up till about now though, it's just been
+simpler to keep everything in a single big file- and it's not even really that
+big! Only 344 lines at this point!
 
 Anyway, this totally breaks right now. Of course it does! I haven't told any of
 the rest of the program how to deal with this strange new type, the `BUILTIN`!
@@ -423,7 +427,7 @@ You may be able to tell, with these side by side, that `cons` is at
 locations- they will change each time the program is run. How can I know which
 `BUILTIN` cell is which?
 
-I can fix this by making the thing storing the function pointer into a union
+I can fix this by making the thing storing the function pointer into a struct
 that holds both a function pointer and a string representation of which
 function it is.
 
@@ -442,6 +446,8 @@ typedef struct C {
     struct C * next;
 } C;
 ```
+
+I'll have something like:
 
 ```c
 struct funcval {
