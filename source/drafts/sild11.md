@@ -1,5 +1,5 @@
 ---
-title: Sild10 builtin functions 3, a refactor
+title: Sild11 adding arity check function
 layout: post
 ---
 
@@ -32,7 +32,7 @@ This is generic enough to abstract into a simple function that can be called at
 the beginning of each builtin. It will take the first operand and the number of
 arguments, and return true if the number matches the number of arguments passed
 to the function. Like most of the other functions that operate on these linked
-lists, it will be recursive.
+lists, it could be recursive.
 
 ```c
 void arity_check(int args, C *operand) {
@@ -49,7 +49,7 @@ void arity_check(int args, C *operand) {
 ```
 
 I can now replace the long hand checks in the builtin functions with a call to
-this function with the appropriate number.
+this function with the appropriate number of args.
 
 ```c
 C *quote(C *operand) {
@@ -97,8 +97,8 @@ void arity_check(int args, C *operand) {
 }
 ```
 This is heading in the right direction, but it's not very rich. What function
-was being called? What was being passed in? I can pass the name of the caller
-in like this:
+was being called? What was being passed in? I can give `arity_check()` the name
+of the caller like this:
 
 ```c
 void arity_check(char *caller_name, int args, C *operand) {
@@ -121,10 +121,10 @@ void arity_check(char *caller_name, int args, C *operand) {
 ```
 
 This is better, but you know what? I don't need to make this recursive at all,
-really. Doing so means I have to copy all those inputs to the function, and I
-don't really know what state I'm in when the error gets tripped. I can just
-count the number of args to the function and compare it against the number that
-was passed in. That's much easier!
+really. Doing so means I have to copy all those inputs to the function on each
+call, and I don't really know what state I'm in when the error gets tripped. I
+can just count the number of args to the function and compare it against the
+number that was passed in. That's much easier!
 
 
 ```c
@@ -145,7 +145,8 @@ void arity_check(char *caller_name, int args, C *cur) {
 ```
 
 I still would like to list the arguments passed in. I can retain access to the
-first operand by copying the pointer at the beginning.
+first operand by copying the pointer at the beginning before transforming it in
+the counting loop.
 
 ```c
 void arity_check(char *caller_name, int args, C *c) {
