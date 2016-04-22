@@ -330,7 +330,9 @@ more sense with an example. Let's make a list out of `"red balloons"`.
 `read("red balloons")` will look at the first char it was given. It is the
 default case in the switch, so it will
 
-`return makecell(read_substring(s), read(s + count_substring_length(s) + 1));`
+```c
+return makecell(read_substring(s), read(s + count_substring_length(s) + 1));
+```
 
 The first `read_substring` will first pass the string into
 `count_substring_length` to figure out the allocation.

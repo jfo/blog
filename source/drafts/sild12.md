@@ -412,6 +412,6 @@ C *truth() {
 
 Now, in `atom`, `eq`, and now in `apply`, I can have a little more clarity into
 what I'm seeing.
-
+op1
 
 
