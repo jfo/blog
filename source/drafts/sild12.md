@@ -105,7 +105,7 @@ even compile, since `true` and `false` live in `<stdbool.h>`, which I'm not
 including.
 
 Traditionally in Lisp, the atom "T" is used to denote generic truthiness, and
-the empty list itself in used to represent falsity. I can see the elegancein
+the empty list itself in used to represent falsity. I can see the elegance in
 this- though I haven't yet formally decided how to represent either of these
 things, it is arguable that the `NIL` cell that terminates every list is
 adequate to represent falsehood. Since the `NIL` cell is foundationally
@@ -118,11 +118,13 @@ from an open and shut case, and I'm not at all convinced the way I chose to do
 it is the best way, but it is a good place to start and is conceptually
 pleasing. People get _really_ hot about it, see
 [this](https://github.com/hylang/hy/issues/373) and note that there are solid
-arguments on both sides of the fence.
+arguments on both sides of the fence. Should "empty" values of any type
+represent falsity, like `0` or `""`? Should there be special singleton values
+to represent true and false?
 
 Anyway, in my lisp, there will be _only one_ thing that is false, which is
 nothingness in the form of the `NIL` cell contained in a list by itself, and
-_everything else_ is truthy. This also has the benefit of corresponding to a
+_everything else_ will be truthy. This also has the benefit of corresponding to a
 simplistic but intuitive understanding of actual reality, since everything is
 something but _only_ nothing is nothing.
 
@@ -134,7 +136,8 @@ return makecell(LIST, (V){.list = &nil}, &nil);
 
 and for the truthy value, since literally anything else is truthy, I'll return
 a `LABEL` cell with the string value of `"#t"`, which is the traditional way
-`T` is returned in Scheme.
+`T` is returned in Scheme, and I've gotten used to it. Really, this value is
+arbitrary, it could be anything and still work.
 
 ```c
 return makecell(LABEL, (V){ "#t" }, &nil);
@@ -219,7 +222,7 @@ C *eq(C *operand) {
 ```
 
 This is _pretty ugly_, but it works for now. I might like to refactor it later
-on, but it covers all of my cases.
+on, maybe to use a switch statement, but it covers all of my cases.
 
 Separating these boolean expressions onto so many different lines makes the
 code look more verbose, but it aids readability quite a bit- the groupings are
@@ -232,7 +235,7 @@ functions that I need to get working.
 
 <hr>
 
-`cond`, like `quote`, is somewhat special. It doesn't evaluate everything
+`cond`, like `quote`, is special. It doesn't evaluate everything
 passed in to it before returning, but only when it needs to evaluate it. It's
 going to take _at least_ one argument, but should be able to accept a variable
 number of arguments that will implicitly be in pairs. It will evaluate the
@@ -343,14 +346,35 @@ C *cond(C *operand) {
 }
 ```
 
-<hr>
-
 Yay! YAY!!
 
-So one funny thing I need to address here- what happens when you `eval` and
-empty list? Currently, you get an error. But in reality, evalling nothing
-should yield... nothing! I'll change that now. Evalling the empty list gives
-you another empty list back.
+A historical note: I read somewhere that traditionally, `cond` is a macro that
+resolves to nested `if` statements. That means that something like:
+
+```
+(cond a 1
+      b 2
+      c 3
+      4)
+```
+
+Would end up being represented like:
+
+```
+(if a 1 (if b 2 (if c 3 4)))
+```
+
+I think it might be somehow "purer" to implement it that way, but, meh. `cond`
+can be used here as a simple if statement- when passed three arguments it
+functions exactly the same way as `if` would:
+
+```
+(cond condition if-statement else-statement)
+```
+
+So I'm happy with that.
+
+<hr>
 
 ```c
 C *apply(C* c) {
@@ -367,10 +391,10 @@ C *apply(C* c) {
 }
 ```
 
-While I'm in there, a couple of things I'd like to do. Now that I'm on a "hey
-how about some useful error messaging there buddy" kick, I'll replace that exit
-with a real error. This case would mean I was trying to apply a `LABEL` as a
-function, which is not a thing I can do (yet!).
+There are a couple of things I'd like to refactor before moving on.
+
+First, attempting to apply either a `LABEL` or `NIL` should result in an error.
+I'll add those cases in `apply`:
 
 ```c
 C *apply(C* c) {
@@ -380,15 +404,74 @@ C *apply(C* c) {
         case LIST:
             return apply(eval(c));
         case LABEL:
-            fprintf(stderr, "Error: attempted to apply non-procedure %s\n", c->val.label);
+            fprintf(stderr, "\nError: attempted to apply non-procedure %s\n", c->val.label);
             exit(1);
         case NIL:
-            return makecell(LIST, (V){.list = &nil}, &nil);
+            fprintf(stderr, "\nError: attempted to evaluate an empty list: ()\n");
+            exit(1);
     }
 }
 ```
 
-Cool cool!
+this is the first time I'm really tightening up evaluation rules- I've
+implemented some of the builtin functions I want to be part of the language,
+currently they are the only functions available to be applied. This will
+change, but for now, that's it!
+
+Furthermore, back when I was evaluating entire ASTs to change everything to
+`chicken`, it made sense to eval recursively. This is no longer ideal- I should
+be able to evaluate only the cells I need to evaluate without worrying about
+what they are connected to. this is pretty simple- I just remove the `c->next =
+eval(c->next)` lines inside `eval`, going from this:
+
+```c
+C *eval(C* c) {
+    switch (c->type) {
+        case BUILTIN:
+        case LABEL:
+            c->next = eval(c->next);
+            return c;
+        case LIST:
+        {
+            C *out = apply(c->val.list);
+            out->next = eval(c->next);
+            free(c);
+            return out;
+        }
+        case NIL:
+            return c;
+    }
+}
+```
+
+to this:
+
+```c
+C *eval(C* c) {
+    switch (c->type) {
+        case BUILTIN:
+        case LABEL:
+            c->next = c->next;
+            return c;
+        case LIST:
+        {
+            C *out = apply(c->val.list);
+            out->next = c->next;
+            free(c);
+            return out;
+        }
+        case NIL:
+            return c;
+    }
+}
+```
+
+This necessitates only minor tweaks to the builtins that accept more than one
+argument (excluding cond, which already deals with its own evaluation rules),
+`eq` and `cons` now need to manually evaluate their second arguments. Easy peasy!
+
+
+<hr>
 
 Also, this
 
@@ -411,7 +494,19 @@ C *truth() {
 ```
 
 Now, in `atom`, `eq`, and now in `apply`, I can have a little more clarity into
-what I'm seeing.
-op1
+what I'm seeing being returned!
 
+This introduces one small bug I missed earlier- if the program attempts to free
+a `truth` cell, it will choke on the string `"#t"` in its `val.label` member,
+because it was passed in as a string literal and not as a malloc'd address. An
+ugly but simple tweak to the `truth()` function can fix this:
 
+```c
+C *truth() {
+    char *tru = malloc(sizeof(char) * 3);
+    tru[0] = '#'; tru[1] = 't'; tru[2] = '\0';
+    return makecell(LABEL, (V){ tru }, &nil);
+}
+```
+
+Now, when that pointer is freed in `free_cell`, it will free the malloc'd address correctly!
