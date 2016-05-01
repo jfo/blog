@@ -435,8 +435,9 @@ well.
 
 The only thing left in sild.c is the main() function, so I'll rename that to main.c
 
-Now, to get an executable, I would compile each library module into an object
-file and then link them all together, just like Andrew said.
+Now, to get an executable, I would compile each library module (including
+main.c itself) into an object file and then link them all together, just like
+Andrew said originally.
 
 ```
 cc utils.c -o
@@ -445,7 +446,8 @@ cc eval.c -o
 cc builtins.c -o
 cc print.c -o
 cc read.c -o
-cc utils.o cell.o eval.o builtins.o print.o read.o main.c -o sild
+cc main.c -o
+cc utils.o cell.o eval.o builtins.o print.o read.o main.o -o sild
 ```
 
 These are a lot of commands to run every time I want to get a new executable!
