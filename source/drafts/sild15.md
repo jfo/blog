@@ -40,7 +40,7 @@ quite a bit of metadata about the chunk of memory that the FILE object was
 initialized to. Though the inner workings of a FILE object are implementation
 specific, here is an example of what is in my computer's `<stdio.h>` where `FILE` is typedeffed
 
-```cc
+```c
 typedef	struct __sFILE {
 	unsigned char *_p;	/* current position in (some) buffer */
 	int	_r;		/* read space left for getc() */
