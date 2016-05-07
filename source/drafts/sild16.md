@@ -677,4 +677,287 @@ Now, everything cleans itself up correctly when it is evaluated.
 
 <hr>
 
+Let's set.
+---------
 
+So, I've got a way to get stuff out of an `Env`, but I'm currently setting it by hand.
+This is silly! I want a corresponding `set` function that takes an env, and a
+key value pair, and inserts a new entry into that Env (at the head of it, which
+becomes important later for scoping!) and then updates that Env's internal
+`head` member to point to this new entry.
+
+First, the function signature, which I had already put into the `h` file:
+
+```c
+C *set(Env* env, C *key, C *value) {
+}
+```
+
+Except, you know what? now that I think of it, this function needn't return
+anything at all, since if it fails I want to exit. And though I'm always going
+to be returning a value, I might as well pass in a string so I don't have to
+muck around with new cells.
+
+```c
+void set(Env* env, char *key, C *value) {
+}
+```
+So I'll make a new entry out of the key value pair with my shiny `new_entry()` function:
+
+```c
+void set(Env* env, char *key, C *value) {
+    new_entry(key, value);
+}
+```
+
+And I'll tell the new_entry that its `next` member should be the current head
+of the Env:
+
+```c
+void set(Env* env, char *key, C *value) {
+    struct Entry *new = new_entry(key, value);
+    new->next = Env->head;
+}
+```
+
+And I'll tell the Env that its head is now the new entry:
+
+```c
+void set(Env* env, char *key, C *value) {
+    struct Entry *new = new_entry(key, value);
+    new->next = Env->head;
+    env->head = new;
+}
+```
+
+And that's it! If the `malloc`ing happening inside of new_entry fails, I'll have
+an `exit(1)` call to cath it. I've been falling behind on setting up good exit error
+messaging, but I'll make a sweep on that at some point.
+
+Back in the `eval_file` function, then, I can do this:
+
+```c
+Env *env = new_env();
+set(env, "hi", truth());
+set(env, "mom", truth());
+```
+
+And I have an env with two entries!
+
+```
+hi
+mom
+```
+
+Gives me:
+
+```
+#t
+#t
+```
+
+Success!
+
+There's one interesting aspect of this env thing that is implicit in its design! What if I do this?
+
+```c
+Env *env = new_env();
+set(env, "hi", truth());
+set(env, "hi", empty_list());
+```
+
+Two entries with the same key but different values. Now, in sild land, what
+will I get if I evaluate the LABEL `hi`? How does my `get` function choose?
+
+```c
+C *get(Env* env, C *key) {
+    Entry *cur = env->head;
+
+    while (cur) {
+        if (scmp(key->val.label, cur->key)) {
+            return copy_one_cell(cur->value);
+        }
+        cur = cur->next;
+    }
+    return NULL;
+}
+```
+
+I didn't put any special logic in there- how does it know which one? Well...
+
+```
+()
+```
+
+It returns the first one it finds! This doesn't seem like a big deal, but it
+will be the backbone of my language's dynamic scoping.
+
+<hr>
+
+Now that I have all these helpers defined, and a concept of an Env defined,
+it's a short walk in the park to implement a new `sild` builtin function that
+can utilize them! The signature will look like all the builtin functions:
+
+```c
+C *define(C *operand, Env *env);
+```
+
+it will take two arguments, a key and a value. (in sild land):
+
+```c
+C *define(C *operand, Env *env) {
+    arity_check("define", 2, operand);
+}
+```
+
+The key _must_ be a label:
+
+```c
+C *define(C *operand, Env *env) {
+    arity_check("define", 2, operand);
+    if (operand->type != LABEL) { exit(1); }
+}
+```
+
+Then it will `set` the arguments to a key value pair inside the given env,
+evalling the 2nd operand.
+
+```c
+C *define(C *operand, Env *env) {
+    arity_check("define", 2, operand);
+    if (operand->type != LABEL) { exit(1); }
+    set(env, operand->val.label, eval(operand->next, env));
+}
+```
+
+Then it will free the label! I don't need to free the evalled operand, because
+that will serve as the master copy in the env.
+
+```c
+C *define(C *operand, Env *env) {
+    arity_check("define", 2, operand);
+    if (operand->type != LABEL) { exit(1); }
+    set(env, operand->val.label, eval(operand->next, env));
+    free_one_cell(operand);
+}
+```
+
+And that's really that! It has to return something, so how about nil? I won't
+be doing anything with that return value ever (you will see why soon!)
+
+```c
+C *define(C *operand, Env *env) {
+    arity_check("define", 2, operand);
+    if (operand->type != LABEL) { exit(1); }
+    set(env, operand->val.label, eval(operand->next, env));
+    free_one_cell(operand);
+    return &nil;
+}
+```
+
+Now, I can add `define` into the reader, just like the other ones:
+
+```
+...
+} else if (scmp(token, "define")) {
+    out = makecell(BUILTIN, (V){ .func = {token, define} }, &nil);
+...
+```
+
+And lo and behold, this totally works!
+
+```
+(define thing (quote (1 2 3)))
+thing
+```
+
+Will print out
+
+```
+(1 2 3)
+```
+
+And I could use thing wherever it makes sense to use (1 2 3)
+
+```
+(define thing (quote (1 2 3)))
+(define otherthing (quote 0))
+(cons otherthing thing)
+```
+
+yields:
+
+```
+(0 1 2 3)
+```
+
+You can even compose them! For example:
+
+```
+(define thing (quote (1 2 3)))
+(define otherthing (quote 0))
+(define wat (cons otherthing thing))
+wat
+```
+
+Now, `wat` is equal to `(0 1 2 3)`!
+
+One more thing
+--------------
+
+Well, a couple more things! `define` is the first builtin function that has any
+sort of side effect- in this case, it is mutating the only possessor of state
+in the running program: the top level environment. Its return value, if it were
+a C function, would be `void`, since it's being called only for those side
+effect. I don't have a `void` type in sild (yet?), but I assigned it to return
+`nil` as an expediency. To see why this might be problematic, consider:
+
+```
+(cons (quote 1) (define thing (quote ())))
+```
+
+This, er, sort of makes sense, right? You would kind of half expect this to
+return
+
+```
+(1)
+```
+
+Since `thing` is supposed to be equal to `()` now, right?
+
+It doesn't, since `define` is returning `nil`, `cons` really gets called on:
+
+```
+(cons (quote 1))
+```
+
+I don't know... should define return its label? Blargh...
+
+This is venturing into some interesting language design question territory, and
+I'm not ready to make a decision! I am going to default to parity with scheme,
+which solves this problem by making `define` to return `undefined`, which is
+kind of funny, and _disallowing_ define statements outside of the top level
+forms.
+
+This looks a little funny compared to the other calls, but i can catch this in
+the reader step by throwing an error if the reader encounters a `define`
+keyword when the depth is greater than 1!
+
+```c
+...
+    } else if (scmp(token, "define")) {
+        if (depth > 1) {
+            fprintf(stderr, "Error: define found in inner form.");
+            exit(1);
+        }
+        out = makecell(BUILTIN, (V){ .func = {token, define} }, &nil);
+...
+```
+
+This solves the problem. Defines will now only be able to happen in the top
+level, and I don't really need to make another void type or whatever, since
+I'll never be able to call define anywhere that would matter.
+
+"But what about `delete()` in the env?"
+
+We'll get there, don't need to do that yet.
