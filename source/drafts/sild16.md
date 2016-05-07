@@ -417,3 +417,264 @@ Will yield;
 ```
 
 This is getting interesting, eh?
+
+<hr>
+Let's look back at those `new_entry` functions. I can totally generalize that!
+
+```
+static Entry *new_entry(char *key, C *value) {
+    char *keyval = malloc(sizeof(key));
+    if (!keyval) { exit(1); };
+    strcpy(keyval, key);
+
+    Entry *out = malloc(sizeof(Entry));
+    if (!out) { exit(1); };
+
+    out->key = keyval;
+    out->value = value;
+    out->next = NULL;
+    return out;
+}
+```
+
+Now, I can make those entries using this function inside of `new_env` itself.
+
+```
+Env *new_env() {
+
+    struct Entry *entry1 = new_entry("one", NULL);
+    struct Entry *entry2 = new_entry("two", NULL);
+    entry1->next = entry2;
+
+    Env *out = malloc(sizeof(Env));
+    if (!out) { exit(1); };
+    out->head = entry1;
+    return out;
+}
+```
+
+And I get the same effect!
+
+<hr>
+
+We're getting close, now! Back in the `get` function, I'm just returning true
+if I find a match, but what I really want is arbitrary values being assigned
+and returned.
+
+```diff
+ C *get(Env* env, C *key) {
+     Entry *cur = env->head;
+     while (cur) {
+         if (scmp(key->val.label, cur->key)) {
+-            return truth();
++            return cur->value;
+         }
+         cur = cur->next;
+     }
+     return NULL;
+ }
+```
+
+and down in `new_env()`:
+
+```diff
+ Env *new_env() {
+
+-    struct Entry *entry1 = new_entry("one", NULL);
+-    struct Entry *entry2 = new_entry("two", NULL);
++    struct Entry *entry1 = new_entry("one", truth());
++    struct Entry *entry2 = new_entry("two", truth());
+     entry1->next = entry2;
+
+     Env *out = malloc(sizeof(Env));
+     if (!out) { exit(1); };
+     out->head = entry1;
+     return out;
+ }
+```
+
+This works great for something like:
+
+```
+one
+two
+anything
+```
+
+which yields:
+
+```
+#t
+#t
+
+Error: unbound label: anything
+
+shell returned 1
+```
+
+Just as we want, but what about this?
+
+```
+one
+one
+```
+
+Can you guess? When `eval` looks at the first `one`, it retrieves the cell
+pointer to the `Entry`'s `value` member. Remember that eval as I've written it
+always cleans up after itself:
+
+```c
+        case LABEL:
+        {
+            C *out = get(env, c);
+            if (out) {
+                free_one_cell(c); // right here!
+                return out;
+            } else {
+```
+
+Which means that the second time I try to evaluate `one`, it tries to clean up after itself and blows up, because that pointer has already been freed:
+
+```c
+sild(76627,0x7fff7b607000) malloc: *** error for object 0x7f88f0403380: pointer being freed was not allocated
+*** set a breakpoint in malloc_error_break to debug
+
+Command terminated
+```
+
+When I fetch a value from the Environment, I need to be fetching a _copy_ of
+it, so that when it passes through the rest of the evaluation, and gets cleaned
+up afterwards, the original entry is still intact and can be fetched again.
+
+this function will live back in `cell.c`, and will look exactly like
+`free_cell` and `free_one_cell`, which look like this:
+
+```c
+void free_cell(C *c) {
+    switch (c->type) {
+        case LABEL:
+            free(c->val.label);
+            free_cell(c->next);
+            free(c);
+            break;
+        case LIST:
+            free_cell(c->val.list);
+            free_cell(c->next);
+            free(c);
+            break;
+        case BUILTIN:
+            free(c->val.func.name);
+            free_cell(c->next);
+            free(c);
+            break;
+        case NIL:
+            break;
+    }
+}
+
+void free_one_cell(C *c) {
+    switch (c->type) {
+        case LABEL:
+            free(c->val.label);
+            free(c);
+            break;
+        case LIST:
+            free_cell(c->val.list);
+            free(c);
+            break;
+        case BUILTIN:
+            free(c->val.func.name);
+            free(c);
+            break;
+        case NIL:
+            break;
+    }
+}
+```
+
+This is some wordy code, but it's necessary to handle all the different types
+of cells. Let's adapt them! Remember that the only substantive difference
+between `copy` and `copy_one` is that `copy_one` doesn't propogate through
+`next` addresses!
+
+```c
+C *copy_cell(C *c) {
+    switch (c->type) {
+        case LABEL:
+            return makecell(LABEL, (V){ c->val.label }, copy_cell(c->next));
+        case LIST:
+            return makecell(LIST, (V){ .list = copy_cell(c->val.list) }, copy_cell(c->next));
+        case BUILTIN:
+            return makecell(BUILTIN, (V){ .func = { c->val.func.name, c->val.func.addr} }, copy_cell(c->next));
+        case NIL:
+            return &nil;
+    }
+}
+```
+
+and `copy_one_cell`, with the `next` members pointing to `&nil`:
+
+```c
+C *copy_one_cell(C *c) {
+    switch (c->type) {
+        case LABEL:
+            return makecell(LABEL, (V){ c->val.label }, &nil);
+        case LIST:
+            return makecell(LIST, (V){ .list = copy_cell(c->val.list) }, &nil);
+        case BUILTIN:
+            return makecell(BUILTIN, (V){ .func = { c->val.func.name, c->val.func.addr} }, &nil);
+        case NIL:
+            return &nil;
+    }
+}
+```
+
+You might notice a problem right away with this! `makecell` allocates memory
+for the contents of a cell, but those contents sometimes include pointers to
+strings that also need to be allocated! I can pull this into a helper function
+that allocates some memory, copies a string into it.
+
+```c
+char *scpy(char *s) {
+    int l = 0;
+    while (s[l] != '\0') { l++; }
+    char *out = malloc(l);
+    if (!out) { exit(1); }
+
+    for (int i = 0; i < l; i++) {
+        out[i] = s[i];
+    }
+    out[l] = '\0';
+    return out;
+};
+```
+
+I'll plop this into `utils.c` and use it in the `env.c` file to return a copy instead of the original.
+
+```c
+...
+            return copy_one_cell(cur->value);
+...
+```
+
+Now, everything cleans itself up correctly when it is evaluated.
+
+> A word about perf
+> -----------------
+
+> You might be reading this and saying something like: "Hey, making copies all
+> the time seems pretty wasteful, and malloc system calls can be pretty
+> expensive, and this isn't very performative, you're an idiot!"
+
+> I wouldn't really argue with you! (except _maybe_ on the idiot thing, which
+> seems a little harsh) There are lots of opportunities for making
+> this faster, better, and generally more perfomative! In fact, I'm trying to
+> keep a running tally of those things in my head, and am looking forward to
+> refactoring things after I get everything working! Much more on that later,
+> but you know, cut me some slack- the goal of this iteration is clarity and
+> consistency in implementation, not performance. I'd love to make that a
+> priority later though!
+
+<hr>
+
+
