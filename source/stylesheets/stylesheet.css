@@ -8,6 +8,14 @@ body {
     font-weight: 100;
 }
 
+.site-header {
+    margin-top: 2em;
+    text-align:right;
+}
+.site-header * {
+    display: inline;
+}
+
 p, li {
     line-height: 2;
 }
@@ -50,11 +58,10 @@ img {
 hr {
     border: none;
     border-top: 1px solid gray;
-    padding: 10px;
 }
 
 .content hr {
-    width: 40%;
+    width: 30%;
 }
 
 #container {
