@@ -37,9 +37,9 @@ header file, and I have a general idea of what its interface is going to be.  I
 know I'm going to have some sort of struct called an Env, I know I'm going to
 need a setter function that takes an `Env` and a key value pair and returns
 void, and a getter that takes an `Env` and a key and returns a value- and I
-know I'll need a deletion function too. This is basically a miniature little
-CRUD interface!  (set = Create, get = Read, delete+set = Update, delete =
-Delete)
+know I'll need a deletion function too, or at least a way to free a whole env
+up at once. This is basically a miniature little CRUD interface!  (set =
+Create, get = Read, delete+set = Update, delete = Delete)
 
 ```c
 #ifndef ENV_GUARD
@@ -53,15 +53,6 @@ C *delete(Env*, C *key);
 
 #endif
 ```
-
-A couple of things to note here! Unlike the `cell.h` file, which defines the
-structs in full, I don't plan on interacting with an Environment except through
-the api that I'm defining here. Much like how the `FILE` object is opaque to
-the consumer of `stdio.h`, I want the interaction to be constrained to these
-basic functions. I am free then, to change the internal workings of the
-implementation of those functions and the underlying env struct however I want,
-and I won't have to go through my other code and update it all, as long as it
-still conforms to this basic api.
 
 I'll jump a little bit now, before implementing something for this, to where it
 will be used in the evaluation code! `eval` currently looks like this:
@@ -210,7 +201,9 @@ C *get(Env* env, C *key) {
 Back in the `eval_file` function, I'm going to have to actually pass in a real
 live `Env` now, instead of just a NULL pointer, since I will be dereferencing
 it. BUT, I can't assign values to the `Env` from there, since I haven't made
-the internals public (for good reasons!). I'll introduce a `new_env()` function to `env.c` and `env.h` that will return a pointer to an env, and I'll set a key for it!
+the internals public (for good reasons!). I'll introduce a `new_env()` function
+to `env.c` and `env.h` that will return a pointer to an env, and I'll set a key
+for it!
 
 ```c
 Env *new_env() {
@@ -278,11 +271,12 @@ I'll get an error, which makes sense, since that evaluates to
 (cons () #t)
 ```
 
-Which shouldn't work.
+Which shouldn't work, since I can't cons something _onto_ something that isn't
+a list.
 
 <hr>
 
-Ok, so, this is pretty contrived. I really neef a way to `set` values in an
+Ok, so, this is pretty contrived. I really need a way to `set` values in an
 Env, and to search through the entries to try and find a match. First of all,
 that struct definition of Env is completely useless for this, as it only holds
 one key value pair. That's really an `Entry`, which I will define internally
@@ -790,7 +784,7 @@ I didn't put any special logic in there- how does it know which one? Well...
 ```
 
 It returns the first one it finds! This doesn't seem like a big deal, but it
-will be the backbone of my language's dynamic scoping.
+will be the backbone of my language's variable scoping, later on.
 
 <hr>
 
@@ -960,4 +954,87 @@ I'll never be able to call define anywhere that would matter.
 
 "But what about `delete()` in the env?"
 
-We'll get there, don't need to do that yet.
+I don't want to expose a deletion function to the sild space just yet, if at
+all, once a variable is bound using `define` in the global environment, I want
+it to remain that way. But I do need to free the environment itself after I'm
+done with it, or I'll have a memory leak.
+
+Just as I free the results of an evaluation of a form after I don't need it anymore in `eval_file`
+
+```c
+void eval_file(const char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (!fp) {
+        fprintf(stderr, "Error opening file: %s\n", filename);
+        exit (1);
+    }
+
+    C * c;
+
+    Env *env = new_env();
+    while((c = read(fp)) != &nil) {
+        c = eval(c, env);
+        free_cell(c);           // here!
+    }
+
+    fclose(fp);
+}
+```
+
+So too will I free the environment I created for that file after I'm done
+reading the file! It will go here:
+
+```c
+void eval_file(const char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (!fp) {
+        fprintf(stderr, "Error opening file: %s\n", filename);
+        exit (1);
+    }
+
+    C * c;
+
+    Env *env = new_env();
+    while((c = read(fp)) != &nil) {
+        c = eval(c, env);
+        free_cell(c);
+    }
+    free_env(env);              // here!
+
+    fclose(fp);
+}
+```
+
+And it will look like this:
+
+```
+void free_env(Env* env) {
+    // get the first entry in the env
+    Entry *cur = env->head;
+
+    //holding place for the next entry
+    Entry *next;
+
+    while (cur) {
+        // free the char* key
+        free(cur->key);
+
+        // free the cell that is the value
+        free_cell(cur->value);
+
+        // hold pointer to next cell here, so that I can ...
+        next = cur->next;
+
+        // free the entry space for cur
+        free(cur);
+
+        // reassign cur to what was its next entry...
+        cur = next;
+    }
+    // finally, when there are no more entries, free the environment itself.
+    free(env);
+}
+```
+
+Now, I am being a good memory citizen and cleaning up after myself when I am
+done reading all the forms in a file.
