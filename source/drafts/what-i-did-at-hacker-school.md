@@ -36,10 +36,12 @@ themselves and coordinate housing and things like that. I wrote a little
 ever ran it.
 
 I asked for suggestions for resources to learn low level programming. Real low
-level programming, this time, not [brainfuck](/how-brainfuck-works/), which I thought was low level when
-I learned it, and in some way it is, I guess, but not in any meaningful sense of the
-way that term is actually used by real people. [Rose Ames](https://superluser.recurse.com/) suggested
-["From NAND to Tetris: Building a Modern Computer from First Principles"](http://www.nand2tetris.org/).
+level programming, this time, not [brainfuck](/how-brainfuck-works/), which I
+thought was low level when I learned it, and in some way it is, I guess, but
+not in any meaningful sense of the way that term is actually used by real
+people. [Rose Ames](https://superluser.recurse.com/) suggested ["From NAND to
+Tetris: Building a Modern Computer from First
+Principles"](http://www.nand2tetris.org/).
 
 Now if there is one thing I love, it's first principles. I loooooove first
 principles. The idea of starting with something very simple and building out of

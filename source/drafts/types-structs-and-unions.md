@@ -216,4 +216,4 @@ like this, with a bunch of leading zeroes:
 Types
 -----
 
-So, 
+So,
