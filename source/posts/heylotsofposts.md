@@ -1,7 +1,9 @@
 ---
 title: Hey, a lot of posts!
 layout: post
-tags: hs
+date: 2016-05-16
+layout: post
+tags: rc
 ---
 
 So, I haven't posted anything on here in a while. Actually, today is the one
