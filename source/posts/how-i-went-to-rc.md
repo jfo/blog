@@ -2,6 +2,7 @@
 title: How I went to the Recurse Center
 date: 2016-05-18
 layout: post
+tags: rc
 ---
 
 I wrote a [post](/corridor) about going to the [Recurse
