@@ -1,20 +1,31 @@
 ---
-title: What I did before Recurse Center
+title: How I went to the Recurse Center
+date: 2016-05-18
 layout: post
 ---
 
-I wrote a [post](/corridor) about going to the Recurse Center (née Hacker School) the night
-before I started my batch. I stand behind it, there were some good feels in there.
-But I never wrote about _how I got there_. Which, if I were me reading my own
-post a year prior, I would, like, you know, really wanted to have known _that_. I've been
-meaning to write this post for _years_ now, which is ridiculous, but better
-late than never?
+I wrote a [post](/corridor) about going to the [Recurse
+Center](https://www.recurse.com/) (née Hacker School) the night before I
+started my batch. I stand behind it, there were some good feels in there.  But
+I never wrote about _how I got there_. Which, if I were me reading my own post
+a year prior, I would, like, you know, really wanted to have known _that_. I've
+been meaning to write this post for _years_ now, which is ridiculous, but
+better late than never?
 
 This is written very procedurally: I did this, then this happened, then I did
 that. I don't mean to give the impression that it wasn't difficult, or that I never
 questioned what I was doing, because I did, a lot. And it was one of the more
 difficult things I've done in my life, most likely. But this post isn't about
 that part of the process, it's just about _what_ I did in that almost a year.
+It's also not about _why_ I did it. That's another subject. Maybe I'll write
+about that sometime, too, but not right now.
+
+I would like this post to be interesting for someone who may be thinking about
+a career switch via RC or a bootcamp, but may not know too much about what that
+might mean concretely. Or also interesting for someone who knows me and
+wonders how I went from a full time musician to a full time engineer in about
+a year. I haven't talked about it much; I'm not so natural a self promoter, as
+it turns out.
 
 <hr>
 
@@ -40,7 +51,7 @@ up with a relatively complete set. Any shape would have one of
 4  different voicings
 ```
 
-The specifics of these, while interesting and  maybe blogelaboutable, are not
+The specifics of these, while interesting and certainly blogelaboutable, are not
 pertinent right now. Just ... I wanted to figure out a lot of different
 permutations. For any given chord, I could see how it fell along these
 dimensions easily, but I was trying to figure out _everything_ because I am a
@@ -59,7 +70,7 @@ echo {A,Bb,B,C,Db,D,Eb,E,F,Gb,G,Ab}{M7,m7,7,m7b5,dim7,mM7,M7#5}_{0,1,2,3}_{drop2
 
 This was completely incomprehensible to me at the time, as I was
 still afraid of opening the terminal, but that didn't matter, because _it
-totally worked_. I had my giant list of voicings; I had my wheels turning!
+totally worked_. I had my giant list of voicings! This got my wheels turning.
 
 <hr>
 
@@ -87,7 +98,7 @@ I bought the books they recommended: Chris Pine's
 [Beginning Ruby](http://peterc.org/beginningruby/)
 
 I worked through them voraciously. I think they also recommended
-[tryruby.com](http://tryruby.com),
+[tryruby.com](http://tryruby.org),
 and I found that to be really helpful, as well. And at some point I found
 [Why's Poignant Guide](http://poignant.guide), which is a little dated now but
 is still a really sweet and weird book.
@@ -139,7 +150,7 @@ been my understanding.
 I had been doing research about other bootcamps and programs this whole time.
 Most of them were pay up front, which made them impossible for me to attend.
 But one of them wasn't, because one of them was the Recurse Center, and the
-Recurse Center is free, completely and no strings attached _free_ to attend.
+Recurse Center is free, completely and no strings attached, to attend.
 
 I don't remember how I found them first. There aren't _that_ many things
 online. I do remember finding this [video](https://www.youtube.com/watch?v=Jds52EW1yzM)
@@ -168,7 +179,7 @@ I submitted this stuff, along with a lot of ideas I had about what I might work
 on while I was there, and waited. I got a first interview. I talked to
 [Mary](http://maryrosecook.com/) for a while. It went ok; she was very nice. I
 wasn't invited to do a second interview. I was even more disappointed this
-time, I had started to develop an attachment to the idea of this possibility.
+time, I had started to develop an attachment to this whole idea.
 
 While talking to Mary, I had asked explicitly if it was possible to reapply,
 and she had said that people often do improve and get in on a second attempt.
@@ -191,7 +202,7 @@ A few days later she wrote back. Posted with her permission:
 This made me _very, very_ happy. She had no way of knowing this, but I had gone
 _way_ out of my way to emphasize the projects I had ideas about working on, because
 I thought that that would show that I had direction, and plans! The truth is
-that when I _really_ get interested in something, I just kind of want to dive in and
+that when I really get interested in something, I just kind of want to dive in and
 meander around in it and try to learn about it through trial and error, but I
 had spent so many years in institutions where this approach is looked down on,
 that I thought it would better to deemphasize that.
@@ -221,12 +232,14 @@ alumni volunteers conduct a lot of the interviews. The facilitators spent an
 enormous amount of time conducting interviews before this change, and to add
 the overhead of providing focused, thoughtful feedback for _every single
 application_ was not possible. This is a bummer, yes, but I do understand it.
+This is just to say that if you apply and don't get in, it might very well be
+worth another shot.
 
 Third, and most importantly, this timeline allowed me to set aside the myriad
 doubts and worries I had about the whole thing for a few months, and to just
 focus on programming _only_. I decided that I would spend that time, that 4-6
 months, learning as much as I could, and if I didn't get in again, well, then
-I'd reassess, at at least I would have learned some new skills. Normally I
+I'd reassess, and at least I would have learned some new skills. Normally I
 wouldn't have been able to do this, normally I would waffle back and forth
 about what the point of it was.
 
@@ -300,7 +313,7 @@ willingness to bang my head against something for a really long time until it
 kind of worked, I managed to make a 3d online rubik's cube [simulation](http://rubykscube.herokuapp.com/)
 
 I had so much fun doing this project that I followed the white rabbit straight
-into [esolang](https://esolangs.org/wiki/Main_Page)_ territory, and wrote my
+into [esolang](https://esolangs.org/wiki/Main_Page) territory, and wrote my
 Fizzbuzz for my second application in Brainfuck, which I wrote about
 extensively [here](/fizzbuzz-in-brainfuck-part-one/), and which to this very
 day wins the prize for most pointless thing I'm most proud of accomplishing in
