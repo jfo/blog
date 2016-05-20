@@ -5,7 +5,7 @@ layout: post
 tags: rc
 ---
 
-I wrote about what I did before I went to the Recurse Center, essentially about
+I wrote about what I did [before](/how-i-went-to-rc) I went to the Recurse Center, essentially about
 what I did to learn (or more accurately, begin to learn) to program, and now I want
 to write about what I did while I was there, and what I did just prior to
 being there, after I had been accepted.
