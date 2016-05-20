@@ -178,7 +178,7 @@ I worked on quite a few smaller projects, too.
   chess board that anyone could interact with in a given channel or private
   message thread.
 
-- A simple [genetic algorithm](http://localhost:4567/a-simple-gene/) that
+- A simple [genetic algorithm](/a-simple-gene) that
   optimizes for the number of `1`'s in a series.
 
   I think this was a very successful project, despite its small size. I learned
@@ -204,7 +204,7 @@ I worked on quite a few smaller projects, too.
 
 - Some miscellaneous puzzle solutions that I'm quite proud of, including [the
   eight queens](https://github.com/urthbound/puzzles/blob/master/eightqueens.rb),
-  a [sudoku solver](https://github.com/urthbound/puzzles/blob/master/sudoku.r://github.com/urthbound/puzzles/blob/master/sudoku.rb),
+  a [sudoku solver](https://github.com/urthbound/puzzles/blob/master/sudoku.rb),
   and [Conway's Game of Life](https://github.com/urthbound/terrorium/blob/master/life.rb).
 
 There was some more Euler solving, and some more pairing, and even some just
