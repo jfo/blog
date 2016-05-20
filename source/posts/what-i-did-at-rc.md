@@ -1,6 +1,8 @@
 ---
 title: What I did at the Recurse Center
+date: 2016-05-20
 layout: post
+tags: rc
 ---
 
 I wrote about what I did before I went to the Recurse Center, essentially about
@@ -10,12 +12,14 @@ being there, after I had been accepted.
 
 I should have written all this while it was happening, but I didn't. I remember
 a lot about the process of working on these projects, but I have forgotten just
-as much. Perhaps more importantly, though, is that I've forgotten the
-perspective I had. I still _remember having it_, I just can't _access_ it. I
-wish I had taken more notes, I wish I had written more things, but I'll try to
-write them now, as well as I maybe can.
+as much. I've forgotten the specific challenges and pitfalls I ran into at the
+time. I've forgotten a lot of what surprised me... perhaps more importantly,
+though, is that I've forgotten the perspective I had. I still _remember having
+it_, I just can't _access_ it. I wish I had taken more notes, I wish I had
+written more things, but I'll try to write them now, as well as I maybe can.
 
 <hr>
+
 ![img](https://s-media-cache-ak0.pinimg.com/736x/74/57/0b/74570beddef5a8f0beefdd102eec9739.jpg)
 
 The very first thing I did after I was accepted was to not program at all for
@@ -23,17 +27,16 @@ two solid weeks, and instead to take a trip to Copenhagen to get hazed by my
 girlfriend's Danish uncles.
 
 I came back in early January of '14, brain freshly pickled in
-[snaps](https://en.wikipedia.org/wiki/Snap://en.wikipedia.org/wiki/Snaps). I had
-around a month before my batch started, and a renewed vigor. Now freed
-from the idea that I "had" to learn Rails because it was my only and an obvious
-attack vector on the industry, I gave some more attention to the Ruby language,
-by itself, starting with a week or two working through the
-[ruby koans](http://rubykoans.com/). They were fun, and I really liked the format.
+[snaps](https://en.wikipedia.org/wiki/Snaps). I
+had around a month before my batch started, and a renewed vigor. Now freed from
+the idea that I "had" to learn Rails, I gave some more attention to the Ruby
+language, by itself, starting with a week or two working through the [ruby
+koans](http://rubykoans.com/). They were fun, and I really liked the format.
 
 Sometime around then, the mailing list opened up for my batchmates to introduce
 themselves and coordinate housing and things like that. I wrote a little
 [hello program](https://github.com/urthbound/hello), but I don't think anyone
-ever ran it.
+ever ran it. That's ok it was kind of silly.
 
 I asked for suggestions for resources to learn low level programming. Real low
 level programming, this time, not [brainfuck](/how-brainfuck-works/), which I
@@ -66,10 +69,10 @@ two years now, so... sorry I guess, random internet person and/or irl friend.
 The first thing I remember doing was pairing with [Robert Lord](https://lord.io/)
 on a battleship playing [bot](https://github.com/urthbound/battleship) in Ruby
 for a [fight club meetup](http://www.meetup.com/Ruby-Fight-Club/events/164727382/)
-later that week. Robert was so good! And like, I swear to god, seventeen years
+later that week. Robert was so good! And like, seventeen years
 old. I hadn't done too much pairing before RC and it was something I wanted to
 get a lot better at, so this was an auspicious start. We didn't win the
-contest, but if I recall correctly we came in a respectably in the middle of the pack.
+contest, but if I recall correctly we came in respectably in the middle of the pack.
 More importantly, it was a lot of fun, and it was the first time I went out _in
 public_ and looked a stranger _right in the eyes_ and told them I was a programmer.
 That was a pretty big step.
@@ -96,7 +99,7 @@ and that was to stick with the language I knew the best and write things with it
 But I couldn't shake the feeling that I should be using the language that most
 of the people around me were using, so I resolved to learn it. I spent a
 couple of days reading through some tutorials, doing some exercises... it all
-seemed very familiar, like I had already done this step... it wasn't super
+seemed very familiar, like I had already done this step... it was not super
 exciting.
 
 On the third day of this, I was solving a [project euler](https://projecteuler.net/)
@@ -127,7 +130,7 @@ Somewhere around the middle of the batch I participated in the traditional "I
 should have a blog which one should it be" week, decided on a static generator
 instead of wordpress, switched from middleman to jekyll and back, decided I
 should know how to host it myself, and then fought nginx config files and [AWS](/into-the-cloud-a-quick-aws-primer/)
-for like _another_ week at least. I also decided it would be good to be able to host my
+for like _another_ week . I also decided it would be good to be able to host my
 own apps and sites, and spent part of that time figuring out really boring
 server config type stuff. I polished up my rubik's cube with keyboard
 bindings, made it look better, and hosted it on my own server.  I spent a
@@ -151,32 +154,53 @@ amirite?) and functionally (functionally). The ruby koans worked for me, and I
 found the [Clojure Koans](http://clojurekoans.com/) pretty approachable as
 well, so that's where I started.
 
-It didn't take me long to discover [Overtone](http://overtone.github.io/).  I
-had originally wanted to write a voice leading engine, but ended up writing a
+It didn't take me long to discover [Overtone](http://overtone.github.io/), a
+Clojure wrapper library to interact with the software synth
+[Supercollider](http://supercollider.github.io/).  I had originally wanted to
+write a voice leading engine, but ended up writing a
 [humdrum](http://www.musiccog.ohio-state.edu/Humdrum/) interpreter and player
 instead, called [Fux](https://github.com/urthbound/fux). I think Fux was the
 biggest thing that I felt the most proud of doing while I was there, and it's
-one of only a few things I gave a presentation on.
+one of only a few things I gave a presentation on. It would read a textfile
+representation of a score of a Bach chorale, and then output the four voices as
+sine waves via Overtone. It really made noise! It was great!
 
 <hr>
 
 I worked on quite a few smaller projects, too.
 
 - A [Chessbot](https://github.com/urthbound/chessbot) for
-[Zulip](https://zulip.org/), our internal chat client. Zulip bots are a really
-popular project as they are of a pretty contained scope and immediately useful.
+  [Zulip](https://zulip.org/), our internal chat client.
+
+  Zulip bots are a
+  really popular project as they are of a pretty contained scope and
+  immediately useful.  This one couldn't play with you, but it acted like a
+  chess board that anyone could interact with in a given channel or private
+  message thread.
 
 - A simple [genetic algorithm](http://localhost:4567/a-simple-gene/) that
   optimizes for the number of `1`'s in a series.
 
-- A vim plugin I called [Runners](https://github.com/urthbound/vim-runners)
-  that knows how to execute scripts by filetype. It is really simple and not
-  especially clever, but I still use this plugin almost every single day to iterate
-  quickly.
+  I think this was a very successful project, despite its small size. I learned
+  a LOT that I didn't know, it only took a few days, it _worked_, and I was
+  even able to write it up. This is exactlyy the kind of thing I would try
+  harder to do more of if I were to do another batch.
+
+- A vim plugin called [Runners](https://github.com/urthbound/vim-runners)
+  that knows how to execute scripts by filetype.
+
+  It is really simple and not especially clever, but I still use this plugin
+  almost every single day to iterate quickly, and I've recently added support
+  for makefiles! The plugin will delegate its behaviour to the makefile if it
+  has a "run" target, essentially allowing you to script any behavior you
+  want in whatever context. Also it makes C feel like a scripting language!
+  So that is very nice.
 
 - A [url link shortener](https://www.youtube.com/watch?v=dQw4w9WgXcQ) that
   could be set to automagically redirect a user to Rick Astly's 1987 smash hit,
   "Never Gonna Give You Up" ([code here](https://github.com/urthbound/rickroller))
+
+  No further comment.
 
 - Some miscellaneous puzzle solutions that I'm quite proud of, including [the
   eight queens](https://github.com/urthbound/puzzles/blob/master/eightqueens.rb),
@@ -185,16 +209,40 @@ popular project as they are of a pretty contained scope and immediately useful.
 
 There was some more Euler solving, and some more pairing, and even some just
 plain old hanging out. It was an amazing group of people from an impressively
-wide array of backgrounds, many if not most of which had very little to do with
-programming. There were at least half a dozen Phd's.
+wide array of backgrounds. There were at least half a dozen Phd's in varied
+fields that had nothing to do with programming at all.
 
 I was still teaching music throughout all of this; I had _just enough_ students
 to keep my rent paid. But it meant that I usually had to miss most if not all
-of the Thursday night presentations, where my co-recursers would talk about
+of the Thursday night presentations, where my batchmates would talk about
 what they were working on and what they had made. I really regretted missing
 those, but there was nothing I could do about it. The presentations are so fun
 and so interesting and for some people it is the only time that they _really_
 put themselves out there and share the cool things they've been learning.
 
+The last couple of weeks were filled with more intense interview prep, more
+"looking for jobs" type stuff, and general stressing out followed by marginally
+more partying than we had been doing. Then it was over. It both went fast and
+slow... so much happened, to be honest when I think back on it, it kind of
+feels like a full school year somehow, but three months is really not that
+long.
+
 <hr>
 
+And that's it. After hearing about RC, people often scratch their heads and
+ask... "but what do you learn there? are there classes? that doesn't sound like
+it would work...". I don't blame the reaction- I had my own skepticism going
+in, but I also knew how powerful self directed learning could be.
+
+It's not magic dust- I spent three months with my hands on the keyboard,
+programming a lot of different things, surrounded by other people doing the
+same. If I got stuck, now there was someone who could get me unstuck sitting
+next to me, or across the room. If I got distracted, or didn't know what I
+wanted to work on, I could just pair for a while with someone else, or watch
+what they were doing. There was no question I could think up that didn't
+have an answer close by, especially at the level I was at going in, as one of
+the most inexperienced people there.
+
+I spent a lot of time programming, and I got a lot better at it! That's all
+there was to it, at the end of the day. It was super fun!  If this sounds like
+something you might enjoy doing, you should totally [apply](https://www.recurse.com)!
