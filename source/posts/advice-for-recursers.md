@@ -22,7 +22,7 @@ This is just my opinion, but those resources will be there before and after
 your batch; your cohort will not be there (at least not _there_ in the physical
 space sense, most likely). If you really feel strongly about something, definitely do
 it! Or if you feel that a reading group or structured work with other people
-could greaty benefit you, then do that! But I would tell you that I think that
+could greatly benefit you, then do that! But I would tell you that I think that
 probably it's not the best use of your batch time to hole up in a room with a
 textbook or do a series of tutorials.  Exceptions being, like I said:
 book/study clubs, or groups working on the same types of things together.
