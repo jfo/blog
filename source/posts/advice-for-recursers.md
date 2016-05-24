@@ -1,6 +1,8 @@
 ---
 title: Advice for Recursers
+date: 2016-05-24
 layout: post
+tags: rc
 ---
 
 Now's the part where I give advice for new Recursers. A lot of it echoes the
