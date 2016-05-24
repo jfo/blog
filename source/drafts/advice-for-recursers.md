@@ -33,9 +33,11 @@ you're really into it.  Don't be afraid to pair on a language you don't know
 well or on a problem space you're unfamiliar with. Your cohort is and will
 long remain an amazing resource, use it! Also, know when to stop! When  you
 agree to pair on something, you might realize quickly after you've begun that
-you're not all that interested in it after all. That's ok too! That might sound
+you're not all that interested in it after all. That's ok too! And if you legit
+don't feel like pairing at all, that is also alright! That might sound
 contradictory, maybe it is contradictory, but `¯\_(ツ)_/¯`. Just be open to
-pairing, is all I'm saying!
+pairing on things you may not have thought about working on before, is all I'm
+saying!
 
 - **Regardless of what you're working on, start where you're at.**
 
@@ -56,7 +58,6 @@ then learn that thing before moving on.
 
 >I think of this as "recursive autodidacticism" and it's a good way to figure
 >out how to get where you want to go!
-
 
 I opened the stats book, the first sentence in the first page of the
 introduction said "A thorough understanding of calculus is required to grasp
@@ -88,23 +89,38 @@ think "work all the time until the thing is done, or" (I cluck disdainfully at
 myself) "don't do it at all." Sometimes, this attitude is a super power... when
 I really get into something, I can maintain focus for weeks on end. But other
 times, it is _not at all_ a superpower. Holding myself to a standard like that
-is not only not realistic, it can also be unhealthy. Figuring out the
-difference is a process; I'd like to think I'm getting better at it.
+is not only unrealistic, it also has the potential to be unhealthy. Figuring
+out the difference between superpower hard headedness and kryptonite hard
+headedness is a process; I'd like to think I'm getting better at it.
 
-Point being, improvement is almost definitionally incremental. Don't fight
+Point being, improvement is by definition incremental. Don't fight
 that! Find the time to rejoice in small victories, sometimes tiny victories.
 Maybe you'll have a day where the only thing you learn is a flag on a command
 line tool like `ls -l` or something. That may not seem like a big deal- but
 that's now a thing you know that you'll likely never need to look up again, and
-that _is_ a big deal! you learned a thing! Go have a beer/chocalate bar/apple
-or something!
+that _is_ a big deal! you learned a thing! Go have a beer/chocalate
+bar/apple/bag of kale chips or something!
 
-- Keep a devlog.
+- **Keep a devlog.**
 
 This could be a blog! If you keep a blog- pick a thing and just use it. It can
 be a tumblr, or a blogspot, or a static site generator like jekyll or middleman
-or pelican or whatever... it doesn't matter. But also, you don't have to make
-it public! But at least keep a single text file in your home directory and jot
-down notes about what you did, what you learned, what you thought about...
-trust me, that perspective will be hellah interesting in a few years, even if it
-is just recorded in procedural sentence fragments!
+or pelican or whatever... it doesn't matter, and you can always port it later.
+Also, you don't have to make it a whole big public blog thing! But, at least
+keep a single text file in your home directory and jot down notes about what
+you did, what you learned, what you thought about...  or make it a habit to
+write [ verbose git commit messages ](http://chris.beams.io/posts/git-commit/).
+Trust me, that perspective will be hellah interesting in a few years, even if
+it is just recorded in procedural sentence fragments!
+
+- **Try to enjoy the time**
+
+Try to stay in the moment here folks, it's only a few weeks, after all. If
+you're there, you probably like to program, right? That is literally your only
+responsibility during your batch- program whatever you want! It's a unique
+period, try not to overthink it.
+
+<hr>
+
+I have other pieces of advice rattling around up there, but these are the main
+highlights. I hope somebody finds them helpful.
