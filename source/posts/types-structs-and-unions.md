@@ -1,10 +1,12 @@
 ---
-title: Types, Structs, and Unions
+title: C and Simple Types
+date: 2016-05-26
 layout: post
+tags: rc
 ---
 
 I'm going to explain some things about C and computers in general in simplified
-terms, ignoring a lot of implementation details.
+terms, ignoring a lot of details.
 
 When a C program starts, it has access to a big chunk of memory. This memory is
 basically just a really long series of bits that can only either be 1 or 0.
@@ -154,7 +156,7 @@ Notice the variable declaration `int x;`. This program sets aside some space in
 the memory for `x`, which we are telling the program is an `int`. That's what
 declaring a variable does; whether or not you assign it any value (this program
 does not do that, `x` has not been initialized to a value, and so is
-_uninitialized_), it sets aside that space.
+_uninitialized_), but it sets aside that space.
 
 In C, the typing of a variable determines an appropriate amount of memory to
 use for that variable's value. In the above example, the `sizeof` operator
@@ -169,19 +171,7 @@ that an int uses, which in this case is:
 vary by machine!) takes up 32 bits. looking at the table above, 32 bits (4
 bytes) can represent a maximum of `4294967296` things.
 
-><h4>Signed vs Unsigned Integers</h4>
-> Though 32 bits can represent `4294967296` things, it doesn't necessarily
-> represent a number that large. We also need a way to represent negative
-> numbers. A _signed_ integer (which is the default) uses the _most significant
-> bit_ as a flag to mark a number as negative (1) or positive (0). In our above
-> example, as a signed int, x can be initialized to a value between -2147483648
-> and 2147483647 (they are one off of each other to account for 0), which is
-> 1/2 of 4294967296 and also is equal to 2<sup>31</sup> (because that one bit is used as
-> the sign: 32 - 1 = 31).
-
-`int`s, on my machine, are 4 bytes long.
-
-Remember- `x` here is _declared_ but still _uninitialized_ If you try to
+Remember- `x` here is _declared_ but still _uninitialized_. If you try to
 actually _use_ an uninitialized variable, you'll get a warning, something like
 this:
 
@@ -198,7 +188,7 @@ program, since memory allocation occurs at runtime.
 
 <hr>
 
-Knowing that an int is 32 bits long is valuable information. Remember before,
+Knowing that an `int` is 32 bits long is valuable information. Remember before,
 when we looked at our 3 bit possibilities? Well, that actually would look more
 like this, with a bunch of leading zeroes:
 
@@ -216,4 +206,72 @@ like this, with a bunch of leading zeroes:
 Types
 -----
 
-So,
+I'm going to pick a number out of a hat. Let's say... `33`. Look at that table
+just above- if I kept counting up like that, `33` would end up being `100001`
+(we can omit the leading zeros as is typical when typing binary numbers). In
+`C`, you can represent a binary number like that by prefacing it with `0b` as a
+bare string in the code. That would look like `0b100001`. That means that the
+following two lines are exactly the same.
+
+```c
+printf("%i", 0b100001); // 33
+printf("%i", 33); // 33
+```
+
+
+`printf` takes a string of text and some arguments, and interpolates the
+arguments into the string where there are 'embedded format tags' like `%i`.
+These tags are typed so that `printf` knows how to interpret what it is being
+given. `%i` means `int`. What do you suppose `%c` means? How about this program:
+
+```c
+#include <stdio.h>
+int main() {
+    printf("%i", 0b100001);
+    printf("%c", 0b100001);
+}
+```
+
+This program prints out:
+
+```
+33!
+```
+
+Where did all that excitement come from? It came from interpreting the binary
+value `100001` as a `%c`, which means `char`. According to the [ASCII
+table](http://www.theasciicode.com.ar/ascii-printable-characters/exclamation-mark-ascii-code-33.html), `33` is equal to `!`! The value of the number hasn't changed, _but how we're interpreting it has changed._
+
+<hr>
+
+Same same but different:
+
+```c
+#include <stdio.h>
+int main() {
+    int x = 33;
+    printf("%i", x);
+    printf("%c", x);
+}
+```
+
+Still outputs:
+
+```
+33!
+```
+
+It doesn't matter that `x` is an `int`, because the value of that data can be
+interpreted any way we want. Can we add two `chars` together, I wonder? `! + !` would be `66`, right?
+
+```c
+printf("%i", '!' + '!'); // 66
+```
+
+Can we print an int directly as a character?
+
+```c
+printf("%c", 33); // !
+```
+
+Well I'll be.
