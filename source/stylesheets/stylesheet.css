@@ -39,6 +39,7 @@ pre {
 pre code {
     overflow-wrap: normal;
     white-space: pre;
+    padding: 0;
 }
 
 code {
