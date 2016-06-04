@@ -3,82 +3,38 @@ title: Sild is a lisp dialect
 layout: post
 ---
 
-I read somewhere that you're not really a lisp programmer until you've
-implemented your own interpreter. Fair enough, I guess, and although that's
-exactly the kind of sweeping, obnoxious statement that makes people not want to
-talk to you at parties... it really stuck with me. People who like lisp
-_really_ like lisp, and I wanted to see what all the fuss was about, but for a
-long time I just didn't know where to start. I've played around quite a bit
-with Scheme through a couple of abortive attempts at SICP, and I enjoyed those
-"the little [thing]er" books very much! I even implemented a toy interpreter
-in Ruby a while back, which was edifying, but I've always found building your
-own data structures in a higher level language to feel kind of...  pointless?
-It's great for learning concepts, for sure, but you're building abstractions on
-top of the (probably) better and (definitely) more efficient abstractions of
-your host language. I wanted to try to implement something on the bare metal of
-the machine; I wanted to build my own abstraction from the memory on up. Lisp,
-after all, is a pretty simple idea, at it's core... you're basically just
-writing a human readable abstract syntax tree!
+Today, I'm releasing [**Sild**](https://github.com/urthbound/sild), a tiny
+little intepreted lisp that I wrote in C.
 
-<u>**Some history** : _wtf is LISP_</u>
+I've been interested in trying to learn about language design and
+implementation for a while now. I've also been interested in Lisp as a concept,
+and I had been wanting to learn C so that I could start wrapping my head around
+systems programming too. This project brought all of those things together!
 
-**Lisp ex nihil**
+Sild is not conformant to any existing spec. It's not _really_ a Scheme and it
+is definitely not a version of Common Lisp. It is simply my attempt to build a
+lispy language in a semi-vacuum from first principles.
 
-Ok,so, Lisp stands for "LISt Processor." One day I was thinking about _just
-that_, and I decided I just needed to start from there, from a linked list.
+A Lisp can be _incredibly_ syntactically simple. It is comparatively easy to
+write a parser for a homegrown lisp; the same task for a homegrown
+pretty-much-anything-else would be orders of magnitude more complex, full of
+bugs and edgecases. For Sild, I was able to write a parser that operates with
+minimal lookahead and in linear time.
 
-So! Making a list in C is pretty simple, actually. We need a type of data
-structure, we'll call it a node for now, that can hold two things: a
-value, and a pointer to the location of the next node. We can make that out of
-a struct, like this:
+I was inspired to try this project by a variety of things. 
 
-```c
-struct node {
-    int value;
-    struct node * node;
-}
-```
+Paul Graham's [_The Roots of Lisp_](http://www.paulgraham.com/rootsoflisp.html)
+
+Mary Rose Cook's [_Little Lisp Interpreter_](https://www.recurse.com/blog/21-little-lisp-interpreter)
+
+Daniel Holden's [_Build Your Own Lisp_](http://www.buildyourownlisp.com/)
+
+John Mccarthy's original 1960 paper [_Recursive Functions of Symbolic Expressions and Their Computation by Machine (Part I)_](http://www-formal.stanford.edu/jmc/recursive.html)
+
+the art of the interpreter
+
+http://repository.readscheme.org/ftp/papers/ai-lab-pubs/AIM-453.pdf
+
+and of course, Sicp https://mitpress.mit.edu/sicp/full-text/book/book.html
 
 
-
-
-sections notes;
-
-what is a list.
-a string is a kind of a list, as is an array when we declare it, but that always
-assumes consecutive memory spaces, which is also why they have to be the same
-size. We want to malloc our own list.
-
-a linked list has two things in it, a value, ad a pointer to the next cell. If
-the pointer to the next cell is null, then that is the end of the list.
-
-make out of a struct.
-
-
-Now this looks something like
-
-```
-[1][->]
-```
-
-Let's start by ingesting a list of chars. It seems like it would be simpler to
-start with numbers, but really because we are starting from a string, we are
-already dealing with chars, we just want to get them into a linked list from a
-C string.
-
-`a b c d`
-
-we want a function that reads each character, and copies it into our linked
-list structure.
-
-that's nice, but we want more than just the basic character set by itself. it
-would be better if the value in our cell could be a raw c string, and let's
-also change the name of the value to `label`, since we are only dealing with
-strings right now and that is more accurate.
-
-```c
-struct cell {
-    char* label;
-    struct cell * next;
-}
-```
