@@ -87,7 +87,7 @@ comprehend!
 
 - Sussman and Abelson's [_The Art of the Interpreter_](http://repository.readscheme.org/ftp/papers/ai-lab-pubs/AIM-453.pdf)
 
-I consulted this a few times when I rean into specific questions, but again, I
+I consulted this a few times when I ran into specific questions, but again, I
 didn't really grok it until after I had finished the whole thing. The finer
 points of closures and mutability and garbage collection were all lost on me
 until I banged my own head against them all for a while. The first time I read
