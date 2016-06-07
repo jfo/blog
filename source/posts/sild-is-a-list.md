@@ -1,27 +1,58 @@
 ---
-title: Sild part 1
+title: Sild is... a list?
 layout: post
+date: 2016-06-6
+tags: rc
 ---
 
-If I'd like to write a lisp, where would I start?
-
-Lisp stands for "list processor," so I'll start with lists.
+This is the first post in a series of posts that start from nothing and end up
+with a lisp interpreter. I tried very hard to keep my commits atomic
+and in parity with these posts, and for the most part I think I did that fairly
+well. You can start from [the first few
+commits](https://github.com/urthbound/sild/commits/master?page=7) if you want
+to follow along and see the growth of the language along with these posts, but
+I won't be linking to particular commits along the way.
 
 <hr>
 
-A list is a series of cells that have two things in them: a value, and an
-address for the next cell in the list. I'll start with creating a struct that
-can hold those two things, and I'll call it a `Cell`:
+Where would I start, if I'd like to write a lisp?
+
+LISP stands for "list processor," so I suppose I should start with lists.
+
+What is a list? A list is a sequential collection of somethings or anothers.
+Let's call these somethings or others "cells" for now.
+
+So, a "list" is a sequential collection of "cells," which begs the question,
+what is a cell? I could say that a cell is a something or another, and that
+wouldn't be a _lie_ exactly, but it's not very helpful, is it? Or maybe it is
+helpful... certainly a cell is a something... let's say that something could be
+a number. So, a cell is a number!
+
+But how do we get the next thing in the list? We could put all the things in
+the list next to each other in memory, and this would make it easy to find the
+next cell- we could just look to the next slot in memory and there we would
+find it. This is actually _not_ a list... this is an _array_. It is similar,
+but not the same.
+
+A list is a collection of sequential cells; a cell is a something _and_ another.
+
+A _something_ is a number, then _another_ would be the next cell in the list.
+
+So, cells have two things in them: a value, and an address for the next cell in
+the list. Let's make a cell, in C. I'll start with creating a struct that can
+hold those two things, and I'll call it a `Cell`:
 
 ```c
 struct Cell {
     int value;
-    struct Cell * next;
+    struct Cell *next;
 };
 ```
 
-For now, let's say that the value has to be an `int`. I could assign values to
-a cell like this:
+If you don't know what a struct is, [I wrote about them
+here](/structs-and-unions/).
+
+I could assign values to a cell like this:
 
 ```c
 int main() {
@@ -35,8 +66,8 @@ int main() {
 ```
 
 That dot notation is used to access the `members` of the struct. In this case,
-there is no next cell, so ```a_cell.next``` is the `NULL` pointer, which is
-zero. This is a list of one element. Let's make a second cell.
+there is no next cell, so `a_cell.next` is the `NULL` pointer, which is
+zero. This is a _list_ of one cell. Let's make a second cell.
 
 ```c
 int main() {
@@ -55,10 +86,10 @@ int main() {
 }
 ```
 
-Now, `a_cell.next` is being assigned to `&another_cell`. Which is
-taking the address of `another_cell`. There is now a reference to
-`another_cell` contained in `a_cell`, and the two cells are _linked_.
-This is why this structure is called a `linked list`.
+Now, `a_cell.next` is being assigned to `&another_cell`. Which is taking the
+address of `another_cell`. There is now a reference to `another_cell` contained
+in `a_cell`, and the two cells are _linked_.  That is why this structure is
+called a `linked list`. It consists of cells that are _linked_ together.
 
 I should be able to get to `another_cell`'s values _through_ the first
 cell, and I can, and it looks like this:
@@ -72,10 +103,14 @@ Notice how that is different... I say "tell me where the next cell after
 ```a_cell``` lives" with ```a_cell.next```, and I say "give me its value" with
 `->value`
 
-TODO: WRITE ABOUT THE ARROW NOTATION.
+We use the `.` notation when we are operating directly on structs, and we use
+the `->` notation when we are operating on a _pointer_ to a struct. The reasons
+for this are historic, and [this fantastic stack overflow
+    answer](http://stackoverflow.com/questions/13366083/why-does-the-arrow-operator-in-c-exist)
+explains why in great detail, if you are interested.
 
-This is a very simple data structure, but you can do a lot with it! Here is a
-function that takes a cell and prints it's value:
+This linked list of cells is a very simple data structure, but you can do a
+whole lot with it! Here is a function that takes a cell and prints it's value:
 
 ```c
 void print_cell(struct Cell car) {
@@ -83,7 +118,7 @@ void print_cell(struct Cell car) {
 }
 ```
 
-But this only does a single cell. What If I want to print a whole list? I could
+But this only prints a single cell. What If I want to print a whole list? I could
 do something like this:
 
 ```c
@@ -95,8 +130,8 @@ void print_list(struct Cell car) {
 
 Notice that `car.next` is a pointer, and ```print_list``` is expecting not a
 pointer to a cell, but an _actual cell_ to be passed into it. The ```*```
-operator takes a pointer and `dereferences` it, which means represents not
-just the address of a thing but the _actual_ thing.
+operator takes a pointer and `dereferences` it, which means it returns not just
+the address of a thing but the _actual_ thing.
 
 If I try to run ```print_list(a_cell)``` though, this dies, because though it
 succeeds in passing the first  two cells through the function, when it tries to
@@ -225,6 +260,20 @@ them a bunch of times, I want to make the Cell once, and then pass around a
 reference to the Cell in the form of the address of where I put it. I don't
 want to _pass by value_, I want to _pass by reference_!
 
+> My dad's friends always send him viral videos. But they don't send youtube or
+> vimeo links, they send the entire video file along in the email! Everyone who
+> gets the mail has to download a copy of the video... everytime the email is
+> transmitted, all the data that constitutes the video goes with it. It gets
+> copied hundreds of times! Isn't it easier to just send a URL to a youtube
+> video? Then the data in the email is very small, but you still get
+> to watch the
+> [video](https://www.youtube.com/watch?v=8F9jXYOH2c0&app=desktop). Also less viruses.
+
+> This is the same as the difference between _pass by value_ (copying the video
+> each time the email is sent) and _pass by reference_ (the "reference" being the
+> address of the video, or the memory address of the structure you're referring
+> to.)
+
 <hr>
 
 I can modify `makecell()` to return a pointer (which is an address) to the Cell
@@ -279,7 +328,7 @@ a room please," and `malloc()` goes back and checks if they have the kind of
 room you wanted. If they do, it will give you the address of the room. If they
 don't, if the hotel is full, you get 'nothing' back, in the form of the null pointer.
 
-> That hotel is the heap. Once you've allocated memory on the heap, it's your's
+> That hotel is the heap. Once you've allocated memory on the heap, it's yours
 > for the remainder of the program's execution. You must _manually_ free the
 > memory by passing the address of it to `free()`, the yang to malloc's yin.
 > Failure to properly manage heap memory, say by forgetting to free memory that
@@ -300,10 +349,7 @@ struct Cell *makecell(int value, struct Cell *next) {
 ```
 
 I start now by requesting enough space on the heap for a cell. How much space
-is enough? I could figure that out by adding the size of an int to the sizeof a
-pointer (which is what a cell contains), but it's easier to use `sizeof()` to
-do it for me, and I don't have to change it if I add more members to the struct
-later on (which I definitely will).
+is enough? I can figure that out by using `sizeof()`.
 
 On success, `malloc()` returns a pointer to that allocated memory. I've told my
 program we're treating it as a pointer to a Cell. The next two lines simply
@@ -378,3 +424,5 @@ As written, this program prints out.
 ```
 1 2
 ```
+
+And now we have a linked list.
