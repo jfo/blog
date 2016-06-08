@@ -1,5 +1,5 @@
 ---
-title: Sild: Reading substrings
+title: Sild- Reading substrings
 layout: post
 date: 2016-06-8
 tags: rc
