@@ -22,11 +22,11 @@ LISP stands for "list processor," so I suppose I should start with lists.
 What is a list? A list is a sequential collection of somethings or anothers.
 Let's call these somethings or others "cells" for now.
 
-So, a "list" is a sequential collection of "cells," which begs the question,
-what is a cell? I could say that a cell is a something or another, and that
-wouldn't be a _lie_ exactly, but it's not very helpful, is it? Or maybe it is
-helpful... certainly a cell is a something... let's say that something could be
-a number. So, a cell is a number!
+So, a "list" is a sequential collection of "cells". So what is a cell? I could
+say that a cell is a something or another, and that wouldn't be a _lie_
+exactly, but it's not very helpful, is it? Or maybe it is helpful... certainly
+a cell is a something... let's say that something could be a number. So, a cell
+is a number!
 
 But how do we get the next thing in the list? We could put all the things in
 the list next to each other in memory, and this would make it easy to find the
