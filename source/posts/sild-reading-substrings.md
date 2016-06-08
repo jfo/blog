@@ -1,9 +1,11 @@
 ---
-title: Sild2 reading substrings
+title: Sild: Reading substrings
 layout: post
+date: 2016-06-8
+tags: rc
 ---
 
-last time link
+[In the last post, I made a simple little linked list](/sild-is-a-list).
 
 I can't expect to make every single cell in a list by hand, of course. I need a
 way to turn some kind of input into a set of cells that are all semantically
@@ -25,16 +27,17 @@ list. As we saw before, from there we can access further elements by traversing
 the `next` members in each cell.
 
 This function accepts a string. In C, strings are not a primitive type,
-they're instead represented by a pointer address that points to the first
-character in the string. C strings are NULL terminated, which means that it
-goes from the "starting" point, to the next null byte. The null byte here is
-represented by '\0', but it could just as well be `NULL` or `0` or `0.0` or
-`0x0`. They are all equal to the same thing, which is absolute 0, which is the
-null byte. Functions that operate on strings implement loops that go until they
-run into a null byte, and this one will do that, too.
+they're instead represented by a pointer address that points to the location of
+the first character in the string. C strings are NULL terminated, which means
+that it goes from the "starting" point, to the next null byte. The null byte
+here is represented by '\0', but it could just as well be `NULL` or `0` or
+`0.0` or `0x0`. They are all equal to the same thing, which is absolute 0,
+which is the null byte. Functions that operate on strings implement loops that
+go until they run into a null byte, and this one will do that, too.
 
 Notice the `*s`'s. This is called 'dereferencing'. When we 'dereference' the
-pointer we've been given, it returns the actual content of that memory address. Let's say we're passing in a string like so:
+pointer we've been given, it returns the actual content of that memory address.
+Let's say we're passing in a string like so:
 
 ```
 read("a");
@@ -363,6 +366,8 @@ Address: 0x7ffb21c033f0, Value: red, Next: 0x7ffb21c033e0
 Address: 0x7ffb21c033e0, Value: balloons, Next: 0x0
 ```
 
-So far so good.
-
-<hr>
+Now, we have a way to turn some input (a random string) into a linked list
+structure that contains a bunch of cells that contain substrings of that
+original string. We also have a couple of functions that can operate on the
+resulting linked list. Those functions, as they develop, will serve as the
+prototypes for _all_ functions that operate on these lists.
