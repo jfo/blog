@@ -1,11 +1,13 @@
 ---
-title: Sild3 actual lists
+title: Sild - actual lists
 layout: post
+date: 2016-06-10
+tags: rc
 ---
 
-So far I've made a linked list whose cells have an arbitrary string as their
-value. I can read in an input string and turn it into a linked list of words,
-like this:
+[So far](/sild-reading-substrings) I've made a linked list whose cells have an
+arbitrary string as their value. I can read in an input string and turn it into
+a linked list of words, like this:
 
 ```c
 int main() {
@@ -272,7 +274,7 @@ to the `val` member, and vice versa. This is silly. A cell can only ever be one
 or the other type, after all, and furthermore as it is I'm allocating space for
 those members even when I'm not using them.
 
-It's much better to use a `union`, which I wrote about before here: TODO UNION LINK.
+It's much better to use a `union`, which I wrote about before [here](/structs-and-unions).
 
 A cell, now, will have only three members ever: a `type`, a generic `value` and
 the `next` pointer to the next cell.
