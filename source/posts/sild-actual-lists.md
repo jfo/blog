@@ -709,6 +709,6 @@ NIL- Address: 0x107b6f020
 
 Now I have a program that can take an arbitrary string of arbitrarily nested
 parenthetical expressions and turn it into an abstract syntax tree that's
-represented in memory by WHAT IS THE NAME OF THAT STRUCTURE TODO. It doesn't
-handle malformed input very well, and I can't do much with the structure I've
-read in yet, but this is really great!
+represented in memory in a structured way. It doesn't handle malformed input
+very well, and I can't do much with the structure I've read in yet, but this is
+really great!
