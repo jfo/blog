@@ -1,6 +1,8 @@
 ---
-title: Sild4 sublist counting refactor
+title: Sild - read more good
 layout: post
+date: 2016-06-13
+tags: rc
 ---
 
 There is a complexity problem with my program!
@@ -9,13 +11,15 @@ I want to iterate over each character as few times as possible in
 order to read them in. How many times am I iterating over them now?
 
 To find out, I'll add an `inner_reads` global var and initialize it
-to 0.
+to 0. As a reminder, you can see this code in its working form in the repo,
+right about
+[here](https://github.com/urthbound/sild/commit/1c9d7a9d14ddf5f7cedca0f749ddc51f4e9624be).
 
 ```c
 int inner_reads = 0;
 ```
 
-And I'll add an increment to that variable each place where a char is
+I'll add an increment to that variable each place where a char is
 being accessed: Once in:
 
 ```c
@@ -271,7 +275,6 @@ C * read(char **s) { // **s is a 'pointer to a pointer', in this case a pointer 
 
 NOW WATCH THIS
 
-
 ```c
 int main() {
     char *a_string = "(((((((((((i)))))))))))";
@@ -350,7 +353,7 @@ NIL- Address: 0x10c22f028
 ```
 
 With this tweak, I've removed a potentially major computation bottleneck and
-guaranteed that the reader function will operate in constant time at a max of
+guaranteed that the reader function will operate in linear time at a max of
 O(3n), and I've completely eliminated the `count_substring_length()` function
 from the source. At this point, the source code is still only 116 lines long,
 and  fully 35 of those lines are devoted to the debugging code that lets me see
