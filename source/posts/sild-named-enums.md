@@ -1,7 +1,11 @@
 ---
-title: Sild5 let's talk about enums
+title: Sild - typedeffed enums have a benefit!
 layout: post
+date: 2016-06-15
+tags: rc
 ---
+
+I've got a short one today.
 
 As of now, the enum I've been using to represent cell types has been an anonymous one.
 
@@ -89,7 +93,6 @@ compiler now knows what the type (`enum Celltype`) of the cell's `type` member
 is, and it knows that the switch statement is operating on this type, it can
 catch me if I try to write a switch and forget to account for every possible
 case. Look what happens if I remove the `LIST` case, for example!
-
 
 ```c
 sild.c:27:13: warning: enumeration value 'LIST' not handled in switch [-Wswitch]
