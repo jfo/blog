@@ -1,6 +1,8 @@
 ---
-title: Sild6 error handling
+title: Sild - match those parens
 layout: post
+date: 2016-06-16
+tags: rc
 ---
 
 I mentioned that this isn't a very resilient reader right now.
@@ -87,7 +89,7 @@ Psh.
 
 <hr>
 
-At the very least, I need to guarantee somehow that the number of open and
+I need to guarantee somehow that the number of open and
 closing parens are equal at the end of the input. A simple solution is to
 create a global counter and increment it when I see an opening paren, decrement
 when I see a closing paren, and check that it is `0` at the end of the string.
@@ -148,10 +150,10 @@ NIL- Address: 0x102f17030
 -------------------------------------------------------
 ```
 
-Derr, still doesn't work. If you look at the `read` ase for `')'`, you can see
+Derr, still doesn't work. If you look at the `read` case for `')'`, you can see
 why. This reader never goes past the first closing paren, because there is not
 a call to `read` inside that case to move forward! This is the intended
-behavior... I'm returning `&nil` there, which is what I want.
+behavior... I'm returning `&nil` there, which is what I wanted.
 
 There are two cases in which the string can be in an erroneous form.
 
@@ -326,5 +328,3 @@ little bit.
           it points to `NIL` as its next value. `NIL` is a special value that
           only exists in one place in memory; since all `NIL` cells are the
           same, we can point to the same location to represent `NIL` anywhere.
-
-
