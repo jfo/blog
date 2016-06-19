@@ -1,6 +1,8 @@
 ---
-title: Sild7 eval
+title: Sild - an initial eval
 layout: post
+date: 2016-06-19
+tags: rc
 ---
 
 With the basic read function working, it's time to write `eval`!
