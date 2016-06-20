@@ -255,7 +255,7 @@ to bring back `print_list`.
 It will have the same basic structure as `debug_list()`, but it will print different
 things. As a reminder of what `debug_list_inner()` looks like (remember that
 `debug_list()` is just a wrapper around `debug_list_inner()` that passes in an
-initial depth or `0`):
+initial depth of `0`):
 
 ```c
 void debug_list_inner(C *l, int depth) {
