@@ -1,6 +1,8 @@
 ---
-title: Sild8 apply
+title: Sild - apply
 layout: post
+date: 2016-06-21
+tags: rc
 ---
 
 Now I have a basic form of `eval`! In order to actually get
@@ -32,8 +34,8 @@ NIL- Address: 0x103792030
 -------------------------------------------------------
 ```
 
-This is the _Sild_ data that represents the `read` in string that looks like the C
-string `"(+ 1 2)"`
+This is the _Sild_ data that represents the string that has been read in that
+looks like the C string `"(+ 1 2)"`
 
 This is the first time I've mentioned the name of this language when describing
 how I'm writing it, and there is a good reason for that. Now that I'm getting
@@ -487,6 +489,7 @@ Hmm, but now, evalling:
 ```
 
 exits with a code of 1. That's because `concat` is still returning LIST cells! After evaluating its operands, the top level list is seeing:
+
 ```c
 (concat hi (himom))
 ```

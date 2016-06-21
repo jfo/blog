@@ -1,5 +1,5 @@
 ---
-title: Sild is... a list?
+title: Sild - is... a list?
 layout: post
 date: 2016-06-6
 tags: rc
