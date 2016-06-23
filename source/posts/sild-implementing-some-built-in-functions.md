@@ -1,7 +1,11 @@
 ---
-title: Sild9 builtin functions
+title: Sild - implementing some built in functions
 layout: post
+date: 2016-06-23
+tags: rc
 ---
+
+This post is part of a series of posts that began [here](/sild-is-a-lisp-dialect/).
 
 Now that the eval apply loop actually _works_, I need to write some basic
 functions that operate on lists in the same way my example functions
@@ -9,8 +13,9 @@ functions that operate on lists in the same way my example functions
 them around.
 
 I'm going to implement the 7 most basic operations in lisp, as per Paul
-Graham's essay "the roots of lisp". I recommend reading that, it is very
-thorough in describing these functions.
+Graham's essay ["The Roots of
+Lisp"](http://www.paulgraham.com/rootsoflisp.html). I recommend reading that,
+it is very thorough in describing these functions.
 
 One function can operate on anyting at all:
 
