@@ -1,6 +1,8 @@
 ---
-title: Sild10 builtin functions 2
+title: Sild - storing built in functions
 layout: post
+date: 2016-06-25
+tags: rc
 ---
 
 It is silly to spend all of this evaluation time unnecessarily comparing
@@ -41,7 +43,7 @@ int main() {
 ```
 
 Here I am printing out a happy birthday message to my Mom, because it is
-actually her birthday the day i am writing this and she is sure to see this
+actually her birthday the day I am writing this and she is sure to see this
 heartfelt message on my computer screen thousands of miles away.
 
 I can _dereference_ the happy birthday function, just like I could any other variable
@@ -356,7 +358,7 @@ C *apply(C* c) {
 ```
 
 All of those `scmp`s are unnecessary! I've already done that work in `read`!
-Instead, I can _call the cell's function pointer on it's `next` member_. This
+Instead, I can _call the cell's function pointer on its `next` member_. This
 is awesome! So sleek!
 
 ```c
@@ -472,6 +474,7 @@ I have to go through the program and adjust every call to the `val.func` member
 depending on whether I'm trying to get at the `name` or the `addr`. This is a
 little hairy, but it's not difficult and I won't show the details. Suffice to
 say following the compiler errors is enough to make this all work. I end up with things that look like 
+
 ```c
 case BUILTIN:
     free(c->val.func.addr);
