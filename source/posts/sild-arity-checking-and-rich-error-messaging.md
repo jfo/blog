@@ -1,6 +1,8 @@
 ---
-title: Sild11 adding arity check function
+title: Sild - arity checking and rich error messaging
 layout: post
+date: 2016-06-27
+tags: rc
 ---
 
 I'd like to take a post and just do some refactoring, and clean things up a
