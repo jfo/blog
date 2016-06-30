@@ -1,6 +1,8 @@
 ---
-title: Sild12 builtin functions 3, truth false
+title: Sild - booleans and conditionals
 layout: post
+date: 2016-06-29
+tags: rc
 ---
 
 The first function I implemented was the identity function `quote`, and relies on
@@ -56,7 +58,7 @@ C* categorize(char **s) {
 }
 ```
 
-Atom expects a single argument, so I'll add that arity check:
+`atom` expects a single argument, so I'll add that arity check:
 
 ```c
 C *atom(C *operand) {
@@ -128,7 +130,7 @@ _everything else_ will be truthy. This also has the benefit of corresponding to 
 simplistic but intuitive understanding of actual reality, since everything is
 something but _only_ nothing is nothing.
 
-So for the falsy value, I'll make a new, empty list.
+So for the falsey value, I'll make a new, empty list.
 
 ```c
 return makecell(LIST, (V){.list = &nil}, &nil);
@@ -229,7 +231,7 @@ code look more verbose, but it aids readability quite a bit- the groupings are
 more readily obvious, and adding a case will show up more clearly in a diff.
 
 With the addition of an idea of boolean values to the language, we're ready to
-implement the foundation conditional statement that allows control flows to
+implement the foundational conditional statement that allows control flows to
 actually work! That's `cond`, and it is the final of the 7 built in primitive
 functions that I need to get working.
 
@@ -241,7 +243,7 @@ going to take _at least_ one argument, but should be able to accept a variable
 number of arguments that will implicitly be in pairs. It will evaluate the
 first argument, and if it sees a truthy value, (anything but `()`), it will
 free any remaining arguments and evaluate and return the second argument. If it
-sees a falsy value, it will free the first and second arguments, _without
+sees a falsey value, it will free the first and second arguments, _without
 evaluating the second argument_, and call itself again on the next pair,
 numbers 3 and 4. Finally, if it is passed a single argument, it will evaluate
 and return that argument.
@@ -298,7 +300,7 @@ In that case, it doesn't have to clean anything up since the eval call will do
 that for it.
 
 And now, if there are two arguments, it evaluates the first to see if it is
-falsy. If it is NOT falsy, it frees any other operands and evaluates the
+falsey. If it is NOT falsey, it frees any other operands and evaluates the
 second, returning its result. To do this, it deconstructs the arguments and
 isolates them from each other. This looks like a lot is going on, but it's
 fairly straightforward.
