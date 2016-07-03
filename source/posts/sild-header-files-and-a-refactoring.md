@@ -1,6 +1,8 @@
 ---
-title: Sild13 a refactoring party
+title: Sild - header files and a refactoring
 layout: post
+date: 2016-07-03
+tags: rc
 ---
 
 I've now implemented the following built in functions:
@@ -45,11 +47,11 @@ There is a lot of weird info on the interwebs about this, too...
 and nothing was one hundred percent clearly the "best way" to factor out code
 into libraries. I found this to be helpful:
 
-http://umich.edu/~eecs381/handouts/CHeaderFileGuidelines.pdf
+[C header file guidelines.](http://umich.edu/~eecs381/handouts/CHeaderFileGuidelines.pdf)
 
 and this:
 
-https://guilhermemacielferreira.com/2011/11/16/best-c-coding-practices-header-files/
+[Best C coding practices for header files](https://guilhermemacielferreira.com/2011/11/16/best-c-coding-practices-header-files/)
 
 But ultimately the set of golden rules came from friend [Andrew
 Kelley](https://github.com/andrewrk), and they boiled down to something like this.
@@ -57,8 +59,9 @@ Kelley](https://github.com/andrewrk), and they boiled down to something like thi
 > 1. Each .o file is produced independently from all other .o files via a
 > separate invocation of the compiler...
 
-`.o` stands for "object" file. An object file is compiled C code, and (usually? always?)
-non-executable. Let's say I have a .c file with some functions inside of it, and call
+`.o` stands for "object" file. An object file is compiled C code, and is
+non-executable. Let's say I have a .c file with some functions inside of it,
+and call
 
 ```
 $ cc myfile.c
@@ -72,7 +75,7 @@ $ cc myfile.c -o myfile
 ```
 
 This is the _only_ line that has been in my makefile this entire time, as a
-matter of fact. (I'll get way deep into makefiles in a minute!)
+matter of fact. (I'll get way deep into makefiles in a while!)
 
 ```make
 sild: sild.c
@@ -180,7 +183,7 @@ current directory the file is actually in first, for a matching name.)
 This works! Because the `#include` direction instructs the compiler to simply
 insert the contents of that file right at that line before compiling the whole
 file together. (`#include`, like `#define` and other octothorpe beginning
-commands, are compiler preprocessor commands.) You can _just compile that main
+thingers, are compiler preprocessor commands.) You can _just compile that main
 file_ and it will work as you expect.
 
 ```
