@@ -1,11 +1,14 @@
 ---
-title: Sild14 we're gonna make it.
+title: Sild - we're gonna Make it after all
 layout: post
+date: 2016-07-05
+tags: rc
 ---
 
-... if only there were a way to automate all those compilation steps...
+[...if only there were a way to automate all those compilation
+steps...](/sild-arity-checking-and-rich-error-messaging/)
 
-```
+```make
 cc utils.c -o
 cc cell.c -o
 cc eval.c -o
@@ -41,7 +44,7 @@ When `make` is invoked, it looks for a makefile, and if it finds one, it
 executes the _default target_ in that makefile. A make _target_ is a rule that
 described how to `make` that target file, and generally looks like this:
 
-```
+```make
 target_name : dependencies
 	commmands to create target
 ```
@@ -49,7 +52,7 @@ target_name : dependencies
 So, for a single file, the target would look pretty familiar (it has no
 dependencies except for its own .c file)
 
-```
+```make
 thing : thing.c
 	cc thing.c -o thing
 ```
@@ -61,7 +64,7 @@ tabs to signal that that line is an actual command to execute in the shell.
 
 Let's say `thing` depends on something else, some object file or another...
 
-```
+```make
 thing : thing.c lib.o
 	cc -o thing thing.c lib.o
 ```
@@ -72,7 +75,7 @@ there are multiple dependencies...)
 But where does lib.o come from? Ostensibly, it comes from some file called
 lib.c! For that, we'll need another target.
 
-```
+```make
 thing : thing.c lib.o
 	cc -o thing thing.c lib.o
 
@@ -88,13 +91,16 @@ and the final executable `thing` file. Then you update `thing.c`, but don't
 change `lib.c`, which is the only thing `lib.o` depends on. the next time you
 run `make`, the program knows that, since lib.c is older than the thing that is
 being recompiled that depends on it, that it doesn't need to be recompiled
-itself, and the existing object file is ok to be linked! This is very cool! For big projects this cleverness can save a massive amount of time in the compile/test/edit cycle! And its convenient even in a small project like this.
+itself, and the existing object file is ok to be linked! This is very cool! For
+big projects this cleverness can save a massive amount of time in the
+compile/test/edit cycle! And its convenient even in a small project like this.
 
 <hr>
 
-So, as I factored out the libraries from my old big sild.c file, I added a rule for each new library in my makefile. Right now, it looks like this:
+So, as I factored out the libraries from my old big sild.c file, I added a rule
+for each new library in my makefile. Right now, it looks like this:
 
-```
+```make
 sild: read.o print.o builtins.o eval.o cell.o util.o sild.c
 	cc read.o print.o builtins.o eval.o cell.o util.o sild.c -o sild
 
@@ -125,13 +131,13 @@ Make supports variables internal to itself, I can start by defining `CC` (for
 'C compiler) to point to my compiler of choice, which is clang, which is
 invoked on my machine via `cc`
 
-```
+```make
 CC = cc
 ```
 
 Now, I replace all the `cc` calls in my rules with a variable expansion of that var:
 
-```
+```make
 CC = cc
 
 sild: read.o print.o builtins.o eval.o cell.o util.o sild.c
@@ -160,7 +166,7 @@ Now, if I want to change my compiler, I just change one line.
 
 It's useful to have a `clean` target to remove all the artifacts from a build. The commands to do that now would be like this:
 
-```
+```make
 clean:
 	rm sild *.o
 ```
@@ -168,7 +174,7 @@ clean:
 I've also added those to my .gitignore file, as I don't need to commit any of
 these artifacts since they are derivable from the source code.
 
-```
+```make
 sild
 *.o
 ```
@@ -179,7 +185,7 @@ might not execute these commands if it looks at the `clean` file and sees that
 it doesn't need to be updated. By declaring `clean` as a `.PHONY` target, this
 problem is resolved.
 
-```
+```make
 .PHONY: clean
 clean:
 	rm sild *.o
@@ -202,7 +208,7 @@ viewing your code.
 
 And then in each of the rules:
 
-```c
+```make
 ...
 builtins.o: builtins.c
 	$(CC) $(CFLAGS) builtins.c -c
@@ -214,40 +220,40 @@ at all the stuff you're not working with. I am keeping everything in a top
 level directory right now. This isn't so great! It is better to hold all your
 source code in a `src` or `source` directory and then build artifacts outside
 of that directory. Here, all of my source files are living in `src`, and all my
-object files are being built to a directory called `src/obj`, which I have also
+object files are being built to a directory called `obj`, which I have also
 added to my .gitignore.
 
 ```make
 CC = cc
 
-sild: src/obj/read.o src/obj/print.o src/obj/builtins.o src/obj/eval.o src/obj/cell.o src/obj/util.o src/sild.c
-	$(CC) src/obj/read.o src/obj/print.o src/obj/builtins.o src/obj/eval.o src/obj/cell.o src/obj/util.o src/sild.c -o sild
+sild: obj/read.o obj/print.o obj/builtins.o obj/eval.o obj/cell.o obj/util.o sild.c
+	$(CC) obj/read.o obj/print.o obj/builtins.o obj/eval.o obj/cell.o obj/util.o sild.c -o sild
 
-src/obj/util.o: src/util.c src/obj
-	$(CC) src/util.c -c -o src/obj/util.o
+obj/util.o: util.c obj
+	$(CC) util.c -c -o obj/util.o
 
-src/obj/cell.o: src/cell.c src/obj
-	$(CC) src/cell.c -c -o src/obj/cell.o
+obj/cell.o: cell.c obj
+	$(CC) cell.c -c -o obj/cell.o
 
-src/obj/eval.o: src/eval.c src/obj
-	$(CC) src/eval.c -c -o src/obj/eval.o
+obj/eval.o: eval.c obj
+	$(CC) eval.c -c -o obj/eval.o
 
-src/obj/builtins.o: src/builtins.c src/obj
-	$(CC) src/builtins.c -c -o src/obj/builtins.o
+obj/builtins.o: builtins.c obj
+	$(CC) builtins.c -c -o obj/builtins.o
 
-src/obj/print.o: src/print.c src/obj
-	$(CC) src/print.c -c -o src/obj/print.o
+obj/print.o: print.c obj
+	$(CC) print.c -c -o obj/print.o
 
-src/obj/read.o: src/read.c src/obj
-	$(CC) src/read.c -c -o src/obj/read.o
+obj/read.o: read.c obj
+	$(CC) read.c -c -o obj/read.o
 
-src/obj:
-	mkdir src/obj
+obj:
+	mkdir obj
 
 .PHONY: clean run
 clean:
 	rm sild
-	rm -r src/obj
+	rm -r obj
 ```
 
 This works, but is getting pretty ugly and verbose and unmaintainable. If I
@@ -277,11 +283,11 @@ CFLAGS = -Wall -Werror
 ```
 
 Here I'll define a var `OBJDIR` for use in the target rules. The `vpath` is
-associating `%.c` with the `src` directory, and will come in handy for locatin
-the source files in relation to their object files:
+telling make "look in this path for this type of file when searching for
+dependencies.
 
 ```make
-OBJDIR=src/obj
+OBJDIR=obj
 vpath %.c src
 ```
 
@@ -319,7 +325,7 @@ $<     refers to the dependency names.
 @<     refers to the target name.
 ```
 
-The `OBJDIR` itself needs to know how to create itself, here that is as simple
+The `OBJDIR` target needs to know how to create itself, here that is as simple
 as a `mkdir`:
 
 ```make
@@ -333,7 +339,7 @@ And Bob's your uncle!
 .PHONY: clean
 clean:
 	rm sild
-	rm -r src/obj
+	rm -r obj
 ```
 
 <hr>
