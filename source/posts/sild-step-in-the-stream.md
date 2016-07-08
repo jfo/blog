@@ -1,6 +1,8 @@
 ---
-title: Sild15 playing in the stream
+title: Sild - step in the stream
 layout: post
+date: 2016-07-07
+tags: rc
 ---
 
 Alright! I've got a nicely refactored `src` directory and a `makefile` that I'm
@@ -20,7 +22,7 @@ lines of one parenthetical form, I would have to read ahead to allocate the
 appropriate amount of buffer memory, or else build a buffer that could resize
 itself if it needed to. There's nothing wrong with this idea, but I would
 prefer a read function that reads in real time and doesn't have any need to
-muck around with buffer reallocation, And I had already spent so much time
+muck around with buffer reallocation, and I had already spent so much time
 optimizing the read function to operate in constant time on strings- why would
 I want to undermine that?
 
@@ -32,13 +34,14 @@ how files are represented in I/O. In some ways, the functions that operate on
 them act a lot like string functions- except that instead of a NULL byte
 (`'\0'`) being the terminal character, the file ends with an `EOF` (end of
 file) byte, which is a constant defined in `<stdio.h>` that usually equals
-`-1`. (The standard dictates that `EOF` must be negative, but not actually the
-value- though it is usually -1).
+`-1`. (The standard dictates that `EOF` must be negative, but does not dictate
+the value- though it is usually -1).
 
 But, `FILE` pointers are _not_ strings. They are in fact structs that contain
 quite a bit of metadata about the chunk of memory that the FILE object was
 initialized to. Though the inner workings of a FILE object are implementation
-specific, here is an example of what is in my computer's `<stdio.h>` where `FILE` is typedeffed
+specific, here is an example of what is in my computer's `<stdio.h>` where
+`FILE` is typedeffed
 
 ```c
 typedef	struct __sFILE {
@@ -78,7 +81,7 @@ typedef	struct __sFILE {
 As you can see, the FILE struct has a lot of extra stuff in it that the library
 functions operate on and with. Now, it's not super important to understand the
 details of the inner workings of a FILE object in order to use it, in fact, it
-is actively discouraged.  Everywhere I see info on the FILE object, I am
+is actively discouraged. Everywhere I see info on the FILE object, I am
 implored to "let the library functions handle interactions" with it, and stuff
 like that. Hey, fine with me! The basic idea is that you `fopen()` a file,
 which returns a pointer to a FILE object, which has a member `_p`_ that is a
@@ -116,16 +119,17 @@ current character. Eventually, the `EOF` value is reached, and the while loop
 exits. I then `fclose()` the connection to the file because I clean up after
 myself.
 
-A FILE pointer, despite its name, is actually usually referred to as a stream
+A FILE, despite its name, is actually usually referred to as a stream
 in C, for "historical reasons" (as vaguely stated in the [GNU
 manual](ftp://ftp.gnu.org/old-gnu/Manuals/glibc-2.2.3/html_chapter/libc_12.html))
 
-This is a more flexible interpretation of what is happening with regard to FILE
-objects, as they serve as a universal interface to many UNIX systems and IO
-devices- consider that the same abstraction is in play when a device interface
-is represented as a 'device file' in `/dev/*`. This is a file in name only, and
-actually serves as a powerful abstraction api over top of the device that it is
-meant to represent.
+This "stream" idea is a more flexible interpretation of what is happening with
+regard to FILE objects, as they serve as a universal interface to many UNIX
+systems and IO devices- consider that the same abstraction is in play when a
+device interface is represented as a 'device file' in `/dev/*`. I wrote about
+that while playing with monomes [here](/monome-part-mono/). This is a FILE in
+name only, and actually serves as a powerful abstraction api over top of the
+device that it is meant to represent.
 
 Further, we've already interfaced quite a bit with standard streams such as
 standard out (`stdout`) and standard error (`stderr`), which are both FILE
@@ -183,7 +187,7 @@ Which takes a FILE pointer (s), and moves it the offset `-1` positions from
 `SEEK_CUR`_, which is an enum that `fseek` interprets to mean 'the file
 pointer's current position.
 
-Naturally, the helper functions that `reaa()` uses will also have to be
+Naturally, the helper functions that `read()` uses will also have to be
 converted to accepting FILE pointers in a very similar way:
 
 ```diff
@@ -229,7 +233,7 @@ converted to accepting FILE pointers in a very similar way:
  }
 ```
 
-I've added `EOF` to the list of delimeters, and replaced all the string pointer
+I've added `EOF` to the list of delimiters, and replaced all the string pointer
 dereferencings with calls to `getc()`. I've also changed the function prototype
 in `read.h` to reflect the new typing. Overall, this actually makes things a
 lot more readable, I think!
@@ -403,10 +407,10 @@ int main(int argc, char *argv[]);
 Though the names of these arguments are arbitrary, these are the customary
 names. `argc` means "argument count" and is an integer representing the number
 of arguments passed to the executable on invocation. This number is always at
-least 1, because the first argument to a executable is implicitly the name by
-which it was invoked. `argv` is a null terminated array of strings that are the
-actual arguments passed to main. They could be anything! What you do with them
-is up to the program.
+least 1, because the first argument to an executable is the name by which it
+was invoked. `argv` is a null terminated array of strings that are the actual
+arguments passed to main. They could be anything! What you do with them is up
+to the program.
 
 Here is a program that prints out the arguments passed to it.
 
@@ -481,6 +485,11 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-<hr>
+Now, when I `make` the project, I end up with an executable that can be run
+just like I would expect it to be run.
 
+```bash
+$ ./sild test.sld
+```
 
+Will evaluate the file!
