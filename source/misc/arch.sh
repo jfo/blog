@@ -2,10 +2,13 @@
 
 wifi-menu
 
-parted /dev/sda mklabel gpt
-parted /dev/sda mkpart msdos 0 1024
-parted /dev/sda1 set boot on
-parted /dev/sda mkpart ext4 1024
+parted -s /dev/sda mklabel gpt
+
+parted /dev/sda mkpart msdos 2048s 411647s
+parted /dev/sda set 1 esp on
+parted /dev/sda set 1 boot on
+
+parted /dev/sda mkpart ext4 411648s 21383167s
 
 mkfs.fat -F32 /dev/sda1
 mkfs.ext4 /dev/sda2
