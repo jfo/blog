@@ -1,6 +1,8 @@
 ---
-title: Sild16 save the environment
+title: Sild - save the environment
 layout: post
+date: 2016-07-16
+tags: rc
 ---
 
 A lot of refactoring, and makefiling, and shuffling things around in the last
@@ -661,13 +663,13 @@ Now, everything cleans itself up correctly when it is evaluated.
 > expensive, and this isn't very performative, you're an idiot!"
 
 > I wouldn't really argue with you! (except _maybe_ on the idiot thing, which
-> seems a little harsh) There are lots of opportunities for making
-> this faster, better, and generally more perfomative! In fact, I'm trying to
-> keep a running tally of those things in my head, and am looking forward to
-> refactoring things after I get everything working! Much more on that later,
-> but you know, cut me some slack- the goal of this iteration is clarity and
-> consistency in implementation, not performance. I'd love to make that a
-> priority later though!
+> seems a little harsh). All of these things, in fact, are very very true.
+> There are lots of opportunities for making this faster, better, and generally
+> more perfomant, in fact, I'm trying to keep a running tally of those things
+> in my head, and am looking forward to a lot of refactoring after I get
+> everything working! The goal of this iteration is clarity and consistency in
+> implementation, not performance. I'd love to make that a priority later
+> though!
 
 <hr>
 
@@ -783,8 +785,8 @@ I didn't put any special logic in there- how does it know which one? Well...
 ()
 ```
 
-It returns the first one it finds! This doesn't seem like a big deal, but it
-will be the backbone of my language's variable scoping, later on.
+It returns the first one it finds! This doesn't seem like a big deal, but in a
+way it will be the backbone of my language's variable scoping, later on.
 
 <hr>
 
@@ -871,7 +873,7 @@ Will print out
 (1 2 3)
 ```
 
-And I could use thing wherever it makes sense to use (1 2 3)
+And I could use `thing` wherever it makes sense to use (1 2 3)
 
 ```
 (define thing (quote (1 2 3)))
@@ -949,8 +951,22 @@ keyword when the depth is greater than 1!
 ```
 
 This solves the problem. Defines will now only be able to happen in the top
-level, and I don't really need to make another void type or whatever, since
-I'll never be able to call define anywhere that would matter.
+level, and I don't really need to make another sild language void type or
+whatever, since I'll never be able to call define anywhere that would matter.
+
+I can even have the C function `define` return `void`, and all will be well.
+
+```
+void define(C *operand, Env *env) {
+    arity_check("define", 2, operand);
+    if (operand->type != LABEL) {
+        fprintf(stderr, "define expected a LABEL as its first argument and did not get one\n");
+        exit(1);
+    }
+    set(env, operand->val.label, eval(operand->next, env));
+    free_one_cell(operand);
+}
+```
 
 "But what about `delete()` in the env?"
 
@@ -963,8 +979,7 @@ Just as I free the results of an evaluation of a form after I don't need it anym
 
 ```c
 void eval_file(const char *filename) {
-    FILE *fp = fopen(filename, "r");
-    if (!fp) {
+
         fprintf(stderr, "Error opening file: %s\n", filename);
         exit (1);
     }
