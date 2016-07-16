@@ -1,4 +1,3 @@
-Let's talk about Bootloaders. OMFG.
 
 Ok. so you get a liveboot medium.
 
@@ -134,7 +133,9 @@ always does is look at the same address near the beginning of the physical disk
 bootup. there is also a magic number checksum that must be present. I don't
 really know much more about this. Here is a blog post I found.
 
-```http://www.dewassoc.com/kbase/hard_drives/master_boot_record.htm```
+```
+http://www.dewassoc.com/kbase/hard_drives/master_boot_record.htm
+```
 
 > OMFG. So many acronyms. I didn't even realize this until I wrote that above,
 > but GPT is a _nested acronym_. `GUID` stands for **Globally Unique
@@ -143,6 +144,7 @@ really know much more about this. Here is a blog post I found.
 > will see `UUID` instead. `UUID` stands for **Universally Unique Identifier**.
 > I can only assume this is a terminological holdover from the EFI stuff that
 > was developed at Microsoft and upon which UEFI was based.
+
 
 So, this all seems kind of alright, but it can get really weird. UEFI systems
 are required to have a BIOS compatible _mode_ and be able to boot a drive that
@@ -188,17 +190,99 @@ Let's format everything
 ----------------------
 
 First, let's erase any existing partitions.
+Then we will make two.
 
-
-and to do this
-I need to write a GPT. I'll use parted for that part, which helpfully refers to
-the partition table as a label.
+Then we'll make sure it's a GPT drive.
 
 ```
-$ parted /dev/sda mklabel gpt
+parted /dev/sda mklabel gpt
 ```
 
-Great.
+now make two partitions
+
+/dev/sda1 a 200M partition with an EFI filesystem type.
+/dev/sda2 a 10 G (or whatever) "linux filesystem"
+
+remember, all that did was write the info into the GPT. We actually have to format the filesystems too.
+
+```
+mkfs.fat -F32 /dev/sda1
+mkfs.ext4 /dev/sda2
+```
+
+now we're ready to mount the drives.
+
+We mount the root partition first, to `/mnt`
+
+```
+mount /dev/sda2 /mnt
+```
+
+now `cd` into /mnt and `ls`. You should see
+
+```
+lost+found
+```
+
+[Wtf is
+that?](http://unix.stackexchange.com/questions/18154/what-is-the-purpose-of-the-lostfound-folder-in-linux-and-unix) 
+
+anyway, you're going to want to mount the efi filesystem in a very special
+place. so, create a new directory:
+
+```
+mkdir -p  /mnt/boot/efi
+```
+
+and then mount our other partition there.
+
+```
+mount /dev/sda1 /mnt/boot/efi
+```
+
+Now we're ready to run the pacstrap tool, which installs pacman packages to an
+arbitrary root.
+
+```
+pacstrap /mnt base base-devel efibootmgr wpa_supplicant grub-efi-x86_64
+```
+
+This will take a while. Remember, it is installing to /mnt, which is actually
+representing the /dev/sda2 drive, and also sda1.
+
+then generate an fstab file
+
+```
+genfstab /mnt >> /mnt/etc/fstab
+```
+
+now arch-chroot into the /mnt root.
+
+```
+arch-chroot /mnt
+```
+
+generate a locale file
+
+```
+vi /etc/locale.gen # edit the locale
+locale-gen
+```
+
+install grub
+
+```
+grub-install
+```
+
+make a new grub config
+
+```
+grub-mkconfig >> /boot/grub/grub.cfg
+```
+
+And bob's your mother's brother.
+
 
 boot kernel without bootloader
 http://www.ondatechnology.org/wiki/index.php?title=Booting_the_Linux_Kernel_without_a_bootloader
