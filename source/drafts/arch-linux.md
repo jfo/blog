@@ -1,4 +1,7 @@
-
+---
+title: wtf mbr gpt uefi
+layout: post
+---
 Ok. so you get a liveboot medium.
 
 I didn't realize that this was special, I kind of thought it was a whole
