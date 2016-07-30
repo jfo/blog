@@ -533,8 +533,6 @@ static C *apply_proc(C* proc, Env *env) {
         cur = cur->next;
     }
 
-   frame->next = proc->val.proc.env;
-
     // eval will free the body, here:
     C *out = eval(proc->val.proc.body, frame);
     // but the args and the proc cell itself still need to be freed manually
