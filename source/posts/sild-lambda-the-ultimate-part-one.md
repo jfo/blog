@@ -1,5 +1,5 @@
 ---
-title: Sild - lambda the ultimate part one
+title: Sild - lambdas p.1
 layout: post
 date: 2016-07-24
 tags: rc
@@ -79,7 +79,7 @@ applied to an arbitrary set of arguments.
 
 Let's think about this for a moment. The way the interpreter is written, if I were to write this:
 
-```
+```scheme
 ((car '(car)) '(1 2 3))
 ```
 
@@ -88,7 +88,7 @@ What am I going to get out of it? Let's walk through it.
 The interpreter sees a list, so it tries to apply the first item in that list
 to the remaining items as a function. It sees another list:
 
-```
+```scheme
 (car '(car))
 ```
 
@@ -102,7 +102,7 @@ control to the function that the builtin points to. As we already know, `car`
 expects a list and returns the first thing in that list. What is being passed
 to it?
 
-```
+```scheme
 '(car)
 ```
 
@@ -110,7 +110,7 @@ It needs to evaluate this to see if the result is a list.
 
 Remember that `'` expands to a quoted form, so what the interpreter is really seeing is:
 
-```
+```scheme
 (quote (car))
 ```
 
@@ -121,13 +121,13 @@ list with one thing in it, which the original, calling `car` knows what to do wi
 So, that call to `car` returns `car`. It could have returned anything- whatever
 was the first thing in that list. So, back to the original:
 
-```
+```scheme
 ((car '(car)) '(1 2 3))
 ```
 
 ends up looking like
 
-```
+```scheme
 (car '(1 2 3))
 ```
 
@@ -135,11 +135,11 @@ Now the interpreter is able to apply the first item to the rest. Once again,
 car returns the first thing in the list that is passed to it. Round and round we go...
 
 
-```
+```scheme
 (car (quote (1 2 3)))
 ```
 
-```
+```scheme
 1
 ```
 
@@ -155,7 +155,7 @@ Sees another list... same deal. Now it sees `lambda`. What is it supposed to
 do? It needs to _return a procedure_. So after it evaluates the lambda, it
 should see something like:
 
-```
+```scheme
 (PROC '9)
 ```
 
@@ -169,7 +169,7 @@ turns into a PROC, it retains a link to the env that was passed into the
 
 What should that look like?
 
-```
+```scheme
 ; arg list    function body
 ;       \   /
 (lambda (x) x)
@@ -177,7 +177,7 @@ What should that look like?
 
 so, let's say the interpreter produces this `PROC` and then tries to apply it:
 
-```
+```scheme
 (PROC '9)
 ```
 
@@ -191,13 +191,13 @@ returns `9`. The end, sleep tight.
 Some notes to this- for now, I think the arity should match. This should throw
 an error:
 
-```
+```scheme
 ((lambda (x y) x) '1)
 ```
 
 So should this, I think:
 
-```
+```scheme
 ((lambda (x y) x) '1 '2 '3)
 ```
 
@@ -206,7 +206,7 @@ the number of arguments the function expects. I don't know much about flexible
 variable arity, maybe it's a good idea? But it doesn't make sense to me right
 now, especially since if you want to pass in some number of things, well...
 
-```
+```scheme
 ((lambda (x) (car (cdr x))) '(1 2 3))
 ```
 
@@ -247,7 +247,7 @@ struct procval {
 This is a little struct to hold those three things I mentioned earlier. Back to
 the identity function example...
 
-```
+```scheme
 (lambda (x) x)
 ```
 
@@ -355,7 +355,7 @@ been passed into it. For this, I'll need a function that can count how many
 things are in the argument list, then count how many things have been passed,
 and then compare them. Remember that the form will be:
 
-```
+```scheme
 ; arg list    function body
 ;       \   /
 ((lambda (x) x) '1)
@@ -385,7 +385,7 @@ static C *apply_proc(C* proc, Env *env) {
 And I'll need to implement `count_list()`. This is relatively straightforward,
 and I'll simply do it iteratively...
 
-```
+```c
 static int count_list(C *c){
     int i= 0;
     // count args until the end of the list!
@@ -447,14 +447,14 @@ effectively isolated from one another.
 
 Look at this expansion:
 
-```
+```scheme
 (cdrer (cdr thingy))
 (cdrer (cdr '(2 3 4)))
 (cdrer (3 4))
 ```
 and internal to the lambda...
 
-```
+```scheme
 (cdr thingy)
 (cdr (3 4))
 (4)
@@ -475,7 +475,7 @@ created.
 
 Here's the money line:
 
-```
+```c
 C *out = eval(proc->val.proc.body, frame);
 ```
 
@@ -496,13 +496,13 @@ free(proc);
 
 and we free the frame
 
-```
+```c
 free_env(frame);
 ```
 
 Then we can return the result that we wanted all along.
 
-```
+```c
 return out;
 ```
 
@@ -557,21 +557,22 @@ We have `car` and `cdr`, but what if we wanted to _second_ item in a list?
 
 We could go like:
 
-```
+```scheme
 (car (cdr '(1 2 3)))
 ```
+
 ```
 2
 ```
 
 If we did that a lot, it would be helpful to have a shortcut:
 
-```
+```scheme
 (define cadr (lambda (x) (car (cdr x))))
 (cadr '(1 2 3))
 ```
 
-```
+```scheme
 2
 ```
 
@@ -597,13 +598,13 @@ What if we want the last item in a list?
 
 Now,
 
-```
+```scheme
 (last '(1 2 3 4 5 6 7))
 ```
 
 is `7`
 
-```
+```scheme
 (last '(1 2))
 ```
 

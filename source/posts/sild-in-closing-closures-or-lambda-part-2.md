@@ -1,13 +1,13 @@
 ---
-title: Sild - closures (lambda part 2)
+title: Sild - In closing, closures (or, lambdas p.2)
 layout: post
-date: 2016-07-30
+date: 2016-07-31
 tags: rc
 ---
 
 Consider this:
 
-```
+```scheme
 (define conser
     (lambda (x y)
         (cons (x y))))
@@ -15,37 +15,37 @@ Consider this:
 
 And now,
 
-```
+```scheme
 (conser 'a '(b c))
 ```
 
 Will return
 
-```
+```scheme
 '(a b c)
 ```
 
 Furthermore,
 
-```
+```scheme
 (define z '(b c))
 ```
 
 And now,
 
-```
+```scheme
 (conser 'a z)
 ```
 
 Will evaluate `z` in the global env before passing it to `conser`, returning:
 
-```
+```scheme
 '(a b c)
 ```
 
 But what about this?
 
-```
+```scheme
 (define z '(b c))
 
 (define conser
@@ -58,7 +58,8 @@ But what about this?
 You'll notice, that at the time of `conser`'s invocation, `z` is defined in the
 global environment. Unlike the second example above, however, `z` is _not_
 being evaluated in that environment. The `z` here is being evaluated within the
-frame environment created by `apply_proc` during the evaluation `(conser 'a)`, an environment that currently has no assignment for `z`.
+frame environment created by `apply_proc` during the evaluation `(conser 'a)`,
+an environment that currently has no assignment for `z`.
 
 And so we get:
 
@@ -68,7 +69,7 @@ Error: unbound label: z
 
 This is obviously not the behavior we would expect! The interpreter _should_ be
 examining the frame for `z`, and then when not finding it, trying to look it up
-in the enclosing environment, which in this cae is the global one!
+in the enclosing environment, which in this case is the global one!
 
 This actually turns out to be a fairly easy fix!
 
@@ -125,7 +126,8 @@ Env *new_env() {
 }
 ```
 
-Now, back in the get function, simply check and see if there is a next member to attempt to look up a given value in if it isn't found in the provided Env:
+Now, back in the get function, simply check and see if there is a next member
+to attempt to look up a given value in if it isn't found in the provided Env:
 
 ```c
 C *get(Env* env, C *key) {
@@ -184,9 +186,10 @@ static C *apply_proc(C* proc, Env *env) {
 }
 ```
 
-As you can see, the `frame` we've created has no `next` member yet. Before we
-evaluate the `proc` body inside the frame, we just have to hook up the frame to
-the parent environment. One line will do it!
+As you can see, the `frame` env that we've created has no `next` member yet,
+since it was initialized to NULL Before we evaluate the `proc` body inside the
+frame, we just have to hook up the frame to the parent environment. One line
+will do it!
 
 ```c
 // etc...
@@ -199,7 +202,7 @@ the parent environment. One line will do it!
 
 Now, back in the example:
 
-```
+```scheme
 (define z '(b c))
 
 (define conser
@@ -220,7 +223,7 @@ when it can't find the `z` variable inside of the frame, and it will find it, an
 
 Not quite done! Consider this.
 
-```
+```scheme
 (define conser
     (lambda (a)
         (lambda () (cons a '(hello)))))
@@ -231,7 +234,7 @@ that, when invoked, will cons that original argument onto the list `'(hello)`.
 
 Will this work?
 
-```
+```scheme
 (define conser
     (lambda (a)
         (lambda () (cons a '(hello)))))
@@ -241,13 +244,20 @@ Will this work?
 (display myconser)
 ```
 
-yields
+yields a procedure that takes no arguments but _contains a closed over variable
+`a`_ whose definition lives in the invocation of `conser` from the line:
 
 ```
+(define myconser (conser '1))
+```
+
+... and it looks like this:
+
+```scheme
 (PROC () (cons a (quote (hello))))
 ```
 
-Which is what we would expect, but if we try to apply that function:
+This is what we would expect, but if we try to apply that function:
 
 ```
 (display (myconser))
@@ -257,7 +267,7 @@ Which is what we would expect, but if we try to apply that function:
 Error: unbound label: a
 ```
 
-Yikes! What's the problem?
+Yikes! What's the problem exactly?
 
 ```c
 // etc...
@@ -298,7 +308,7 @@ We want this!
 
 BUT OH NO!
 
-```
+```scheme
 (define conser
     (lambda (a)
         (lambda () (cons a '(hello)))))
@@ -322,20 +332,22 @@ The pertinent line above, in `apply_proc`, is:
 free_env(frame);
 ```
 
-This is the behavior I want! But in the case of `conser`, I need to persist the
+This _is_ the behavior I wanted! But in the case of `conser`, I need to persist the
 environment that `myconser` was _defined_ in so that when I try to evaluate
 `myconser`, I can still look up `a` in that enclosing environment. Currently,
 the procedure I am trying to apply contains a _danging pointer_ to the
 environment that it was defined in, because that environment was `free`'d right
-after evaluation. That's why the program crashes, it encounters a
+after evaluation. That's why the program crashes; it encounters a
 [segfault](https://en.wikipedia.org/wiki/Segmentation_fault).
 
-This is a _closure_, that enclosing environment, and maintaining them correctly
-is _difficult_, and non trivial.
+This is a
+[_closure_](https://simple.wikipedia.org/wiki/Closure_(computer_science)), that
+enclosing environment, and maintaining them correctly is _difficult_, and non
+trivial.
 
 For now, simply removing that line will achieve what I want.
 
-```
+```scheme
 (define conser
     (lambda (a)
         (lambda () (cons a '(hello)))))
@@ -347,7 +359,7 @@ For now, simply removing that line will achieve what I want.
 
 Can now look up `a` and displays:
 
-```
+```scheme
 (1 hello)
 ```
 
@@ -358,24 +370,24 @@ A preliminary coda
 
 So... this fixes the problem with the segfault, yes, but it introduces a new
 problem- a giant memory leak. Now, everytime I evaluate a procedure and create a
-frame environment to help me with that, I have one more environment that may or
-may not be referenced anywhere. If I have a long enough running program, this
-will eventually run out of memory and die.
+frame environment to help me with that, I have one more Env that may or
+may not be referenced anywhere. If I have a long enough running program, these
+will eventually fill up all the memory available, and the program will die.
 
-To really solve this problem, I would have to implement a garbage collector
+To _really_ solve this problem, I would have to implement a garbage collector
 inside the language! I only really want to hang onto frame environments that
-are referenced somewhere... if they are not referenced anywhere then I can
-safely free them. This is a big project all on it's own and there are many ways
+are referenced somewhere... if they are not referenced anywhere then I could
+safely free them. This is a big project all on it's own and there are [many ways](https://spin.atomicobject.com/2014/09/03/visualizing-garbage-collection-algorithms/)
 to implement GC. If Sild were to ever be a real, useful language, it would need
-to be garbage collected! (It would also need a standard library of some sort,
-or at the very least, you know, numbers...)
+to be garbage collected, somehow! (It would also need a standard library of
+some sort, or at the very least, you know, numbers...)
 
 As I was doing this project, this is the point when I decided I was "done."
 
 Not really _done_ done, I would very much like to implement a garbage
 collector! (and also numbers...) and likely will! But not right now.
 
-My initial goal for this project was to implement a very basic interpreted lisp
+My initial goal for was to implement a very basic interpreted lisp
 that could express quote, car, cons, cdr, eq, atom, cond, define, display, and
 lambda. I was able to do that! I learned an enormous amount along the way, and
 the scope of the project creeped appropriately in order to accomodate those
@@ -383,7 +395,12 @@ goals.
 
 Garbage collection, a standard library, and numerical support would be
 incredibly interesting projects! But they are in a different category than what
-I've done so far. As are a repl, and better error handling, and a test suite...
-these are all things I'd like to do, but not right now.
+I've done so far. As are a repl, and better error handling, tail call
+optimization, and a test suite...  these are all things I'd like to do, but not
+right now.
 
-Right now, I'm done with it!
+I've recorded this whole process in painstaking detail for my future self, and
+for anyone else who might be interested in the subject. I hope it's been
+interesting! I plan to write some more posts about Sild, but for now, this
+feels like the right place to stop. So, if you've gotten this far, thanks for
+reading!
