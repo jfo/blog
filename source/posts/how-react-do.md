@@ -11,7 +11,7 @@ keep up with all the frameworks because I always want to know what's going on at
 things. I think this is maybe a laudable impulse, but I have a lot of FOMO with
 all the new hotnesses because I just don't have the patience to learn all the
 API's before some other thing comes along, and in practice, I really _would_
-like to be better a javascript.
+like to be better at javascript.
 
 I spend a lot of my time as a product engineer writing javascript, and
 sometimes, I write really bad javascript! I know that thinking about front end
