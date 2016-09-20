@@ -1,5 +1,7 @@
 ---
 title: How React Do?
+date: 2016-09-20
+tags: rc
 layout: post
 ---
 
