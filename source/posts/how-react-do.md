@@ -45,6 +45,7 @@ Table of Contents:
 - [element properties](#elprops)
 - [Think of the Children](#children)
 - [No more inline js](#notinline)
+- [Elements](#elements)
 - [Let's make a box](#box)
 - [Let's make two boxes](#boxes)
 - [Let's make a row of boxes](#row)
@@ -628,6 +629,9 @@ React.createElement(App,{ props: "this" },
 ```
 
 So here we are!
+
+<a name=elements />
+#Elements
 
 In JSX land, you can interpolate arbitrary javascript code by wrapping it in
 curlies. (Sorry, my syntax highlighter doesn't like inlined JSX at all.)
