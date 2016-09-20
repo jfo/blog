@@ -1,38 +1,65 @@
 ---
-title: An Initial Reaction (a react.js sort of guide/primer but not really at all)
+title: How React Do?
 layout: post
 ---
 
 I like doing things from total scratch, or at least what _seems_ like total
 scratch to me. For this reason a lot of modern javascript has baffled me. I can't
-keep up with all the frameworks, I want to know what's going on at the root of
+keep up with all the frameworks because I always want to know what's going on at the root of
 things. I think this is maybe a laudable impulse, but I have a lot of FOMO with
 all the new hotnesses because I just don't have the patience to learn all the
-API's before some other thing comes along.
+API's before some other thing comes along, and in practice, I really _would_
+like to be better a javascript.
 
-But, I spend a lot of my time as a product engineer writing javascript, and
-sometimes, I write really bad javascript! I've been waiting for something to
-grab me- some project or framework that really makes me want to learn the ins
-and outs of js. I finally got the itch last week while helping a coworker hack
-on his React project. So this weekend I scratched the itch!
+I spend a lot of my time as a product engineer writing javascript, and
+sometimes, I write really bad javascript! I know that thinking about front end
+development in a more modern, coherent way would benefit me whether I'm working
+in a framework or not, but I've been waiting for something to grab me- some
+project or idea that really makes me want to learn the ins and outs of the
+language. I finally got the itch last week while helping a coworker hack on his
+React project. So this weekend I scratched the itch!
 
 A thing about javascript is that there seem to be a million differenct ways to
 package it up. The tooling is sometimes as impenetrable as the coding itself. I
-want to start by skipping _all_ of that part.  I want to make the simplest
-simple app I can. How do I do this???
+want to start by skipping _all_ of that.  I want to make the simplest simple
+app I can. How do I do this???
 
 This is kind of sort of a tutorial, but it's really, really not. It's more of a
 dev log that I wrote _while_ I was learning about React, so I wouldn't take
 this as the source of truth or anything. In fact, I would encourage a reader
 who knows better to let me know if there is anything strange in here! I do
-provide ample links to resources that I found helpful, though.
+provide ample links to resources that I found helpful, though, so [you don't
+have to take my word for it](https://www.youtube.com/watch?v=JjuzxiuIbjs).
+
+This post got kind of long, so here's a 
+
+<a name=toc />
+
+Table of Contents:
+------------------
+
+- [mkdir](#mkdir)
+- [injecting a single React element into the dom](#singleel)
+- [element properties](#elprops)
+- [Think of the Children](#children)
+- [No more inline js](#notinline)
+- [Let's make a box](#box)
+- [Let's make two boxes](#boxes)
+- [Let's make a row of boxes](#row)
+- [Let's make a grid of rows of boxes](#grid)
+- [Dynamically sizing with `props`](#sizing)
+- [Giving it dimensions](#dimensions)
+- [Multiplying elements (with a cheeky little lambda)](#multi)
+- [The State of the Dom](#statedom)
+- [Coda](#coda)
 
 Anyway, let's start! This project will be called "boxes", and it will start
 from `mkdir`. The repo of all the code is
 [here](https://github.com/urthbound/boxes). You can follow along with it if you want to!
 
-mkdir
--------
+<a name=mkdir />
+#mkdir
+
 
 ```
 mkdir boxes && cd boxes
@@ -95,7 +122,7 @@ Looks like I can _download it directly from a CDN_. Ok.
 
 I'll dump those two script tags into my `index.html`'s `<head>`, like it's
 2003, and also console.log the two objects I get back. I know these are the
-objects I get back from
+objects I get back from those calls because
 [this](https://facebook.github.io/react/docs/package-management.html).
 
 ```html
@@ -116,7 +143,13 @@ objects I get back from
 
 [Lol.](https://www.reddit.com/r/javascript/comments/3m6wyu/found_this_line_in_the_react_codebase_made_me/cvcyo4a)
 
-Ok, now I want to inject a React component into the dom. To do that I first need a reference to a container that already exists in the dom. Let's see if I can get one this way:
+<sub><a href='#toc'>toc</a></sub>
+<a name=singleel />
+#Injecting a single react element into the dom
+
+Ok, now I want to inject a React element into the dom. To do that I first need
+a reference to a container that already exists in the dom. Let's see if I can
+get one this way:
 
 ```html
 <!DOCTYPE html>
@@ -171,15 +204,16 @@ lines, after all!)
 
 This logs:
 
-```javascript
+```js
 > div#example
 ```
 
-Which is a DOM object that you can open up and mess with in the console.
+Which is a DOM object that you can open up and mess with in the console which
+is what I wanted hooray.
 
-This so far is loosely coupled with this:
+This so far is loosely coupled with
+[this](https://facebook.github.io/react/docs/getting-started.html):
 
-https://facebook.github.io/react/docs/getting-started.html
 
 So let's try dropping in that React code directly. This should work, right? I
 know that I have access to the ReactDOM object there, after all.
@@ -220,12 +254,14 @@ Astute readers will notice that I did not include `babel` like in the facebook e
 <script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
 ```
 
-Wtf is babel? Do I want to use it? Eventually, yes I do. In this case, it's
-turning `<h1>Hello, world!</h1>,` from inlined `jsx` into vanilla javascript.
+Wtf is [babel](https://babeljs.io/)? Do I want to use it? Eventually, yes I do.
+In this case, it's turning `<h1>Hello, world!</h1>,` from inlined `JSX` into
+vanilla javascript.
 
-[More on JSX here.](https://facebook.github.io/react/docs/jsx-in-depth.html)
+[More on JSX here!](https://facebook.github.io/react/docs/jsx-in-depth.html).
+I'll come back to it in a minute.
 
-Maybe I can pass in a string of html, then?
+Maybe I can just pass in a string of html, then?
 
 ```js
 ReactDOM.render(
@@ -243,9 +279,10 @@ React.createElement('div') or <div />.
 
 ```
 
-I can't pass `<div />` yet, because that's JSX. (To see what that would get
-turned into, try this [ REPL
+I can't pass `<div />` yet, because that's JSX and I'm not transpiling yet. (To
+see what that would get turned into, try this [ REPL
 ](https://babeljs.io/repl/#?babili=false&evaluate=true&lineWrap=false&presets=es2015%2Creact%2Cstage-2&code=%3Cdiv%20%2F%3E%0A)).
+
 But I can pass the other one!
 
 ```js
@@ -269,7 +306,7 @@ you can pass any string into that `createElement()` and you will get a tag of
 that name. What the rendering browser does with that is up to it, but the React
 function doesn't heel you to a particular set of elements. [Here's a pedantic
 Stack Overflow thread about
-it](http://stackoverflow.com/questions/3593726/whats-stopping-me-from-using-arbitrary-tags-in-html).
+arbitrary tags](http://stackoverflow.com/questions/3593726/whats-stopping-me-from-using-arbitrary-tags-in-html).
 
 ```js
 ReactDOM.render(
@@ -337,6 +374,10 @@ We can see the whole source by calling `toString` on the function:
 
 Sweet, sweet code comments! This looks like a light wrapper around
 `ReactElement.createElement.apply()` that does a little bit of error handling.
+
+<sub><a href='#toc'>toc</a></sub>
+<a name=elprops />
+# Element props
 
 The function takes three arguments: `type`, `props`, and `children`. We know
 what 'type' is, how about 'props'? I would expect that to map to [html
@@ -431,6 +472,12 @@ ReactDOM.render(
 <whatsit data-reactroot class="hoohaa" for="derp"></whatsit>
 ```
 
+<sub><a href='#toc'>toc</a></sub>
+
+<a name=children />
+
+#Think of the Children
+
 And as for the last argument to the function, `children`, You pass any child
 elements and/or strings and/or numbers and/or arrays you want to be rendered!
 
@@ -463,7 +510,7 @@ Elements. Also, I haven't passed in an array of things, I've just passed in an
 arbitrary number of args. Funny story about `children`... it's never even
 accessed in the function body! it's simply a semantic placeholder, and the
 entire argument list is passed through into the sub call as an array (accessed
-by the `arguments` keyword). You can see this in the function body above!
+by the [arguments](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments) keyword). You can see this in the function body above!
 
 Ok back to safety:
 
@@ -482,6 +529,12 @@ And we're back where we started, but with React in the mix. This Single Page
 App is going to be so sweeeeeeeet!
 
 <hr>
+
+<sub><a href='#toc'>toc</a></sub>
+
+<a name=notinline />
+
+# ok let's not inline the js in the template
 
 Ok this inline JS thing is cute and all but let's put that in its own file, in
 the same directory as the index.html file.
@@ -514,7 +567,8 @@ earlier with
 python -m SimpleHTTPServer 4321
 ```
 
-And go to `localhost:4321` in the browser, and _that_ will work!
+And go to `localhost:4321` in the browser, and _that_ will work! Or whatever
+dev server you have lying around will work, really.
 
 Now I can freely use JSX inlined in the js file, like this! Both of those lines
 are equivalent:
@@ -574,7 +628,7 @@ React.createElement(App,{ props: "this" },
 So here we are!
 
 In JSX land, you can interpolate arbitrary javascript code by wrapping it in
-curlies.
+curlies. (Sorry, my syntax highlighter doesn't like inlined JSX at all.)
 
 ```js
 var thing = "Hello World!";
@@ -595,8 +649,6 @@ ReactDOM.render(
     document.getElementById('example')
 );
 ```
-
-(sorry, my syntax highlighter doesn't like inlined JSX at all)
 
 Ok, so, what if I want to style this thing? I know how to add attributes in
 JSX, how about this?
@@ -623,7 +675,7 @@ This, once again, makes sense, but I wouldn't have guessed it offhand!
 var thing = "Hello World!";
 
 ReactDOM.render(
-    <h1 style={ {"color":"red"} }>{thing}</h1>,
+    <h1 style={ {color:"red"} }>{thing}</h1>,
     document.getElementById('example')
 );
 ```
@@ -639,7 +691,7 @@ var colors = [ "red", "blue", "orange", "green" ];
 var color = colors[Math.floor(Math.random() * colors.length)];
 
 ReactDOM.render(
-    <h1 style={ {"color":color} }>{thing}</h1>,
+    <h1 style={ {color:color} }>{thing}</h1>,
     document.getElementById('example')
 );
 ```
@@ -703,11 +755,27 @@ This works! I will see the color change every second.
 
 But it is _so, so, ugly._
 
-[elaborate on the ugliness and why it sucks so bad]
+It's bad in so many ways... I'm reaching into the DOM from an arbitrary place
+in the code. The selector is brittle and if I moved that div _at all_ I'd have
+to update every place I touch it. What if I wanted to transform this based on
+its state? Like say I wanted to avoid the color that it already is? I'd have to
+either keep a reference to that around, which means maintaining multiple
+sources of truth (the reference and also the truth in the dom) _or_ reaching
+into the dom anytime I want to get that truth out (state in the dom!)
+
+State in the DOM is one of javascript's original sins! It may be a single
+source of truth, kind of, but from javascript's perspective you can grab that
+out from anywhere, anytime, and mutate it, or make branching decisions on it,
+or all manner of things. You can have multiple references in the js code to the
+same dom element that depend on similarly brittle selectors to the one above
+that are tough to keep track of and easy to get out of sync. It's a big mess is
+what it is.
+
 
 This is one of the _exact problems_ that react was meant to solve. I don't want
 to have to manage the state of the DOM procedurally like that, I want the dom
-to manage itself.
+to manage itself based on a description of what it should look like in various
+states.
 
 I can do this very simply, by _rerendering the entire ReactDOM anytime the state changes!_
 
@@ -761,7 +829,7 @@ about when and how to manipulate DOM nodes directly, or in what order! I no
 longer have to litter every code path with jQuery selectors that may or may not
 represent the same nodes at the same or different times. I think
 this is a really Good idea, and in fact it's the thing that made me really
-want to check out React in the first place!
+want to actually learn React in the first place!
 
 [Check out this great stack overflow answer about this from one of the
 authors.](http://stackoverflow.com/a/23995928)
@@ -780,11 +848,15 @@ authors.](http://stackoverflow.com/a/23995928)
 
 
 Components
--------------
+-----------
 
-I was confused about components for a while, thinking that they were somehow a superset of elements but with more stuff in them or something. _the truth is much stranger!_
+I was confused about components for a while, thinking that they were somehow a
+superset of elements but with more stuff in them or something. _the truth is
+much stranger!_
 
-All of the following things are basically equivalent as written.
+All of the following things are basically equivalent as written, where an
+element can be produced from either a pure function (the first two), or an
+Object (the last two).
 
 ```js
 var randColor = function() {
@@ -823,21 +895,29 @@ setInterval(function() {
 }, 100)
 ```
 
-[I found a good doc!!](https://facebook.github.io/react/blog/2015/12/18/react-components-elements-and-instances.html)
+[I found a good doc about this!!](https://facebook.github.io/react/blog/2015/12/18/react-components-elements-and-instances.html)
 
-also it includes this gem:
+> also it includes this gem:
 
-["React is like a child asking “what is Y” for every “X is Y” you explain to them
-until they figure out every little thing in the world."](https://youtu.be/4u2ZsoYWwJA?t=7m37s)
+> ["React is like a child asking “what is Y” for every “X is Y” you explain to them
+> until they figure out every little thing in the world."](https://youtu.be/4u2ZsoYWwJA?t=7m37s)
+
+The difference in using an object (or class with the es6 syntax) is that
+_objects can maintain state_.
 
 What I've learned is to try to use the simplest choice. If your component
 needn't hold state or react to events inside of itself, it should be a pure
 function of the properties passed into it when possible. More complex things
-might require the class extension, but it's important to note that all of these
-things basically boil down to the same thing at the end of the day: functions
-and objects. JavaScript!
+might require the class extension or the `React.createClass()`, but it's
+important to note that all of these things basically boil down to the same
+thing at the end of the day. JavaScript!
 
 <hr>
+
+<sub><a href='#toc'>toc</a></sub>
+
+<a name=box />
+#Let's make a box
 
 With this in mind, let's make a box.
 
@@ -863,6 +943,11 @@ setInterval(function() {
 ```
 
 Everytime this is rendered (10 times a second!) we get a new color box. Let's make 2!
+
+<sub><a href='#toc'>toc</a></sub>
+
+<a name=boxes />
+#Let's make two boxes
 
 ```js
 ReactDOM.render(
@@ -893,14 +978,19 @@ itself instead of in an external style sheet... but this is the react way. Self
 contained composable units!
 
 > Since I'm using es6, I'm going to go ahead and change those `var` declarations
-> to `let` declarations. [Here's a little more about
+> to `let` and `const` declarations. [Here's a little more about
 > that.](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let)
+
+<sub><a href='#toc'>toc</a></sub>
+
+<a name=row />
+#Let's make a row of boxes
 
 Now that boxes can be put next to each other, I can make a `Row` component that
 composes 5 of them side by side!
 
 ```js
-let Row = () => {
+const Row = () => {
     return <div>
         <Box />
         <Box />
@@ -911,10 +1001,15 @@ let Row = () => {
 }
 ```
 
+<sub><a href='#toc'>toc</a></sub>
+
+<a name=grid />
+#Let's make a grid of rows of boxes
+
 I can do a very similar thing by stacking 5 rows together to make a `Grid` component.
 
 ```js
-let Grid = () => {
+const Grid = () => {
     return <div>
         <Row />
         <Row />
@@ -937,12 +1032,17 @@ setInterval(()=>{
 }, 100)
 ```
 
+<sub><a href='#toc'>toc</a></sub>
+
+<a name=sizing />
+#Dynamically sizing the grid with `props`
+
 What I would like, though, is a dynamically sized grid. This is fairly simple-
 I can pass height and width in as props to the grid and set the style
 accordingly...
 
 ```js
-let Grid = (props) => {
+const Grid = (props) => {
     return <div style={{
         display: "inline-block",
         height: props.height,
@@ -968,7 +1068,7 @@ This limits the size of the enclosing `Grid` element to what I specify. I would
 like to cascade that value down through the hierarchy.
 
 ```js
-let Row = (props) => {
+const Row = (props) => {
     return <div style={{
         height: props.height,
         width: props.width
@@ -981,7 +1081,7 @@ let Row = (props) => {
     </div>
 }
 
-let Grid = (props) => {
+const Grid = (props) => {
     return <div style={{
         display: "inline-block",
         height: props.height,
@@ -1005,7 +1105,7 @@ know. Feels like it though.
 A similar pass for the `Box`:
 
 ```js
-let Box = (props) => {
+const Box = (props) => {
     return <div style={{
         display: "inline-block",
         background: randColor(),
@@ -1014,7 +1114,7 @@ let Box = (props) => {
     }} />;
 }
 
-let Row = (props) => {
+const Row = (props) => {
     return <div style={{
         height: props.height,
         width: props.width
@@ -1028,14 +1128,18 @@ let Row = (props) => {
 }
 ```
 
+<sub><a href='#toc'>toc</a></sub>
+<a name=dimensions />
+#Giving it dimensions
+
 The grid really has two things I'd like to specify- the absolute size that I've been working with so far, and also the x y values of how many boxes are inside of it.
 
 ```js
-let randColor = function() {
+const randColor = function() {
     return '#'+Math.floor(Math.random()*16777215).toString(16);
 }
 
-let Box = (props) => {
+const Box = (props) => {
     return <div style={{
         display: "inline-block",
         background: randColor(),
@@ -1044,7 +1148,7 @@ let Box = (props) => {
     }} />;
 }
 
-let Row = (props) => {
+const Row = (props) => {
     return <div style={{
         height: props.height,
         width: props.width
@@ -1057,7 +1161,7 @@ let Row = (props) => {
     </div>
 }
 
-let Grid = (props) => {
+const Grid = (props) => {
     return <div style={{
         display: "inline-block",
         height: props.height,
@@ -1086,7 +1190,7 @@ React elements_ inside of a jsx curly brace block. This will be munged and
 rendered as if I had written them by hand as before.
 
 ```
-let Row = (props) => {
+const Row = (props) => {
     return <div style={{
         height: props.height,
         width: props.width
@@ -1111,8 +1215,17 @@ Grid) in Grid
 
 [https://fb.me/react-warning-keys](https://fb.me/react-warning-keys).
 
+Duly noted, I need to manually assign these keys when I create an array of
+elements, then, so that react knows how to keep track of them.
+
+<sub><a href='#toc'>toc</a></sub>
+
+<a name=multi />
+#Multiplying elements (with a cheeky little lambda)
+
 Ok! I need to create a little block that returns an array of elements whose
-length is the `count` that I pass in! This is a fun one! A first pass might look something like this:
+length is the `count` that I pass in! This is a fun one! A first pass might
+look something like this:
 
 ```js
 function(count) {
@@ -1139,9 +1252,13 @@ an Array with that number of elements.
 Array(props.dimensions.y)
 ```
 
-This will return a reference to an Array that has its `length` property set to that number (if you pass more than one argument to this constructor, it simply makes an array out of them).
+This will return a reference to an Array that has its `length` property set to
+that number (if you pass more than one argument to this constructor, it simply
+makes an array out of them).
 
-If I want to map over this array, I need to fill in the array with a placeholder value (this is weird that I have to do this, but whatever- it's all in the service of a good one liner!)
+If I want to map over this array, I need to fill in the array with a
+placeholder value (this is weird that I have to do this, but whatever- it's all
+in the service of a good one liner!)
 
 ```js
 Array(props.dimensions.y).fill()
@@ -1167,7 +1284,12 @@ Would return
 [3, 3, 3, 3, 3]
 ```
 
-Instead of those `3`'s, I'll simply return the element I started with!
+Instead of those `3`'s, I'll simply return the element I wanted!
+
+The map function takes two arguments, positionally they are `(element, index)`.
+I can use that index as the `key` of the element I'm producing! (Keys only need
+to be unique amongst their siblings, so this won't interfere with other rows of
+keys boxes, for example.)
 
 ```js
 Array(props.dimensions.y).fill().map((_, i) => {
@@ -1184,8 +1306,10 @@ And Robert's your sister's husband's father-in-law's cousin's cousin!
 I thought that one could use some splainin' because... while it's very simple,
 it looks pretty weird.
 
-The State of the Domion
-----------------------
+<sub><a href='#toc'>toc</a></sub>
+
+<a name=statedom />
+#The State of the Dom
 
 Ok, it's about to get pretty wild in here. So far, this has been fairly
 straightforward... just passing in some props and generating a dom based on
@@ -1283,14 +1407,54 @@ class Grid extends React.Component {
 
 I've added two sliders for the x and y dimension values. Now, instead of
 passing them in as props, they are given a default value of 1 and when the
-sliders are moved, the whole dom is efficiently rerendered!
+sliders are moved, the whole dom is efficiently rerendered! This means that the
+cells are resized _but the colors stay the same_, because the boxes each
+maintain that state on their own.
 
-You can see a working examply of this "final" product [here](http://codepen.io/urthbound/full/wzzGok/)
+The sliders and the rows/boxes are sibling elements that share a common
+ancestor- in this case the containing Grid itself. Because the state of the
+sliders affects the properties of the rows/boxes (specifically their
+dimensions), that state must live on that common ancestor (the Grid
+component.)
 
+If the DOM was a lot bigger, or if, say, the sliders were somewhere way down in
+the dom tree away from the boxes they affect, I might have to pass bound
+functions down the hierarchy to get those states hooked up properly. My very
+limited understanding of the flux pattern is that it solves this problem by
+maintaining a global store singleton that acts as an event handler/dispatcher
+at the very top level of the application. But I don't know much about that yet.
 
-Coda
-====
+You can see a working examply of this "final" product
+[here](http://codepen.io/urthbound/full/wzzGok/). (It might not work quite
+right on mobile, I'm sure there is a way to fix that but it's beyond the scope
+of this post.)
 
-Here's where I might refactor this into proper dependency files and use a
-module loader like npm or something, but I think I've gotten to the end of this
-particular tunnel.
+<sub><a href='#toc'>toc</a></sub>
+
+<a name=coda />
+#Coda
+
+This app doesn't really do that much! But I think I kind of sort of get the basic
+ideas behind react and also how to sort of use it! The next thing I would want
+to learn is how to bundle dependencies, so I could separate the "library"
+code that would expose the `Grid` component from the "application" code that
+just amounts to that initial `ReactDOM.render()` call.
+
+I guess I could use gulp or webpack or browserify or require or bower or AMD
+or... npm? Can npm do that by itself? I think some of these are the same thing.
+Or different things. I have no idea yet, really. Maybe I'll write another post
+on that!
+
+And then also a proper development server that does hot reloading on file
+changes would be nice... do I have to write that myself, too, out of my
+somewhat misguided NIH syndrome? Hmm....
+
+In the meantime,
+[create-react-app](https://github.com/facebookincubator/create-react-app) looks
+really interesting!
+
+A friend of mine told me I should put some keywords at the bottom of the post,
+so here's that part: javascript node node react javascript jquery horse-js npm
+install.
+
+Thanks for reading!
