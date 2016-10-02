@@ -9,9 +9,10 @@ I like doing things from total scratch, or at least what _seems_ like total
 scratch to me. For this reason a lot of modern javascript has baffled me. I can't
 keep up with all the frameworks because I always want to know what's going on at the root of
 things. I think this is maybe a laudable impulse, but I have a lot of FOMO with
-all the new hotnesses because I just don't have the patience to learn all the
-API's before some other thing comes along, and in practice, I really _would_
-like to be better at javascript.
+all the new hotnesses because I just don't have the patience or time to learn all the
+API's before some other thing comes along. In practice, I really _would_
+like to be better at javascript, but the number of possible entry points can be
+overwhelming.
 
 I spend a lot of my time as a product engineer writing javascript, and
 sometimes, I write really bad javascript! I know that thinking about front end
@@ -21,19 +22,19 @@ project or idea that really makes me want to learn the ins and outs of the
 language. I finally got the itch last week while helping a coworker hack on his
 React project. So this weekend I scratched the itch!
 
-A thing about javascript is that there seem to be a million differenct ways to
+A thing about javascript is that there seem to be a million different ways to
 package it up. The tooling is sometimes as impenetrable as the coding itself. I
 want to start by skipping _all_ of that.  I want to make the simplest simple
 app I can. How do I do this???
 
 This is kind of sort of a tutorial, but it's really, really not. It's more of a
 dev log that I wrote _while_ I was learning about React, so I wouldn't take
-this as the source of truth or anything. In fact, I would encourage a reader
-who knows better to let me know if there is anything strange in here! I do
+this as the source of truth or anything. In fact, I would encourage readers
+who know better to let me know if there is anything strange in here! I do
 provide ample links to resources that I found helpful, though, so [you don't
 have to take my word for it](https://www.youtube.com/watch?v=JjuzxiuIbjs).
 
-This post got kind of long, so here's a 
+This post got kind of long, so here's a
 
 <a name=toc />
 
@@ -1190,7 +1191,7 @@ setInterval(()=>{
 ```
 
 Now, I want to dynamically generate the number of boxes based on those
-dimension values, and compute the absolute height and width values of theese
+dimension values, and compute the absolute height and width values of these
 children on the fly. Step one is to recognize that I can return _an array of
 React elements_ inside of a jsx curly brace block. This will be munged and
 rendered as if I had written them by hand as before.
@@ -1280,7 +1281,7 @@ Since I didn't pass in anything to `fill()`.
 
 Now, I can map over this array! I pass it a function (yay stabby procs!)
 
-```
+```js
 Array(5).fill().map(()=>3)
 ```
 
@@ -1412,7 +1413,7 @@ class Grid extends React.Component {
 ```
 
 I've added two sliders for the x and y dimension values. Now, instead of
-passing them in as props, they are given a default value of 1 and when the
+passing them in as props, they are given a default value of 1, and when the
 sliders are moved, the whole dom is efficiently rerendered! This means that the
 cells are resized _but the colors stay the same_, because the boxes each
 maintain that state on their own.
