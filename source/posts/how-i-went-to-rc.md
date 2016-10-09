@@ -111,7 +111,7 @@ is still a really sweet and weird book.
 > [here](http://www.slate.com/articles/technology/technology/2012/03/ruby_ruby_on_rails_and__why_the_disappearance_of_one_of_the_world_s_most_beloved_computer_programmers_.html)
 
 It was a lot all at once, and it was very overwhelming at times. When I looked
-at the [curriculum](http://www.appacademy.io/curriculum), I saw a _whole bunch
+at the [curriculum](http://www.appacademy.io/immersive/curriculum), I saw a _whole bunch
 of idk_ and quite a bit of _wtf_. But I had told myself that I was at least
 going to try it. I had been asked to do a second test, so I must not be
 abysmal, right?
