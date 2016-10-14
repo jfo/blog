@@ -211,7 +211,7 @@ Now with access to that, I can call `stdout()`, which is a function that
 returns a 'handle' to the standard out of the current process (read, access to
 the running program's environmental stdout pipe!).
 
-This program does nothing, but will compile: 
+This program does nothing, but will compile:
 
 ```rust
 use std::io::stdout;
@@ -373,7 +373,7 @@ stdout().write(1u8);
 
 Maybe it needs the number to be in an array?
 
-```
+```rust
 stdout().write([1u8]);
 ```
 
@@ -385,7 +385,7 @@ stdout().write([1u8]);
 ```
 
 > I want to pause for a minute here and acknowledge how incredibly frustrating
-> this might be for beginners to the language, especially 
+> this might be for beginners to the language, especially
 
 We're almost there. The type that it's expecting is prepended with an
 ampersand. In C, this would denote a pointer address to an array of `chars`
@@ -399,13 +399,13 @@ the same thing in this case.
 
 Anyway- let's slap an ampersand on it.
 
-```
+```rust
 stdout().write(&[1u8]);
 ```
 
 This one compiles! As will, surprisingly, this one:
 
-```
+```rust
 stdout().write(&[1]);
 ```
 
@@ -429,7 +429,7 @@ There it is, that's the `1` we wrote to stdout!
 
 `write()` was expecting a variably sized slice of `u8`s, so we could write as many was we want.
 
-```
+```rust
 stdout().write(&[1, 2, 3, 4, 5, 6, 7, 8]);
 ```
 
@@ -437,10 +437,10 @@ stdout().write(&[1, 2, 3, 4, 5, 6, 7, 8]);
 0000000: 0102 0304 0506 0708                      ........
 ```
 
-If the values correspond to an ascii code, then it will be interpreted as that
-character by the terminal.
+If the values correspond to an ascii character code, then it will be
+interpreted as that character by the terminal.
 
-```
+```rust
 stdout().write(&[104, 105, 32, 109, 111, 109, 22]);
 ```
 
@@ -448,7 +448,331 @@ stdout().write(&[104, 105, 32, 109, 111, 109, 22]);
 0000000: 6869 206d 6f6d 16                        hi mom.
 ```
 
+Well, it doesn't have to be ascii, it can be unicode too!
+
+```rust
+stdout().write(&[0xe0, 0xb9, 0x80, 0xd5, 0x87, 0x20, 0xe0, 0xb9, 0x94, 0xe0, 0xb9, 0x8f, 0xd1, 0x94, 0xe0, 0xb8, 0xa3, 0xe0, 0xb8, 0xa0, 0x27, 0xd5, 0x87, 0x20, 0xd1, 0x92, 0xe0, 0xb8, 0x84, 0xd7, 0xa9, 0xd1, 0x94, 0x20, 0xd5, 0x87, 0xe0, 0xb9, 0x8f, 0x20, 0xe0, 0xb9, 0x92, 0xd1, 0x94, 0x20, 0xe0, 0xb8, 0x84, 0xe0, 0xb8, 0xa3, 0xcf, 0x82, 0xe0, 0xb9, 0x80, 0xe0, 0xb9, 0x80, 0x0a]);
+```
+
 Neat!
 
 Writing the waves
 =================
+
+We usually think of catting and echoing and stdout and whatnot as being related
+to textual out and input. But it's not, really! It can be _any type_ of data. I want to make a sound file. For simplicitie's sake, it should be uncompressed. I'll make a .wav file!
+
+![img](http://soundfile.sapp.org/doc/WaveFormat/wav-sound-format.gif)
+
+[A wave file consists of a header
+chunk](http://soundfile.sapp.org/doc/WaveFormat/), containing metadata about
+the data contained int he rest of the file, and a data chunk, which contains
+the, uh, data.
+
+The link above is really informative, but I'll go over it a little bit here
+too. I'm going to be writing an 8 bit file, at 44.1kHz. I'll write all the data
+to `stdout` initally, from there I can do something else with it if I want.
+
+We start with the characters `"RIFF"`
+
+```rust
+stdout().write(b"RIFF");
+```
+
+Just like writing a string; that's 4 bytes long.
+
+The next 4 bytes are a little-endian representation of how long the rest of the
+file is. We'll come back to that in a minute, for now I'll just put in nulls (0).
+
+```rust
+stdout().write(b"RIFF");
+stdout().write(&[ 0, 0, 0, 0 ]);
+```
+
+Next I write the literal strings `"WAVE"` and `"fmt "`... note the extra space
+at the end of `"fmt "`, so that it takes up 4 bytes.
+
+```rust
+stdout().write(b"RIFF");
+stdout().write(&[ 0, 0, 0, 0 ]);
+stdout().write(b"WAVE");
+stdout().write(b"fmt ");
+```
+
+Next comes the size annotation for the metadata chunk. For this type of wave
+file, it is always 16 bytes.
+
+```rust
+stdout().write(b"RIFF");
+stdout().write(&[ 0, 0, 0, 0 ]);
+stdout().write(b"WAVE");
+stdout().write(b"fmt ");
+stdout().write(&[ 0, 0, 0, 16 ]);
+```
+
+BUT WAIT! All of the numerical values in this metadata header are in _little endian_ format. This means that _the least significant byte comes first_. So, instead of
+
+```rust
+stdout().write(&[ 0, 0, 0, 16 ]);
+```
+
+We write 16 like this:
+
+```rust
+stdout().write(&[ 16, 0, 0, 0 ]);
+```
+
+[Here's a spoopy video describing endianess in more
+detail.](https://www.youtube.com/watch?v=MEyV7moej-k) (Happy Halloween
+errybody.)
+
+Ok, little endian everywhere! The next two bytes denote the "Audio Format". For uncompressed [PCM](https://en.wikipedia.org/wiki/Pulse-code_modulation), this value is always `1` (Again, in little endian!)
+
+```
+stdout().write(&[ 1, 0 ]);
+```
+
+The next two bits are the number of channels. Let's go easy on ourselves with mono!
+
+```
+stdout().write(&[ 1, 0 ]);
+```
+
+(That's one channel.)
+
+The next one is a tad different! It's 4 bytes that represent that _sample rate_
+of the file. We're going to go with 44.1kHz, which is the ["red book
+standard"](http://www.soundonsound.com/sound-advice/q-it-worth-recording-higher-sample-rate)
+for digital audio.
+
+Now, we can't do this:
+
+```
+stdout().write(&[ 44100, 0, 0, 0 ]);
+```
+
+This doesn't make any sense. Each number is a single byte- which is 8 bits. A
+single byte can only hold a value up to 2<sup>8</sup>, which is 256. Including
+0, that's [255 possible values](/c-and-simple-types/). We need a two byte / 16
+bit word to hold 44100.
+
+That value will look like this:
+
+```
+1010110001000100
+```
+
+If we split that up into two bytes, and assing hexadecimal values to the two bytes,
+
+```
+binary:   1010 1100  0100 0100
+hex:         a    c     4    4
+```
+
+Add a couple of padding zero bytes before these two byte:
+
+```
+00 00 ac 44
+```
+
+And then make the transformation to little endian:
+
+```
+44 ac 00 00
+```
+
+And there you go! It makes sense to write these into the stream as hexadecimal
+literals just like they look above,
+
+```
+stdout().write(&[ 0x44, 0xac, 0x00, 0x00 ]);
+```
+
+(though you could write their decimal equivalents)
+
+```
+stdout().write(&[ 68, 172, 0, 0 ]);
+```
+
+(but, frankly, this makes even less sense, kind of...)
+
+We're getting close. Don't worry. We're going to make it.
+
+Next, is a 4 byte block for the byterate. The byterate is computed thusly:
+
+```
+samplerate * number of channels * (bits per sample / 8)
+```
+
+This is basically asking: how many bytes are set aside for each second of
+audio? In our case,
+
+```
+44100 * 1 * (8 / 8)
+```
+
+This is the same as the sample rate, so we can reuse that value. Again, in
+little endian.
+
+```
+stdout().write(&[ 0x44, 0xac, 0x00, 0x00 ]);
+```
+
+Blockalign is similar... how many bytes _per sample_ for all channels
+inclusively.
+
+```
+number of channels * (bits per sample / 8)
+```
+
+That's just one.
+
+```
+stdout().write(&[ 1, 0 ]);
+```
+
+Sigh. Almost there.
+
+Bits per sample is self explanatory:
+
+```
+stdout().write(&[ 8, 0 ]);
+```
+
+Finally, another string literal to dnote the beginning of the data chunk...
+
+```
+stdout().write(b"data");
+```
+
+AND FINALLY, a four byte section to tell us how many bytes exist _in the whole
+data chunk_. Let's pretend we're going to make one second of sound... at a
+sample rate of 44100Hz, this means we're going to need 44100 samples to fill
+one second, so once again:
+
+```
+// subchunk2size == numsamples * numchannels * bitspersample / 8
+stdout().write(&[ 0x44, 0xac, 0x00, 0x00 ]);
+```
+
+The whole header looks something like this:
+
+```rust
+fn main() {
+
+    // ChunkId
+    stdout().write(b"RIFF");
+
+    // ChunkSize = 36 + subchunk size 2
+    stdout().write(&[ 0x68, 0xac, 0x00, 0x00 ]);
+
+    // Format
+    stdout().write(b"WAVE");
+
+    // Subchunk1ID
+    stdout().write(b"fmt ");
+
+    // Subchunk1size
+    stdout().write(&[16, 0, 0, 0 ]);
+
+    // AudioFormat
+    stdout().write(&[ 1, 0 ]);
+
+    // Numchannels
+    stdout().write(&[ 1, 0 ]);
+
+    // Samplerate
+    stdout().write(&[ 0x44, 0xac, 0x00, 0x00 ]);
+
+    // Byterate samplerate + num of channels * bits per sample /8
+    stdout().write(&[ 0x44, 0xac, 0x00, 0x00 ]);
+
+    // blockalign
+    stdout().write(&[ 1, 0 ]);
+
+    // bitspersample
+    stdout().write(&[ 8, 0 ]);
+
+    // subchunk2 id
+    stdout().write(b"data");
+
+    // subchunk2size == numsamples * numchannels * bitspersample / 8
+    stdout().write(&[ 0x44, 0xac, 0x00, 0x00 ]);
+
+```
+
+Notice I've filled in the subchunk 1 size with the appropriate value! That's the whole header!
+
+Make some noise
+---------------
+
+We need some actual data to fill this wav file with! What is it going to be? We
+could start with the simplest to make noise there is- [white
+noise](https://www.youtube.com/watch?v=EY5OQ2iVA50).
+
+Sampled white noise is simply random values. Each sample is going to be some
+random value between 0 and 255. No computation necessary!
+
+We need 44100 of these values. It will look something like this!
+
+```
+for x in 0..44100 {
+    stdout().write(&[ random() ]);
+}
+```
+
+But rust isn't going to let us get away with a call like `random()`! We'll need
+a crate [library](https://crates.io/crates/rand) for it!
+
+Using a crate is pretty easy! We just need to add it to our `Cargo.toml` file
+under `[dependencies]`, along with a version annotation. This glob means I
+don't care.
+
+```
+[dependencies]
+rand = "*"
+```
+
+At the top of the file, we'll import the library.
+
+```
+extern crate rand;
+```
+
+And we'll have access to that namespacing and all of its functions and traits!
+
+```
+for x in 0..44100 {
+    stdout().write(&[ rand::random::<u8>() ]);
+}
+```
+
+So, cool thing here- when we compile this, _cargo just like, works_. Assuming
+you're connected to the internet- the dependency will be downloaded and
+resolved and made available to you to be linked and compiled into the resulting
+binary.
+
+[We're just about right here, by the way.](https://github.com/urthbound/rav/commit/cf20c195d94a01b0edf70ef21d10118d39e977a2)
+
+You can compile and run this! If you `cargo run` it, it will both compile _and_
+run it.
+
+But surprise if you did, because it just screwed up your terminal!! :D Turns
+out catting a bunch of random binary shit to stdout can royally screw up your
+terminal emulator. I assume it's catching random values that correspond to
+instruction codes to the terminal display or something? I don't know, it
+doesn't matter, but the first time it happens it sure can freak you out. if you
+did this, just type `reset` and all should be well.
+
+But, also, there is an easy way to get stdout directed into a file!
+
+```
+cargo build
+target/debug/rav > out.wav
+```
+
+Note that we have to build and run it this way because `cargo run` prints other stuff to stdout before compiling the file!
+
+Hey look a wav file! Try opening it up in a music player, and you should hear
+exactly one second of horrible abrasive white noise! We just wrote a soundfile
+from scratch. Cool.
