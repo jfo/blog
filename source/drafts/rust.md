@@ -3,6 +3,7 @@ title: How Rust Do?
 layout: post
 ---
 
+
 Hey how tf [Rust](https://www.rust-lang.org/en-US/) do?
 
 Ok, first I have to get Rust on my machine. I could download a binary from that
@@ -776,3 +777,547 @@ Note that we have to build and run it this way because `cargo run` prints other 
 Hey look a wav file! Try opening it up in a music player, and you should hear
 exactly one second of horrible abrasive white noise! We just wrote a soundfile
 from scratch. Cool.
+
+Let's refactor this dumpster fire!
+--------------------------------
+
+Ok, so, first of all, it seems pretty straightforward that we might want to
+abstract the header writing out into a function called something clever, like
+`write_header`. How about that?
+
+```rust
+use std::io::{ stdout, Write };
+extern crate rand;
+
+#[allow(unused_must_use)]
+fn write_header() {
+    // ChunkId
+    stdout().write(b"RIFF");
+
+    // ChunkSize = 36 + subchunk size 2
+    stdout().write(&[ 0x68, 0xac, 0x00, 0x00 ]);
+
+    // Format
+    stdout().write(b"WAVE");
+
+    // Subchunk1ID
+    stdout().write(b"fmt ");
+
+    // Subchunk1size
+    stdout().write(&[16, 0, 0, 0 ]);
+
+    // AudioFormat
+    stdout().write(&[ 1, 0 ]);
+
+    // Numchannels
+    stdout().write(&[ 1, 0 ]);
+
+    // Samplerate
+    stdout().write(&[ 0x44, 0xac, 0x00, 0x00 ]);
+
+    // Byterate samplerate + num of channels * bits per sample /8
+    stdout().write(&[ 0x44, 0xac, 0x00, 0x00 ]);
+
+    // blockalign
+    stdout().write(&[ 1, 0 ]);
+
+    // bitspersample
+    stdout().write(&[ 8, 0 ]);
+
+    // subchunk2 id
+    stdout().write(b"data");
+
+    // subchunk2size == numsamples * numchannels * bitspersample / 8
+    stdout().write(&[ 0x44, 0xac, 0x00, 0x00 ]);
+}
+
+#[allow(unused_must_use)]
+fn main() {
+    write_header();
+    // for x in 0..44100 {
+    //     stdout().write(&[ rand::random::<u8>() ]);
+    // }
+}
+```
+
+Notice that we have to add the `#[allow(unused_must_use)]` annotation over
+every function that we want it to apply to. Explicit! (There is a way to have
+it apply to the [whole project](http://stackoverflow.com/a/25877389/2727670),
+but that's overkill right now.)
+
+> Also, I've commented out the noise generation so that I can `cargo run` with
+> impunity [because I want to](https://www.youtube.com/watch?v=D_XI_290cfw).
+> <sup><a href="#footnote-1">1</a></sup>
+
+stdout.lock()
+--------------
+
+So, this works fine. Each call to `stdout()` returns a locked handle to the
+stdout stream of that process. But, why suffer the overhead of calling that
+function over and over again? I can simply assign the output of that call
+_once_ to a local binding, and reuse it... something like this:
+
+
+```rust
+let stdout = stdout();
+stdout.write(b"RIFF");
+```
+
+Woah hey this doesn't work!
+
+```
+ --> src/main.rs:9:5
+  |
+6 |     let stdout = stdout();
+  |         ------ use `mut stdout` here to make mutable
+...
+9 |     stdout.write(b"RIFF");
+  |     ^^^^^^ cannot borrow mutably
+
+```
+
+IF I do that...
+
+```rust
+let mut stdout = stdout();
+stdout.write(b"RIFF");
+```
+
+This will work. It will uncomplainingly compile and run, printint as you would
+expect. But this is not the best way to accomplish this!
+
+A mutable reference to stdout means that there is no lock against an attempt to write to it from anywhere!
+
+Look at this- what if I try to write to stdout in this mutable way from two different threads simultaneously?
+
+```rust
+thread::spawn(|| {
+    for _ in 0..100 {
+        let mut stdout = stdout();
+        stdout.write(b"1");
+    }
+});
+thread::spawn(|| {
+    for _ in 0..100 {
+        let mut stdout = stdout();
+        stdout.write(b"2");
+    }
+});
+```
+
+This will also compile... I have explicitly told the compiler to treat stdout
+at mutable in both places, but it's _completely unpredictable_. Every time you
+run it it will look different. I mean, look at this hot garbage!
+
+```
+   Compiling rav v0.1.0 (file:///Users/jfowler/code/rav)
+    Finished debug [unoptimized + debuginfo] target(s) in 0.41 secs
+     Running `target/debug/rav`
+11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111112222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
+Press ENTER or type command to continue
+
+   Compiling rav v0.1.0 (file:///Users/jfowler/code/rav)
+    Finished debug [unoptimized + debuginfo] target(s) in 0.42 secs
+     Running `target/debug/rav`
+12thread '<unnamed>' panicked at 'cannot access stdout during shutdown', ../src/libcore/option.rs:700
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
+
+Press ENTER or type command to continue
+
+   Compiling rav v0.1.0 (file:///Users/jfowler/code/rav)
+    Finished debug [unoptimized + debuginfo] target(s) in 0.42 secs
+     Running `target/debug/rav`
+12thread '
+Press ENTER or type command to continue
+```
+
+I don't even rn.
+
+This is just to say that I need a mechanism for _locking stdout_ to a
+particular handle before I write to it. This is implicit in the `stdout()`
+calls, as the lock persists only as long as the scope of that call, but I'd
+prefer to be more explicit, as rust [seems to want me to want to
+be.](https://doc.rust-lang.org/beta/std/io/fn.stdout.html)
+
+So I will!
+
+```rust
+let stdout = stdout();
+let mut handle = stdout.lock();
+handle.write(b"RIFF");
+// etc...
+```
+
+The benefits of this method will become more apparent when I start to pass
+handles around!
+
+Byteorder
+---------
+
+So, this all works fine, to write that header, but it's cryptic as all hell.
+
+```rust
+handle.write(&[ 0x44, 0xac, 0x00, 0x00 ]);
+```
+
+We know what that is because I explained it, but if I hadn't, would it make any
+sense at all at first glance? When I forget this repo exists and come back to
+it in a year... will I remember what that is? What it represents? That it's in
+little endian?
+
+
+```rust
+// little endian bytewise representation of the sample rate: 44100
+handle.write(&[ 0x44, 0xac, 0x00, 0x00 ]);
+```
+
+Sure, fine, I should comment more liberally. But that old axiom, that code
+should be it's own documentation? That might be bumpkis, writ generalis, but I
+can't argue with the idea that I should try to write code that clearly
+expresses my intent.
+
+The fine folks over in `#rust-beginners` pointed me to the perfect library to
+solve this problem... [Byteorder](https://crates.io/crates/byteorder).
+
+I pull in the crate in my Cargo.toml:
+
+```
+[dependencies]
+rand = "*"
+byteorder = "0.5.3"
+```
+
+And add the import `use` statement specifying what I'm actually using in my
+preamble.
+
+```
+use byteorder::{ LittleEndian, WriteBytesExt };
+```
+
+This library includes some utilities for writing different sized numerical
+types into anything that uses the `Write` trait. So instead of the cryptic
+thing above, I can write this:
+
+```
+handle.write_u32::<LittleEndian>(44100);
+```
+
+I'm writing a u32 (which is 4 bytes wide) and I'm writing it in little endian,
+and the number I am writing is clear in the code now!
+
+> This syntax is pretty unfamiliar- the brackets and type annotations and where
+> they can live and do things and what they do has so far been the most counter
+> intuitive part of this exercise for me...
+
+I can do the same for all the other writes in the header function. And also I'm
+going to pull a bunch of these values out into constants, because I don't
+anticipate changing them for the duration of these exercises.
+
+```rust
+const SAMPLE_RATE: u32 = 44100;
+const CHANNELS: u32 = 1;
+const HEADER_SIZE: u32 = 36;
+const SUBCHUNK1_SIZE: u32 = 16;
+const AUDIO_FORMAT: u32 = 1;
+const BIT_DEPTH: u32 = 8;
+const BYTE_SIZE: u32 = 8;
+
+fn write_header() {
+    let stdout = stdout();
+    let mut handle = stdout.lock();
+
+    let numsamples = SAMPLE_RATE * 1;
+
+    handle.write(b"RIFF");
+    handle.write_u32::<LittleEndian>(HEADER_SIZE + numsamples);
+    handle.write(b"WAVEfmt ");
+    handle.write_u32::<LittleEndian>(SUBCHUNK1_SIZE);
+    handle.write_u16::<LittleEndian>(AUDIO_FORMAT as u16);
+    handle.write_u16::<LittleEndian>(CHANNELS as u16);
+    handle.write_u32::<LittleEndian>(SAMPLE_RATE);
+    handle.write_u32::<LittleEndian>(SAMPLE_RATE * CHANNELS * (BIT_DEPTH / BYTE_SIZE));
+    handle.write_u16::<LittleEndian>((CHANNELS * (BIT_DEPTH / BYTE_SIZE)) as u16);
+    handle.write_u16::<LittleEndian>(BIT_DEPTH as u16);
+    handle.write(b"data");
+    handle.write_u32::<LittleEndian>(numsamples * CHANNELS * (BIT_DEPTH / BYTE_SIZE));
+}
+```
+
+Sure thing! That's a lot clearer. Also I snuck some other stuff in there!
+
+Look at the `as u16` statements in the audio format and the channels sections.
+So, in rust, there is _no implicit arithmetic integral type casting_. This is pretty wild!
+
+So for example,
+
+```rust
+3 * 3 // will work
+3u32 * 3u32 // will work
+3u32 * 3i32 // will NOT work
+3u8 * 3i64 // will NOT work
+```
+
+They have to actually be the actual for realsies same type!
+
+I'm setting most of those constants as u32 (because I don't need any negative
+numbers.) so that they can interact with each other. But I need to explicitly
+cast them into `u16` to write them as two byte words into stdout, even though
+the value is small enough to fit into a u16, it might NOT be small enough. How
+is the compiler supposed to know? That's some hard typing, right there.
+
+Also this:
+
+```rust
+let numsamples = SAMPLE_RATE * 1;
+```
+
+I'm computing how many samples total are in the file! This is straightforward-
+however many seconds the file is, times the sample rate. Look above, the number
+of samples is also used in computing the size of the whole file in the last
+line, and the size of the whole file including the headers in the second!
+
+> There is a subtle bug in there! I just noticed it while writing this. See if
+> you can find it! A hint is that it won't actually show up with the current settings.
+
+Let's parameterize the seconds!
+
+```rust
+#[allow(unused_must_use)]
+fn write_header(seconds: u32) {
+    let stdout = stdout();
+    let mut handle = stdout.lock();
+
+    let numsamples = SAMPLE_RATE * seconds;
+// etc...
+```
+
+Now I can write a wav file of arbitrary length of white noise!
+
+> TODO: link to that commit
+
+passing locks.
+------------
+
+I want `write_header()` to be more generic. I'll also parameterize the lock
+that I'm passing in!
+
+```rust
+fn write_header(seconds: u32, mut handle: StdoutLock) {
+        // etc...
+```
+
+```rust
+let stdoutvar = stdout();
+write_header(duration, stdoutvar.lock());
+```
+
+So, check out that typing! `seconds` has to be a `u32` but the `handle` var
+must be a `StdoutLock`.
+[StdoutLock](https://doc.rust-lang.org/std/io/struct.StdoutLock.html) is the
+struct that is returned by a call to `.lock()`. Also, it _must_ be mutable,
+because we're writing to it! You can't write to an immutable value, because that would be changing it, which means it's not immutable.
+
+Now, in main, I can create that lock once and pass it around:
+
+```rust
+#[allow(unused_must_use)]
+fn main() {
+
+    let duration = 1;
+
+    let stdoutvar = stdout();
+    write_header(duration, stdoutvar.lock());
+    for x in 0..duration * SAMPLE_RATE {
+        stdoutvar.lock().write(&[ rand::random::<u8>() ]);
+    }
+}
+```
+
+Not just stdout, pls.
+----------------------
+
+So whiny.
+
+Ok so,
+
+```rust
+fn write_header<T:Write>(seconds: u32, mut handle: StdoutLock) {
+    // stuff
+}
+```
+
+Is great, cause I can pass in a lock, but what if I want to write that output
+to something else? Say a file? Or a
+[vector](https://doc.rust-lang.org/std/vec/struct.Vec.html)?
+
+Let's start with a vector! Vectors [do implement the write
+trait](https://doc.rust-lang.org/src/std/up/src/libstd/io/impls.rs.html#211-226),
+so all those writes should work on them the same way! (of course, it will need to be a vector of `u8`s, but that's ok!)
+
+I can't pass a vector in under the current type annotation, though, I'll get this:
+
+```
+error[E0308]: mismatched types
+  --> src/main.rs:40:28
+   |
+40 |     write_header(duration, vec);
+   |                            ^^^ expected struct `std::io::StdoutLock`, found struct `std::vec::Vec`
+   |
+```
+
+But I could state that I could allow anything to be passed through, with a
+generic, which is denoted by `T`
+
+```rust
+fn write_header<T:Write>(seconds: u32, mut handle: T) {
+```
+
+A generic needs to guarantee some trait or interface, that's
+
+
+```rust
+let duration = 1;
+let vec: Vec<u8> = Vec::new();
+write_header(duration, vec);
+```
+
+This will work! I just wrote the header for a one second file straight into a vector.
+
+Let's print the vector to see what it looks like;
+
+```rust
+fn main() {
+    let duration = 1;
+    let vec: Vec<u8> = Vec::new();
+    write_header(duration, vec);
+    println!("{:?}", vec);
+}
+```
+
+Uh oh...
+
+```
+error[E0382]: use of moved value: `vec`
+  --> src/main.rs:42:22
+   |
+40 |     write_header(duration, vec);
+   |                            --- value moved here
+41 |
+42 |     println!("{:?}", vec);
+   |                      ^^^ value used here after move
+```
+
+Strap the eff in because it's our first encounter with
+
+The Borrow Checker
+------------------
+
+[The official docs](https://doc.rust-lang.org/beta/book/ownership.html) do a
+much better job of explaining this concept than I could hope to in a subsection
+of an introductory blog post, so I'd suggest you go skim a little bit of that
+doc to get a feel for _what_ the borrow checker is, _why_ it is, and _how_ it
+do. It's one of Rust's power features, and what makes GC-less memory management
+possible.
+
+I can however, in this limited example, explain _exactly_ what the checker is
+complaining about.
+
+When a value is passed in with what you might think of as "normal" syntax,
+ownership of that value is transferred to the function you're passing it into.
+That means that at the end of _that_ scope, the memory is freed.
+
+When we try to print it after that function call, we get the error above,
+because the memory is no longer guaranteed to be stable. It _might_ be, but it
+_might_ not be, so it won't compile.
+
+What if we pass in a (ahem) "pointer"?
+
+```rust
+let duration = 1;
+let  vec: Vec<u8> = Vec::new();
+write_header(duration, &vec);
+println!("{:?}", vec);
+```
+
+No worky!
+
+```
+error[E0277]: the trait bound `&std::vec::Vec<u8>: std::io::Write` is not satisfied
+```
+
+I'm a little fuzzy on the terminology here, but I find it useful to think about
+it this way.
+
+```
+&
+```
+
+In C, the ampersand _takes the address of a thing_. When you pass an address
+around, you're passing by reference, and when you mutate that thing, you're
+mutating the original data.
+
+In Rust, the ampersand _kind of sort of_ means the same thing, but the
+appropriate term is "borrowing" the value- the difference being what I was
+saying before about who is responsible for deallocation.
+
+If the value is "moved", i.e., passed by value into a called function- the
+called function is responsible for that deallocation. If however, the value is "borrowed" by the called function, the _caller_ is still responsible for the deallocation.
+
+But passing by reference (er... _borrowing_) is _immutable by default._
+
+A borrowed vector is therefore read only. To make it writable, we have to
+explicitly we're borrowing a mutable reference.
+
+Both in the function declaration:
+
+```rust
+fn write_header<T:Write>(seconds: u32, handle: &mut T) {
+    // stuff...
+}
+```
+
+And in the variable binding:
+
+
+```rust
+let mut vec: Vec<u8> = Vec::new();
+```
+
+... oh yes, _and_ in the call to the function.
+
+```rust
+write_header(duration, &mut vec);
+```
+
+With all these conditions satisfied, we can now pass in a mutable vector which
+gets written to in the function call, and then print it to the screen after
+that.
+
+```
+[82, 73, 70, 70, 104, 172, 0, 0, 87, 65, 86, 69, 102, 109, 116, 32, 16, 0, 0, 0, 1, 0, 1, 0, 68, 172, 0, 0, 68, 172, 0, 0, 1, 0, 8, 0, 100, 97, 116, 97
+```
+
+Isn't that something?
+
+<hr>
+
+
+Sections still to add:
+
+factoring out the noise maker
+that sawtooth wave function
+
+*error handling* (the result type)
+
+- unwrapping
+- longform pattern matching
+- the `try!` macro
+
+writing to files directly.
+
+Finally, computing a sine wave and writing a full scale to a file with one note
+per second.
+
+an addendum on clicking between notes because of zero crossings.
+
+<div id="footnote-1"><sub>1- what the f</sub></div>
