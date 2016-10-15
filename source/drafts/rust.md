@@ -1299,24 +1299,354 @@ that.
 
 Isn't that something?
 
+I will also factor out the white noise generation into its own function, with the same type signature as `write_header()` :
+
+```rust
+#[allow(unused_must_use)]
+fn make_some_noise<T: Write>(seconds: u32, handle: &mut T) {
+    for _ in 0..seconds * SAMPLE_RATE {
+        handle.write(&[ rand::random::<u8>() ]);
+    }
+}
+```
+
+> How about this one?
+>
+> ```rust
+> #[allow(unused_must_use)]
+> fn make_a_random_ass_sawtooth<T: Write>(seconds: u32, handle: &mut T) -> Result<(), Error > {
+>     for x in 0..seconds * SAMPLE_RATE {
+>         try!(handle.write(&[ ((x + 1) % 255) 1as u8 ]));
+>     }
+> }
+> ```
+>
+> The period of this [waveform](https://en.wikipedia.org/wiki/Sawtooth_wave) is
+> SAMPLE_RATE / [u8::MAX](https://doc.rust-lang.org/std/u8/constant.MAX.html).
+> That's 44100 / 255 = 172.94, which is just a hair under
+> [F3](http://www.phy.mtu.edu/~suits/notefreqs.html). Give it a try!
+
+
+
+You said we were going to come back to those warnings.
+-------------------------------------------------------
+
+So I did. It's time to remove all the `#[allow(unused_must_use)]`
+annotations.
+
+Surprise! Everything breaks!
+
+```rust
+   Compiling rav v0.1.0 (file:///Users/jfowler/code/rav)
+warning: unused result which must be used, #[warn(unused_must_use)] on by default
+  --> src/main.rs:42:9
+   |
+42 |         handle.write(&[ rand::random::<u8>() ]);
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+```
+
+Well, not everything breaks, really, it still compiles, but with _ton_ of
+warnings. In fact, I get a separate warning like the above for every call to
+any kind of `write`.
+
+Let's go back to the simplest case where we first saw this message.
+
+```rust
+use std::io::{ stdout, Write };
+
+fn main() {
+    stdout().write(b"hi mom");
+}
+```
+
+```
+warning: unused result which must be used, #[warn(unused_must_use)] on by default
+ --> thing.rs:5:5
+  |
+5 |     stdout().write(b"hi mom");
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+hi mom
+```
+
+What is this `result` thing? Let's try to get a little more information about
+it... maybe I can print it to something? It's being returned from that expression, so I'll assign it to a thing and then `println!` it...
+
+```rust
+use std::io::{ stdout, Write };
+
+fn main() {
+    let thing = stdout().write(b"hi mom\n");
+    println!("{:?}", thing);
+}
+```
+
+yields:
+
+
+```
+hi mom
+Ok(7)
+```
+
+OOOOOOH, the result is a [_Result_ with a capital
+`R`](https://doc.rust-lang.org/beta/std/result/)!
+
+So, Rust doesn't have exceptions. There is no concept of a `try`/`catch` block
+like there is in many other languages. Instead, Rust uses [return
+values](https://doc.rust-lang.org/book/error-handling.html) to communicate
+success and failure.
+
+For every call that can fail, like `write()`, the expression evaluates to a
+Return type, that can either be `Ok` or `Err`. That's this bit:
+
+```rust
+enum Result<T, E> {
+   Ok(T),
+   Err(E),
+}
+```
+
+So, if a `Result` is `Ok`, it can return any other type `T` wrapped in that
+Result. If it's an Error, it return an `E` type wrapped in a Result. Either
+way, the return value of a potentially failable function call is a something
+wrapped in a Result.
+
+> This has something to do / a lot in common with the [maybe monad in
+> Haskell](https://en.wikibooks.org/wiki/Haskell/Understanding_monads/Maybe), and
+> the [Option type in
+> Scala](http://danielwestheide.com/blog/2012/12/19/the-neophytes-guide-to-scala-part-5-the-option-type.html)
+> and the [option datatype](http://sml-family.org/Basis/option.html) in ML. I
+> don't really know about how those things work other than to mention them as
+> probably pertinent here! Rust is my first encounter with this concept in a
+> language I'm actively trying to learn, but it's not new!
+
+The compiler is telling us that we need to address this Result, because it
+could be potentially failing. As the code is written, if any of the writes
+fail, the program will do weird things!
+
+Check this one out:
+
+```
+use std::fs::File;
+
+fn main() {
+    let result = File::open("file_that_doesnt_exist.lol");
+    println!("{:?}", result);
+}
+```
+
+```
+Err(Error { repr: Os { code: 2, message: "No such file or directory" } })
+```
+
+That's a potential error case that I need to address in my code! This is what
+the warning was warning about.
+
+There are a few ways to do this! The simplest way is to call
+[`.unwrap()`](https://doc.rust-lang.org/1.7.0/std/option/enum.Option.html#method.unwrap)
+on the expression that returns a result. This will "unwrap" the option, and if
+it's `Ok()` it will return whatever the result has wrapped. If it's an `Err()`,
+it will simply panic, killing the process. This is a rudimentary way of
+handling the error, yes, but it definitely beats the program mysteriously
+dying, or worse, undefined behavior after that failure to write or whatever.
+
+```rust
+use std::fs::{File};
+
+fn main() {
+    File::open("file_that_doesnt_exist.lol").unwrap();
+}
+```
+
+```
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Error { repr: Os { code: 2, message: "No such file or directory" } }', ../src/libcore/result.rs:788
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
+```
+
+backtrace == sweet action.
+
+Better still is to _actively deal with the error_ somehow. I could assign that
+result to a local var and handle each case explicitly using a match statement...
+
+```rust
+use std::fs::{File};
+fn main() {
+    let result = File::open("file_that_doesnt_exist.lol");
+    match result {
+        Ok(v) => println!("success opening file :) {:?}", v),
+        Err(e) => println!("error opening file!!!: {:?}", e),
+    }
+    println!("the above doesn't exit the thread though, so this is still printed.");
+}
+```
+
+[Pattern matching is super common and useful in
+rust!](https://doc.rust-lang.org/stable/book/patterns.html) The `match`
+statement is like a superpowered `switch` from C. [Just like in
+C](http://blog.jfo.click/sild-named-enums/) the compiler will warn you if you
+haven't handled all the possible cases for a typed match! If I try to do this,
+for example:
+
+```rust
+use std::fs::{File};
+fn main() {
+    let result = File::open("file_that_doesnt_exist.lol");
+    match result {
+        Ok(v) => println!("success opening file :) {:?}", v),
+    }
+    println!("the above doesn't exit the thread though, so this is still printed.");
+}
+```
+
+I get this:
+
+```
+error[E0004]: non-exhaustive patterns: `Err(_)` not covered
+ --> thing.rs:5:11
+  |
+5 |     match result {
+  |           ^^^^^^ pattern `Err(_)` not covered
+
+error: aborting due to previous error
+```
+
+This is a great example of the compiler being your best friend! Non exhaustive
+pattern matching would mean that I could have weird things happen.
+
+So a thing about match, syntactically, is that it can be inlined and the
+intermediate `result` variable can be dispensed with, assuming you don't need that result type for anything else:
+
+```rust
+match File::open("file_that_doesnt_exist.lol") {
+    Ok(v) => println!("success opening file :) {:?}", v),
+    Err(e) => println!("error opening file!!!: {:?}", e),
+}
+```
+
+In reality, I need to handle _every single write() call_ and the possible Error
+results. You can imagine how tedious, and ugly, and verbose this would get in a
+function like `write_header()`, especially when all the handlers basically do
+the same thing. Rust provides a macro that does this for me,
+[`try!`](https://doc.rust-lang.org/src/core/up/src/libcore/macros.rs.html#223-230).
+Unfortunately, there is a catch... this won't work.
+
+```rust
+use std::fs::{File};
+
+fn main() {
+    try!(File::open("file_that_doesnt_exist.lol"));
+}
+```
+And fails with kind of a cryptic error..
+
+```
+error[E0308]: mismatched types
+ --> <std macros>:5:8
+  |
+5 | return $ crate :: result :: Result :: Err (
+  |        ^ expected (), found enum `std::result::Result`
+thing.rs:4:5: 4:52 note: in this expansion of try! (defined in <std macros>)
+  |
+  = note: expected type `()`
+  = note:    found type `std::result::Result<_, _>`
+```
+
+This was was a head scratcher for me for a bit. Why would this fail? And what
+was expecting
+[`()`](http://stackoverflow.com/questions/31107614/what-does-an-empty-set-of-parens-mean-when-used-in-a-generic-type-declaration)?
+
+The answer is perfectly reasonable but very sneaky! Check again the 
+[`try!`](https://doc.rust-lang.org/src/core/up/src/libcore/macros.rs.html#227).
+macro's source... you'll notice there is a hidden `return` statement in there!
+
+In this case the compiler error is referencing _main itself_. It was expected
+to return nothing, but a branch of that code (expanded from `try!`) could
+potentially return the errored result. This was tricky!
+
+`try!` is designed to allow early bailing from a function that returns a
+result. It doesn't work in `main()` because main doesn't return a result! But
+it will work perfectly finely in the other functions I've written, with a
+little change to their signatures... take the noise function as an example!
+
+```rust
+fn make_some_noise<T: Write>(seconds: u32, handle: &mut T) -> Result< (), Error > {
+
+    for _ in 0..seconds * SAMPLE_RATE {
+       try!(handle.write(&[ rand::random::<u8>() ]));
+    }
+
+    Ok(())
+}
+
+This will compile just fine- I am saying that this function will return a
+result of either nothing (`Ok(())`) or an error! This can then be _explicitly
+passed_ to the caller (in this case `main`) and handled there.
+
+For my case, simply `unwrap()`ping the return from the `make_some_noise()` call
+is sufficient. If it failed at any point, fine, just bail. In production code
+or a bigger program, I might want to propogate that error further, or handle it
+more gracefully, but this is ok for now.
+
+```rust
+fn main() {
+    let duration = 1;
+
+    let mut fp = File::create("out.wav").unwrap();
+
+    write_header(duration, &mut fp).unwrap();
+    make_some_noise(duration, &mut fp).unwrap();
+}
+```
+
+[I also wrap all the `write` calls in `write_header()` in `try!` macros!](https://github.com/urthbound/rav/commit/8994c8e0163a7a0d67bcac9f043745dd3327421f)
+
+And now I don't have to suppress those warnings, because I've addressed them,
+and they don't show up!
+
 <hr>
 
+This is getting pretty close to being a doneass program, but I still haven't
+really written any sound output that sounds like anything.
 
-Sections still to add:
+Here's a function that computes sinusoidal values on a sample by sample basis given a frequency:
 
-factoring out the noise maker
-that sawtooth wave function
+```rust
+fn sine_wave<T: Write>(seconds: u32, handle: &mut T) -> Result<(), Error > {
+    for x in 0..seconds * SAMPLE_RATE {
+       let x = x as f64;
+       try!(handle.write(&[ ((((((x * 2f64 * PI) / 44100f64) * 440f64).sin() + 1f64 )/ 2f64) * 255f64) as u8 ]));
+    }
+    Ok(())
+}
+```
 
-*error handling* (the result type)
+Whic I can then use to write a [Barry Harris scale](https://www.youtube.com/watch?v=-jO-sIrjTq://www.youtube.com/watch?v=-jO-sIrjTqg)
 
-- unwrapping
-- longform pattern matching
-- the `try!` macro
+```rust
+fn main() {
+    let duration = 1;
 
-writing to files directly.
+    let mut fp = File::create("out.wav").unwrap();
 
-Finally, computing a sine wave and writing a full scale to a file with one note
-per second.
+    write_header(duration * 9, &mut fp).unwrap();
+    sine_wave(duration, &mut fp, 523.25_f64).unwrap();
+    sine_wave(duration, &mut fp, 493.88_f64).unwrap();
+    sine_wave(duration, &mut fp, 440_f64).unwrap();
+    sine_wave(duration, &mut fp, 415.30_f64).unwrap();
+    sine_wave(duration, &mut fp, 392_f64).unwrap();
+    sine_wave(duration, &mut fp, 349.23_f64).unwrap();
+    sine_wave(duration, &mut fp, 329.63_f64).unwrap();
+    sine_wave(duration, &mut fp, 293.66_f64).unwrap();
+    sine_wave(duration, &mut fp, 261.63_f64).unwrap();
+}
+```
+
+[Try compiling
+it!](https://github.com/urthbound/rav/commit/f291ae4d50573c0591ef8496cbadce1e6c111cd2)
+
+
+<hr>
 
 an addendum on clicking between notes because of zero crossings.
 

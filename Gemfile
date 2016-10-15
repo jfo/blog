@@ -8,3 +8,4 @@ gem 'nokogiri'
 gem 'middleman-syntax'
 gem "builder"
 gem "redcarpet"
+gem "kramdown"
