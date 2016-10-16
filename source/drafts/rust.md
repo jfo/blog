@@ -3,7 +3,6 @@ title: How Rust Do?
 layout: post
 ---
 
-
 Hey how does [Rust](https://www.rust-lang.org/en-US/) do?
 
 I've been kind of interested in Rust since my [Recurse
@@ -54,6 +53,8 @@ Table of Contents
 - [you said we were going to come back to those warnings](#comebacktowarnings)
 - [result returns vs exceptions](#resultsvsexceptions)
 - [almost done](#almostdoneass)
+- [what's that click](#whatsthatclick)
+- [coda](#coda)
 
 
 <sub><a href='#toc'>toc</a></sub>
@@ -880,7 +881,19 @@ stuff to stdout before compiling the file!
 
 Hey look a wav file! Try opening it up in a music player, and you should hear
 exactly one second of horrible abrasive white noise! We just wrote a soundfile
-from scratch. Cool.
+from scratch.
+
+If I open the resulting horrible sounding wave file in some editing software
+that I can see the waveform in, I can look at the values I've produced.
+
+<img src="/images/whitenoise.png" />
+
+Looks like whitenoise! If we zoom in even further, it's easy to see the
+individual random values.
+
+<img src="/images/whitenoiseclose.png" />
+
+
 
 
 <sub><a href='#toc'>toc</a></sub>
@@ -954,7 +967,6 @@ but that's overkill right now.)
 
 > Also, I've commented out the noise generation so that I can `cargo run` with
 > impunity [because I want to](https://www.youtube.com/watch?v=D_XI_290cfw).
-> <sup><a href="#footnote-1">1</a></sup>
 
 <sub><a href='#toc'>toc</a></sub>
 <a name=stdoutlock />
@@ -1772,9 +1784,12 @@ fn sine_wave<T: Write>(seconds: u32, handle: &mut T, freq: f64) -> Result<(), Er
 }
 ```
 
-I debated whether or not to 
+I debated whether or not to explain everything in that function right now. I'm
+not going to! I'll come back to it in another post, because it's fascinating,
+but it's not about rust, really..
 
-Which I can then use to write a [Barry Harris scale](https://www.youtube.com/watch?v=-jO-sIrjTq://www.youtube.com/watch?v=-jO-sIrjTqg)
+I used it to write a [Barry Harris
+scale](https://www.youtube.com/watch?v=-jO-sIrjTq://www.youtube.com/watch?v=-jO-sIrjTqg)
 
 ```rust
 fn main() {
@@ -1798,9 +1813,40 @@ fn main() {
 [Try compiling
 it!](https://github.com/urthbound/rav/commit/f291ae4d50573c0591ef8496cbadce1e6c111cd2)
 
+<img src="/images/sinusoidal.png" />
 
-<hr>
+<sub><a href='#toc'>toc</a></sub>
+<a name=whatsthatclick />
+what's that click
+------------------
 
-an addendum on clicking between notes because of zero crossings.
+So, I gotta share this one last thing that I learned. If you compile that last
+example and play the resulting wave file, you might notice something strange.
+There is an audible clicking between some of the notes being played. I used to
+wonder about what that is, but with this output you can just like, _look at
+it_, and see!
 
-<div id="footnote-1"><sub>1- what the f</sub></div>
+<img src="/images/clicks.png" />
+
+When I start computing a new note, I _always_ start from 0. Sometimes, the last
+value in the previous note is pretty close to 0, and you don't hear anything,
+and it's smooth. Sometimes, it's _very far_ from 0, and the change happens
+super abruptly and results in an audible clicking noise. Gross! The solution to
+this nastiness would be to precompute the phase offset of the next note, to
+know where to start the new waveform from. This is outside the scope of this post,
+but I thought it was pretty neat!
+
+<sub><a href='#toc'>toc</a></sub>
+<a name=coda />
+Coda
+----
+
+Thanks to the in #rust-beginners, that channel was friendly and does what it
+says on the tin.  And also
+[users.rust-lang.org/](https://users.rust-lang.org/t/some-questions-on-idioms-in-a-small-program/7607/4).
+And also Steve Klabnik, who seems to be everywhere and is very helpful. The
+Rust community has a pretty good and welcoming reputation, and so far so good
+on that front! I'm excited to do low level stuff with a modern ecosystem, and
+Rust has a lot of interesting ideas behind it I am eager to learn more about.
+
+Until next time.

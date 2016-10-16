@@ -9,7 +9,7 @@ doesn't really matter. What matters is that all of the particles and atoms and
 gases are equidistant from each other, roughly speaking. It is a very quiet
 room.
 
-![img](https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Simple_sine_wave.svg/1024px-Simple_sine_wave.svg.png)
+<img src="/images/sinusoidal.png" />
 
 Two disembodied hands clap together one time, suspended in the very middle of
 the room. Like two cousin It's from the Addam's Family.
