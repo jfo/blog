@@ -1843,12 +1843,14 @@ but I thought it was pretty neat!
 Coda
 ----
 
-Thanks to the in #rust-beginners, that channel was friendly and does what it
-says on the tin.  And also
+Thanks to #rust-beginners, that channel was friendly and does what it says on
+the tin.  And also
 [users.rust-lang.org/](https://users.rust-lang.org/t/some-questions-on-idioms-in-a-small-program/7607/4).
-And also Steve Klabnik, who seems to be everywhere and is very helpful. The
-Rust community has a pretty good and welcoming reputation, and so far so good
-on that front! I'm excited to do low level stuff with a modern ecosystem, and
-Rust has a lot of interesting ideas behind it I am eager to learn more about.
+And also [Steve Klabnik](https://twitter.com/steveklabnik), who seems to be
+everywhere and is very helpful.
 
-Until next time.
+The Rust community has a pretty welcoming reputation, and so far so good on
+that front! I'm excited to do low level stuff with a modern ecosystem, and Rust
+has a lot of interesting ideas behind it I am eager to learn more about.
+
+Ok that's it for now.
