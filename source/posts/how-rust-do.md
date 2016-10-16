@@ -1,6 +1,8 @@
 ---
 title: How Rust Do?
 layout: post
+date: 2016-10-16
+tags: rc
 ---
 
 Hey how does [Rust](https://www.rust-lang.org/en-US/) do?
