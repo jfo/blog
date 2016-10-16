@@ -6,8 +6,9 @@ layout: post
 
 Hey how does [Rust](https://www.rust-lang.org/en-US/) do?
 
-I've been kind of interested in Rust since my RC batch in 2014. A [batchmate of
-mine was getting interested in it](http://src.codes/), and it sounded hella neat.
+I've been kind of interested in Rust since my [Recurse
+Center](https://www.recurse.com) batch in 2014. A [batchmate of mine was
+getting interested in it](http://src.codes/), and it sounded hella neat.
 
 But alas, it wasn't to be. I was new to programming, having only written
 Ruby for a few months, and Rust was still a long ways from 1.0 stable,
