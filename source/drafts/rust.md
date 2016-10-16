@@ -28,7 +28,8 @@ Feel free to lmk if anything is borked. I would be happy to know.
 
 The code for this is [here](https://github.com/urthbound/rav)
 
-TOC
+<a name=toc />
+Table of Contents
 ----
 
 - [getting Rust](#getrust)
@@ -53,6 +54,9 @@ TOC
 - [you said we were going to come back to those warnings](#comebacktowarnings)
 - [result returns vs exceptions](#resultsvsexceptions)
 - [almost done](#almostdoneass)
+
+
+<sub><a href='#toc'>toc</a></sub>
 
 <a name=getrust />
 getting Rust
@@ -140,6 +144,7 @@ What's the other stuff?
 Let's do something with rust! I'm going to write a program that produces a wave
 file that's going to sound really good I promise.
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=mkdir />
 mkdir
 =====
@@ -206,6 +211,7 @@ Hello, World!
 
 Hello, Rust!
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=cargo />
 Cargo
 =====
@@ -253,6 +259,7 @@ already added that command to my
 plugin that I use all the time.
 
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=stdout />
 stdout
 ======
@@ -349,6 +356,7 @@ fn main() {
 }
 ```
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=mystery />
 A mysterious warning
 --------------------
@@ -392,6 +400,7 @@ fn main() {
 Now, the program will compile without any warnings at all, and write 'hi mom'
 to stdout when run.
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=arbbytes />
 writing arbitrary bytes
 ---------------
@@ -479,6 +488,7 @@ stdout().write(&[1]);
 Turns out the compiler does do some type inference on integral types, after
 all!
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=didsomethinghappen />
 did something happen?
 -------------------
@@ -529,6 +539,7 @@ stdout().write(&[0xe0, 0xb9, 0x80, 0xd5, 0x87, 0x20, 0xe0, 0xb9, 0x94, 0xe0, 0xb
 
 Neat!
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=writingthewaves />
 Writing the waves
 =================
@@ -785,6 +796,7 @@ Notice I've filled in the subchunk 1 size with the appropriate value, which is
 the size of all the data + a constant of 36 for the header prior to the data
 chunk! That's the whole header!
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=makesomenoise />
 Make some noise
 ---------------
@@ -839,6 +851,7 @@ binary.
 way.](https://github.com/urthbound/rav/commit/cf20c195d94a01b0edf70ef21d10118d39e977a2)
 
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=runit />
 run it
 -----
@@ -870,6 +883,7 @@ exactly one second of horrible abrasive white noise! We just wrote a soundfile
 from scratch. Cool.
 
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=dumpster />
 Let's refactor this dumpster fire!
 --------------------------------
@@ -942,6 +956,7 @@ but that's overkill right now.)
 > impunity [because I want to](https://www.youtube.com/watch?v=D_XI_290cfw).
 > <sup><a href="#footnote-1">1</a></sup>
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=stdoutlock />
 stdout.lock()
 --------------
@@ -1047,6 +1062,7 @@ The benefits of this method will become more apparent when I start to pass
 handles around!
 
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=byteorder />
 Byteorder
 ---------
@@ -1142,6 +1158,7 @@ fn write_header() {
 
 Sure thing! That's a lot clearer. Also I snuck some other stuff in there!
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=someotherstuff />
 some other stuff
 -------------
@@ -1194,6 +1211,7 @@ Now I can write a wav file of arbitrary length of white noise!
 
 > TODO: link to that commit
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=passinglocks />
 passing locks.
 ------------
@@ -1236,6 +1254,7 @@ fn main() {
     }
 }
 ```
+<sub><a href='#toc'>toc</a></sub>
 <a name=notjust />
 Not just stdout, pls.
 ----------------------
@@ -1313,6 +1332,7 @@ error[E0382]: use of moved value: `vec`
 
 Strap the eff in because it's our first encounter with
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=borrowchecker />
 The Borrow Checker
 ------------------
@@ -1354,6 +1374,7 @@ error[E0277]: the trait bound `&std::vec::Vec<u8>: std::io::Write` is not satisf
 I'm a little fuzzy on the terminology here, but I find it useful to think about
 it this way.
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=& />
 &
 -
@@ -1410,6 +1431,7 @@ that.
 
 Isn't that something?
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=twofuncs />
 two sound producing functions
 ---------------------------
@@ -1442,6 +1464,7 @@ fn make_some_noise<T: Write>(seconds: u32, handle: &mut T) {
 > [F3](http://www.phy.mtu.edu/~suits/notefreqs.html). Give it a try!
 
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=comebacktowarnings />
 You said we were going to come back to those warnings.
 -------------------------------------------------------
@@ -1507,6 +1530,7 @@ Ok(7)
 OOOOOOH, the result is a [_Result_, with a capital
 `R`](https://doc.rust-lang.org/beta/std/result/)!
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=resultsvsexceptions />
 result returns vs exceptions
 --------------------------------
@@ -1726,6 +1750,7 @@ fn main() {
 And now I don't have to suppress those warnings, because I've addressed them,
 and they don't show up!
 
+<sub><a href='#toc'>toc</a></sub>
 <a name=almostdoneass />
 almost done
 ----------------
