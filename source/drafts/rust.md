@@ -4,7 +4,58 @@ layout: post
 ---
 
 
-Hey how tf [Rust](https://www.rust-lang.org/en-US/) do?
+Hey how does [Rust](https://www.rust-lang.org/en-US/) do?
+
+I've been kind of interested in Rust since my RC batch in 2014. A [batchmate of
+mine was getting interested in it](http://src.codes/), and it sounded hella neat.
+
+But alas, it wasn't to be. I was new to programming, having only written
+Ruby for a few months, and Rust was still a long ways from 1.0 stable,
+with the nightlies breaking libraries and the like.  One or the other of these
+might have been alright, but not both. I'm glad I didn't try to learn it then,
+I almost definitely would have been extremely frustrated.
+
+But I kept Rust in the back of my mind, and now, with at least some programming
+in C under my belt, more general experience, and Rust being firmly post 1.0, it
+feels like the right time to check it out in earnest. I gotta say, I'm pretty
+excited about it so far.
+
+This is a tutorial/devlog of a small project, my first, I did in Rust. Once
+again, I'm no expert, but I learned a lot doing it, and maybe someone will find
+this account useful- I start from nothing and build a thing that does a thing.
+Feel free to lmk if anything is borked. I would be happy to know.
+
+The code for this is [here](https://github.com/urthbound/rav)
+
+TOC
+----
+
+- [getting Rust](#getrust)
+- [mkdir](#mkdir)
+- [Cargo](#cargo)
+- [stdout](#stdout)
+- [mystery](#mystery)
+- [writing arbitrary bytes](#arbbytes)
+- [did something happen?](#didsomethinghappen)
+- [writing the waves](#writingthewaves)
+- [make some noise](#makesomenoise)
+- [run it](#runit)
+- [let's refactor this dumpster fire](#dumpster)
+- [stdout.lock()](#stdoutlock)
+- [byteorder](#byteorder)
+- [some other stuff](#someotherstuff)
+- [passing locks](#passinglocks)
+- [not just stdout, pls](#notjust)
+- [the borrow checker](#borrowchecker)
+- [&](#&)
+- [two sound producing functions](#twofuncs)
+- [you said we were going to come back to those warnings](#comebacktowarnings)
+- [result returns vs exceptions](#resultsvsexceptions)
+- [almost done](#almostdoneass)
+
+<a name=getrust />
+getting Rust
+-----------
 
 Ok, first I have to get Rust on my machine. I could download a binary from that
 website, or I could use [homebrew](http://brewformulas.org/Rust) on my mac, or
@@ -88,6 +139,7 @@ What's the other stuff?
 Let's do something with rust! I'm going to write a program that produces a wave
 file that's going to sound really good I promise.
 
+<a name=mkdir />
 mkdir
 =====
 
@@ -128,7 +180,8 @@ of useful things right off the bat.
 Second, though I won't go into the differences just yet, `println!` is a
 _macro_, not a function. This distinction is very important, but for now you
 can just think of it like a function, as long as you keep in the back of your
-head that it is a macro. It does act look a function, anyway.
+head that it is a macro. It does act look a function, anyway. Anything with a
+`!` at the end of it is a macro.
 
 We can compile that! Let's say it lives in a file called `hello.rs`
 
@@ -152,6 +205,7 @@ Hello, World!
 
 Hello, Rust!
 
+<a name=cargo />
 Cargo
 =====
 
@@ -163,7 +217,7 @@ Cargo is rust's package manager. It feels a lot like ruby's
 
 That is to say, it is very easy to use, and declarative. You have a
 [manifest](http://doc.crates.io/manifest.html) file written in
-[toml](https://users.rust-lang.org/t/why-does-cargo-use-toml/3577/4?u=jfo) and
+[toml](https://users.rust-lang.org/t/why-does-cargo-use-toml/3577/4) and
 running cargo will keep all the dependencies installed and up to date.
 
 But `cargo` isn't _just_ dependency management... it's also a taskrunner.
@@ -197,12 +251,15 @@ already added that command to my
 [vim-runners](https://github.com/urthbound/vim-runners/blob/master/plugin/runners.vim#L41-L49)
 plugin that I use all the time.
 
+
+<a name=stdout />
 stdout
 ======
 
 If I want to write data out of the program, I'm going to start by figuring out
 how to write arbitrary data to standard out. This facility is _not_ included
-with the prelude, so I'm going to have to import a thing for it.
+with the prelude, so I'm going to have to import a thing for it. That looks
+like this:
 
 ```rust
 use std::io::stdout;
@@ -227,7 +284,8 @@ sometimes, but the compiler erroring is quite verbose and will lead you down
 some really interesting rabbit holes if you follow it. The fact that this
 compiles is :+1:!
 
-But of course, I actually want to write something to stdout. For that, I'll need to import another trait from the same namespace as before:
+But of course, I actually want to _write something_ to stdout. For that, I'll
+need to import another trait from the same namespace as before:
 
 ```rust
 use std::io::stdout;
@@ -290,6 +348,10 @@ fn main() {
 }
 ```
 
+<a name=mystery />
+A mysterious warning
+--------------------
+
 Both of these examples compile and run, but they also trigger compiler warnings:
 
 ```
@@ -329,7 +391,8 @@ fn main() {
 Now, the program will compile without any warnings at all, and write 'hi mom'
 to stdout when run.
 
-arbitrary bytes
+<a name=arbbytes />
+writing arbitrary bytes
 ---------------
 
 So, `write()` ing to stdout is different than printing to standard out. The
@@ -386,7 +449,9 @@ stdout().write([1u8]);
 ```
 
 > I want to pause for a minute here and acknowledge how incredibly frustrating
-> this might be for beginners to the language, especially
+> this might be for beginners to the language, especially if you're new to
+> types in general. This type of thing would have crushed my resolve a few
+> years ago!
 
 We're almost there. The type that it's expecting is prepended with an
 ampersand. In C, this would denote a pointer address to an array of `chars`
@@ -413,6 +478,10 @@ stdout().write(&[1]);
 Turns out the compiler does do some type inference on integral types, after
 all!
 
+<a name=didsomethinghappen />
+did something happen?
+-------------------
+
 When you run this one, it doesn't seem to do anything. But it does! Let's run
 the binary directly, it gets compiled into `target/debug/rav`. We'll pipe it
 into [`xxd`](http://linuxcommand.org/man_pages/xxd1.html), which makes a stream
@@ -428,7 +497,9 @@ into a hexdump.
 
 There it is, that's the `1` we wrote to stdout!
 
-`write()` was expecting a variably sized slice of `u8`s, so we could write as many was we want.
+`write()` was expecting a variably sized
+[slice](https://doc.rust-lang.org/beta/std/slice/) of `u8`s, so we could write
+as many as we want.
 
 ```rust
 stdout().write(&[1, 2, 3, 4, 5, 6, 7, 8]);
@@ -457,11 +528,14 @@ stdout().write(&[0xe0, 0xb9, 0x80, 0xd5, 0x87, 0x20, 0xe0, 0xb9, 0x94, 0xe0, 0xb
 
 Neat!
 
+<a name=writingthewaves />
 Writing the waves
 =================
 
 We usually think of catting and echoing and stdout and whatnot as being related
-to textual out and input. But it's not, really! It can be _any type_ of data. I want to make a sound file. For simplicitie's sake, it should be uncompressed. I'll make a .wav file!
+to textual out and input. But it's not, really! It can be _any type_ of data. I
+want to make a sound file. For simplicity's sake, it should be uncompressed.
+I'll make a .wav file!
 
 ![img](http://soundfile.sapp.org/doc/WaveFormat/wav-sound-format.gif)
 
@@ -511,7 +585,9 @@ stdout().write(b"fmt ");
 stdout().write(&[ 0, 0, 0, 16 ]);
 ```
 
-BUT WAIT! All of the numerical values in this metadata header are in _little endian_ format. This means that _the least significant byte comes first_. So, instead of
+BUT WAIT! All of the numerical values in this metadata header are in _little
+endian_ format. This means that _the least significant byte comes first_. So,
+instead of
 
 ```rust
 stdout().write(&[ 0, 0, 0, 16 ]);
@@ -527,15 +603,17 @@ stdout().write(&[ 16, 0, 0, 0 ]);
 detail.](https://www.youtube.com/watch?v=MEyV7moej-k) (Happy Halloween
 errybody.)
 
-Ok, little endian everywhere! The next two bytes denote the "Audio Format". For uncompressed [PCM](https://en.wikipedia.org/wiki/Pulse-code_modulation), this value is always `1` (Again, in little endian!)
+Ok, little endian everywhere! The next two bytes denote the "Audio Format". For
+uncompressed [PCM](https://en.wikipedia.org/wiki/Pulse-code_modulation), this
+value is always `1` (Again, in little endian!)
 
-```
+```rust
 stdout().write(&[ 1, 0 ]);
 ```
 
 The next two bits are the number of channels. Let's go easy on ourselves with mono!
 
-```
+```rust
 stdout().write(&[ 1, 0 ]);
 ```
 
@@ -548,7 +626,7 @@ for digital audio.
 
 Now, we can't do this:
 
-```
+```rust
 stdout().write(&[ 44100, 0, 0, 0 ]);
 ```
 
@@ -557,7 +635,7 @@ single byte can only hold a value up to 2<sup>8</sup>, which is 256. Including
 0, that's [255 possible values](/c-and-simple-types/). We need a two byte / 16
 bit word to hold 44100.
 
-That value will look like this:
+In binary, that value would look like this:
 
 ```
 1010110001000100
@@ -566,8 +644,8 @@ That value will look like this:
 If we split that up into two bytes, and assing hexadecimal values to the two bytes,
 
 ```
-binary:   1010 1100  0100 0100
-hex:         a    c     4    4
+binary:   1010 1100    0100 0100
+hex:         a    c       4    4
 ```
 
 Add a couple of padding zero bytes before these two byte:
@@ -585,13 +663,13 @@ And then make the transformation to little endian:
 And there you go! It makes sense to write these into the stream as hexadecimal
 literals just like they look above,
 
-```
+```rust
 stdout().write(&[ 0x44, 0xac, 0x00, 0x00 ]);
 ```
 
 (though you could write their decimal equivalents)
 
-```
+```rust
 stdout().write(&[ 68, 172, 0, 0 ]);
 ```
 
@@ -601,34 +679,34 @@ We're getting close. Don't worry. We're going to make it.
 
 Next, is a 4 byte block for the byterate. The byterate is computed thusly:
 
-```
+```rust
 samplerate * number of channels * (bits per sample / 8)
 ```
 
 This is basically asking: how many bytes are set aside for each second of
 audio? In our case,
 
-```
+```rust
 44100 * 1 * (8 / 8)
 ```
 
 This is the same as the sample rate, so we can reuse that value. Again, in
 little endian.
 
-```
+```rust
 stdout().write(&[ 0x44, 0xac, 0x00, 0x00 ]);
 ```
 
 Blockalign is similar... how many bytes _per sample_ for all channels
 inclusively.
 
-```
+```rust
 number of channels * (bits per sample / 8)
 ```
 
 That's just one.
 
-```
+```rust
 stdout().write(&[ 1, 0 ]);
 ```
 
@@ -636,13 +714,13 @@ Sigh. Almost there.
 
 Bits per sample is self explanatory:
 
-```
+```rust
 stdout().write(&[ 8, 0 ]);
 ```
 
-Finally, another string literal to dnote the beginning of the data chunk...
+Finally, another string literal to denote the beginning of the data chunk...
 
-```
+```rust
 stdout().write(b"data");
 ```
 
@@ -702,8 +780,11 @@ fn main() {
 
 ```
 
-Notice I've filled in the subchunk 1 size with the appropriate value! That's the whole header!
+Notice I've filled in the subchunk 1 size with the appropriate value, which is
+the size of all the data + a constant of 36 for the header prior to the data
+chunk! That's the whole header!
 
+<a name=makesomenoise />
 Make some noise
 ---------------
 
@@ -727,7 +808,7 @@ a crate [library](https://crates.io/crates/rand) for it!
 
 Using a crate is pretty easy! We just need to add it to our `Cargo.toml` file
 under `[dependencies]`, along with a version annotation. This glob means I
-don't care.
+don't care which version I get.
 
 ```
 [dependencies]
@@ -753,7 +834,13 @@ you're connected to the internet- the dependency will be downloaded and
 resolved and made available to you to be linked and compiled into the resulting
 binary.
 
-[We're just about right here, by the way.](https://github.com/urthbound/rav/commit/cf20c195d94a01b0edf70ef21d10118d39e977a2)
+[We're just about right here, by the
+way.](https://github.com/urthbound/rav/commit/cf20c195d94a01b0edf70ef21d10118d39e977a2)
+
+
+<a name=runit />
+run it
+-----
 
 You can compile and run this! If you `cargo run` it, it will both compile _and_
 run it.
@@ -765,6 +852,8 @@ instruction codes to the terminal display or something? I don't know, it
 doesn't matter, but the first time it happens it sure can freak you out. if you
 did this, just type `reset` and all should be well.
 
+> If it screwed up your tmux, you can reset the pane by renaming it. <C-b>,<C-n>
+
 But, also, there is an easy way to get stdout directed into a file!
 
 ```
@@ -772,12 +861,15 @@ cargo build
 target/debug/rav > out.wav
 ```
 
-Note that we have to build and run it this way because `cargo run` prints other stuff to stdout before compiling the file!
+Note that we have to build and run it this way because `cargo run` prints other
+stuff to stdout before compiling the file!
 
 Hey look a wav file! Try opening it up in a music player, and you should hear
 exactly one second of horrible abrasive white noise! We just wrote a soundfile
 from scratch. Cool.
 
+
+<a name=dumpster />
 Let's refactor this dumpster fire!
 --------------------------------
 
@@ -841,7 +933,7 @@ fn main() {
 ```
 
 Notice that we have to add the `#[allow(unused_must_use)]` annotation over
-every function that we want it to apply to. Explicit! (There is a way to have
+_every_ function that we want it to apply to. Explicit! (There is a way to have
 it apply to the [whole project](http://stackoverflow.com/a/25877389/2727670),
 but that's overkill right now.)
 
@@ -849,6 +941,7 @@ but that's overkill right now.)
 > impunity [because I want to](https://www.youtube.com/watch?v=D_XI_290cfw).
 > <sup><a href="#footnote-1">1</a></sup>
 
+<a name=stdoutlock />
 stdout.lock()
 --------------
 
@@ -856,7 +949,6 @@ So, this works fine. Each call to `stdout()` returns a locked handle to the
 stdout stream of that process. But, why suffer the overhead of calling that
 function over and over again? I can simply assign the output of that call
 _once_ to a local binding, and reuse it... something like this:
-
 
 ```rust
 let stdout = stdout();
@@ -886,9 +978,11 @@ stdout.write(b"RIFF");
 This will work. It will uncomplainingly compile and run, printint as you would
 expect. But this is not the best way to accomplish this!
 
-A mutable reference to stdout means that there is no lock against an attempt to write to it from anywhere!
+A mutable reference to stdout means that there is no lock against an attempt to
+write to it from anywhere!
 
-Look at this- what if I try to write to stdout in this mutable way from two different threads simultaneously?
+Look at this- what if I try to write to stdout in this mutable way from two
+different threads simultaneously?
 
 ```rust
 thread::spawn(|| {
@@ -951,6 +1045,8 @@ handle.write(b"RIFF");
 The benefits of this method will become more apparent when I start to pass
 handles around!
 
+
+<a name=byteorder />
 Byteorder
 ---------
 
@@ -994,20 +1090,20 @@ preamble.
 use byteorder::{ LittleEndian, WriteBytesExt };
 ```
 
-This library includes some utilities for writing different sized numerical
-types into anything that uses the `Write` trait. So instead of the cryptic
-thing above, I can write this:
+This library includes some utilities (WriteBytesExt) for writing different
+sized numerical types into anything that uses the `Write` trait. So instead of
+the cryptic thing above, I can write this:
 
 ```
 handle.write_u32::<LittleEndian>(44100);
 ```
 
 I'm writing a u32 (which is 4 bytes wide) and I'm writing it in little endian,
-and the number I am writing is clear in the code now!
+and the number I am writing is clear af and human readable right in the code now!
 
-> This syntax is pretty unfamiliar- the brackets and type annotations and where
+> This syntax is pretty unfamiliar to me- the brackets and type annotations and where
 > they can live and do things and what they do has so far been the most counter
-> intuitive part of this exercise for me...
+> intuitive part of this exercise...
 
 I can do the same for all the other writes in the header function. And also I'm
 going to pull a bunch of these values out into constants, because I don't
@@ -1045,16 +1141,21 @@ fn write_header() {
 
 Sure thing! That's a lot clearer. Also I snuck some other stuff in there!
 
+<a name=someotherstuff />
+some other stuff
+-------------
+
 Look at the `as u16` statements in the audio format and the channels sections.
-So, in rust, there is _no implicit arithmetic integral type casting_. This is pretty wild!
+So, in rust, there is _no implicit arithmetic integral type casting_. This is
+pretty wild!
 
 So for example,
 
 ```rust
-3 * 3 // will work
-3u32 * 3u32 // will work
-3u32 * 3i32 // will NOT work
-3u8 * 3i64 // will NOT work
+3 * 3           // will work
+3u32 * 3u32     // will work
+3u32 * 3i32     // will NOT work
+3u8 * 3i64      // will NOT work
 ```
 
 They have to actually be the actual for realsies same type!
@@ -1076,9 +1177,6 @@ however many seconds the file is, times the sample rate. Look above, the number
 of samples is also used in computing the size of the whole file in the last
 line, and the size of the whole file including the headers in the second!
 
-> There is a subtle bug in there! I just noticed it while writing this. See if
-> you can find it! A hint is that it won't actually show up with the current settings.
-
 Let's parameterize the seconds!
 
 ```rust
@@ -1095,6 +1193,7 @@ Now I can write a wav file of arbitrary length of white noise!
 
 > TODO: link to that commit
 
+<a name=passinglocks />
 passing locks.
 ------------
 
@@ -1106,6 +1205,8 @@ fn write_header(seconds: u32, mut handle: StdoutLock) {
         // etc...
 ```
 
+and in `main()`:
+
 ```rust
 let stdoutvar = stdout();
 write_header(duration, stdoutvar.lock());
@@ -1115,9 +1216,11 @@ So, check out that typing! `seconds` has to be a `u32` but the `handle` var
 must be a `StdoutLock`.
 [StdoutLock](https://doc.rust-lang.org/std/io/struct.StdoutLock.html) is the
 struct that is returned by a call to `.lock()`. Also, it _must_ be mutable,
-because we're writing to it! You can't write to an immutable value, because that would be changing it, which means it's not immutable.
+because we're writing to it! You can't write to an immutable value, because
+that would be changing it, which means it's not immutable.
 
-Now, in main, I can create that lock once and pass it around:
+Now, in main, I can create that lock once and pass it in to the function I've
+made:
 
 ```rust
 #[allow(unused_must_use)]
@@ -1132,7 +1235,7 @@ fn main() {
     }
 }
 ```
-
+<a name=notjust />
 Not just stdout, pls.
 ----------------------
 
@@ -1172,8 +1275,8 @@ generic, which is denoted by `T`
 fn write_header<T:Write>(seconds: u32, mut handle: T) {
 ```
 
-A generic needs to guarantee some trait or interface, that's
-
+A generic needs to guarantee some trait or interface, that's the `<T:Write>`
+part of the function declaration.
 
 ```rust
 let duration = 1;
@@ -1209,22 +1312,24 @@ error[E0382]: use of moved value: `vec`
 
 Strap the eff in because it's our first encounter with
 
+<a name=borrowchecker />
 The Borrow Checker
 ------------------
 
 [The official docs](https://doc.rust-lang.org/beta/book/ownership.html) do a
 much better job of explaining this concept than I could hope to in a subsection
 of an introductory blog post, so I'd suggest you go skim a little bit of that
-doc to get a feel for _what_ the borrow checker is, _why_ it is, and _how_ it
-do. It's one of Rust's power features, and what makes GC-less memory management
-possible.
+to get a feel for _what_ the borrow checker is, _why_ it is, and _how_ it
+do. It's one of Rust's most powerful power features, and what makes GC-less
+memory management possible through static compile time analysis.
 
 I can however, in this limited example, explain _exactly_ what the checker is
 complaining about.
 
-When a value is passed in with what you might think of as "normal" syntax,
-ownership of that value is transferred to the function you're passing it into.
-That means that at the end of _that_ scope, the memory is freed.
+When a value is passed in with what you might think of as "normal" syntax (ie,
+no special annotation), _ownership_ of that value is transferred to the function
+you're passing it into.  That means that at the end of _that_ scope, the memory
+is freed.
 
 When we try to print it after that function call, we get the error above,
 because the memory is no longer guaranteed to be stable. It _might_ be, but it
@@ -1248,25 +1353,30 @@ error[E0277]: the trait bound `&std::vec::Vec<u8>: std::io::Write` is not satisf
 I'm a little fuzzy on the terminology here, but I find it useful to think about
 it this way.
 
+<a name=& />
+&
+-
 ```
 &
 ```
 
 In C, the ampersand _takes the address of a thing_. When you pass an address
-around, you're passing by reference, and when you mutate that thing, you're
-mutating the original data.
+around, you're passing by reference, and when you mutate the data that thing
+references, you're mutating the original data, not a copy.
 
 In Rust, the ampersand _kind of sort of_ means the same thing, but the
 appropriate term is "borrowing" the value- the difference being what I was
 saying before about who is responsible for deallocation.
 
 If the value is "moved", i.e., passed by value into a called function- the
-called function is responsible for that deallocation. If however, the value is "borrowed" by the called function, the _caller_ is still responsible for the deallocation.
+called function is responsible for that deallocation. If however, the value is
+"borrowed" by the called function, the _caller_ is still responsible for the
+deallocation.
 
 But passing by reference (er... _borrowing_) is _immutable by default._
 
 A borrowed vector is therefore read only. To make it writable, we have to
-explicitly we're borrowing a mutable reference.
+explicitly _say_ we're borrowing a _mutable_ reference, with `mut`.
 
 Both in the function declaration:
 
@@ -1299,6 +1409,10 @@ that.
 
 Isn't that something?
 
+<a name=twofuncs />
+two sound producing functions
+---------------------------
+
 I will also factor out the white noise generation into its own function, with the same type signature as `write_header()` :
 
 ```rust
@@ -1327,7 +1441,7 @@ fn make_some_noise<T: Write>(seconds: u32, handle: &mut T) {
 > [F3](http://www.phy.mtu.edu/~suits/notefreqs.html). Give it a try!
 
 
-
+<a name=comebacktowarnings />
 You said we were going to come back to those warnings.
 -------------------------------------------------------
 
@@ -1369,8 +1483,9 @@ warning: unused result which must be used, #[warn(unused_must_use)] on by defaul
 hi mom
 ```
 
-What is this `result` thing? Let's try to get a little more information about
-it... maybe I can print it to something? It's being returned from that expression, so I'll assign it to a thing and then `println!` it...
+What is this unused `result` thing? Let's try to get a little more information
+about it... maybe I can print it to something? It's being returned from that
+expression, so I'll assign it to a thing and then `println!` it...
 
 ```rust
 use std::io::{ stdout, Write };
@@ -1383,14 +1498,17 @@ fn main() {
 
 yields:
 
-
 ```
 hi mom
 Ok(7)
 ```
 
-OOOOOOH, the result is a [_Result_ with a capital
+OOOOOOH, the result is a [_Result_, with a capital
 `R`](https://doc.rust-lang.org/beta/std/result/)!
+
+<a name=resultsvsexceptions />
+result returns vs exceptions
+--------------------------------
 
 So, Rust doesn't have exceptions. There is no concept of a `try`/`catch` block
 like there is in many other languages. Instead, Rust uses [return
@@ -1398,10 +1516,11 @@ values](https://doc.rust-lang.org/book/error-handling.html) to communicate
 success and failure.
 
 For every call that can fail, like `write()`, the expression evaluates to a
-Return type, that can either be `Ok` or `Err`. That's this bit:
+Return type, that can either be `Ok` or `Err`. [That's this bit](https://doc.rust-lang.org/beta/std/result/enum.Result.html):
 
 ```rust
-enum Result<T, E> {
+#[must_use]
+pub enum Result<T, E> {
    Ok(T),
    Err(E),
 }
@@ -1409,7 +1528,7 @@ enum Result<T, E> {
 
 So, if a `Result` is `Ok`, it can return any other type `T` wrapped in that
 Result. If it's an Error, it return an `E` type wrapped in a Result. Either
-way, the return value of a potentially failable function call is a something
+way, the return value of a potentially failable function call is a _something_
 wrapped in a Result.
 
 > This has something to do / a lot in common with the [maybe monad in
@@ -1419,10 +1538,10 @@ wrapped in a Result.
 > and the [option datatype](http://sml-family.org/Basis/option.html) in ML. I
 > don't really know about how those things work other than to mention them as
 > probably pertinent here! Rust is my first encounter with this concept in a
-> language I'm actively trying to learn, but it's not new!
+> language I'm actively trying to learn, but it's not new in the world at large!
 
 The compiler is telling us that we need to address this Result, because it
-could be potentially failing. As the code is written, if any of the writes
+_could_ be potentially failing. As the code is written, if any of the writes
 fail, the program will do weird things!
 
 Check this one out:
@@ -1515,7 +1634,8 @@ This is a great example of the compiler being your best friend! Non exhaustive
 pattern matching would mean that I could have weird things happen.
 
 So a thing about match, syntactically, is that it can be inlined and the
-intermediate `result` variable can be dispensed with, assuming you don't need that result type for anything else:
+intermediate `result` variable can be dispensed with, assuming you don't need
+that result type for anything else:
 
 ```rust
 match File::open("file_that_doesnt_exist.lol") {
@@ -1529,15 +1649,16 @@ results. You can imagine how tedious, and ugly, and verbose this would get in a
 function like `write_header()`, especially when all the handlers basically do
 the same thing. Rust provides a macro that does this for me,
 [`try!`](https://doc.rust-lang.org/src/core/up/src/libcore/macros.rs.html#223-230).
-Unfortunately, there is a catch... this won't work.
+Unfortunately, there is a catch! ... this won't work...
 
 ```rust
-use std::fs::{File};
+use std::fs::{ File };
 
 fn main() {
     try!(File::open("file_that_doesnt_exist.lol"));
 }
 ```
+
 And fails with kind of a cryptic error..
 
 ```
@@ -1556,7 +1677,7 @@ This was was a head scratcher for me for a bit. Why would this fail? And what
 was expecting
 [`()`](http://stackoverflow.com/questions/31107614/what-does-an-empty-set-of-parens-mean-when-used-in-a-generic-type-declaration)?
 
-The answer is perfectly reasonable but very sneaky! Check again the 
+The answer is perfectly reasonable but very sneaky! Check again the
 [`try!`](https://doc.rust-lang.org/src/core/up/src/libcore/macros.rs.html#227).
 macro's source... you'll notice there is a hidden `return` statement in there!
 
@@ -1566,7 +1687,7 @@ potentially return the errored result. This was tricky!
 
 `try!` is designed to allow early bailing from a function that returns a
 result. It doesn't work in `main()` because main doesn't return a result! But
-it will work perfectly finely in the other functions I've written, with a
+it will work perfectly fine in the other functions I've written, with a
 little change to their signatures... take the noise function as an example!
 
 ```rust
@@ -1584,9 +1705,9 @@ result of either nothing (`Ok(())`) or an error! This can then be _explicitly
 passed_ to the caller (in this case `main`) and handled there.
 
 For my case, simply `unwrap()`ping the return from the `make_some_noise()` call
-is sufficient. If it failed at any point, fine, just bail. In production code
-or a bigger program, I might want to propogate that error further, or handle it
-more gracefully, but this is ok for now.
+inside of `main()` is sufficient. If it failed at any point, ok whatevers, just bail.
+In production code or a bigger program, I might want to propogate that error
+further, or handle it more gracefully, but this is ok for now.
 
 ```rust
 fn main() {
@@ -1604,24 +1725,30 @@ fn main() {
 And now I don't have to suppress those warnings, because I've addressed them,
 and they don't show up!
 
-<hr>
+<a name=almostdoneass />
+almost done
+----------------
 
 This is getting pretty close to being a doneass program, but I still haven't
-really written any sound output that sounds like anything.
+really written any sound output that sounds like anything, except for that
+awful sawtooth whose frequency is tied to the sample rate.
 
-Here's a function that computes sinusoidal values on a sample by sample basis given a frequency:
+Here's a function that computes sinusoidal values on a sample by sample basis
+given a frequency:
 
 ```rust
-fn sine_wave<T: Write>(seconds: u32, handle: &mut T) -> Result<(), Error > {
+fn sine_wave<T: Write>(seconds: u32, handle: &mut T, freq: f64) -> Result<(), Error > {
     for x in 0..seconds * SAMPLE_RATE {
        let x = x as f64;
-       try!(handle.write(&[ ((((((x * 2f64 * PI) / 44100f64) * 440f64).sin() + 1f64 )/ 2f64) * 255f64) as u8 ]));
+       try!(handle.write(&[ ((((((x * 2f64 * PI) / SAMPLE_RATE as f64) * freq).sin() + 1f64 )/ 2f64) * 255f64) as u8 ]));
     }
     Ok(())
 }
 ```
 
-Whic I can then use to write a [Barry Harris scale](https://www.youtube.com/watch?v=-jO-sIrjTq://www.youtube.com/watch?v=-jO-sIrjTqg)
+I debated whether or not to 
+
+Which I can then use to write a [Barry Harris scale](https://www.youtube.com/watch?v=-jO-sIrjTq://www.youtube.com/watch?v=-jO-sIrjTqg)
 
 ```rust
 fn main() {
