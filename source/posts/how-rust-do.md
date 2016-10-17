@@ -1570,8 +1570,8 @@ Result. If it's an Error, it return an `E` type wrapped in a Result. Either
 way, the return value of a potentially failable function call is a _something_
 wrapped in a Result.
 
-> This has something to do / a lot in common with the [maybe monad in
-> Haskell](https://en.wikibooks.org/wiki/Haskell/Understanding_monads/Maybe), and
+> This has something to do / a lot in common with the [Either monad in
+> Haskell](https://hackage.haskell.org/package/category-extras-0.52.0/docs/Control-Monad-Either.html), and
 > the [Option type in
 > Scala](http://danielwestheide.com/blog/2012/12/19/the-neophytes-guide-to-scala-part-5-the-option-type.html)
 > and the [option datatype](http://sml-family.org/Basis/option.html) in ML. I
