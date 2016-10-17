@@ -1738,6 +1738,7 @@ fn make_some_noise<T: Write>(seconds: u32, handle: &mut T) -> Result< (), Error 
 
     Ok(())
 }
+```
 
 This will compile just fine- I am saying that this function will return a
 result of either nothing (`Ok(())`) or an error! This can then be _explicitly
