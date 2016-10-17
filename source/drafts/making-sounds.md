@@ -191,6 +191,8 @@ void loop() {
 }
 ```
 
+TODO: click video
+
 (`delay()` takes an int that represents milliseconds, so this is one second)
 
 You can hear it clicking, once per second, but it is very quiet. Look close at
@@ -209,6 +211,8 @@ void loop() {
 }
 ```
 
+TODO: click video two
+
 Now you have your own shitty, too quiet, incredibly user unfriendly
 metronome!
 
@@ -219,24 +223,28 @@ metronome!
 A 440hz
 -------
 
-A musical note is pitched. A pitch is denoted by a frequency, and a frequency
-is denoted by a hertz value. There is a lot that goes into what it actually
-*sounds* like, tonally, but the fundamental frequency of the wave, usually the
-lowest or perceived frequency in a sound,is what defines the pitch that we
-hear. Take another look at this chart:
+A musical note is pitched.
+
+A pitch is denoted by a frequency, and a frequency is denoted by a hertz value.
+It's really the same thing... 1Hz is once per second, and once per second is a
+frequency, in this case of waves per second.
+
+There is a lot more that goes into what a note actually *sounds* like, tonally,
+but the fundamental frequency of the wave, usually but not always the lowest
+frequency in a sound,is what defines the pitch that we perceive. Take a look at
+this chart:
 
 ![img](http://www.sengpielaudio.com/FrequenzenKlavier09.jpg)
 
 This is a handy chart mapping a couple of octaves of notes in the middle of the
 keyboard with their corresponding frequencies. A pitch is the pitch it is
-because it has a specific frequency; in many ways "pitch" and "frequency"
-describe the exact same thing! *
+because it has a specific frequency.
 
-> * these frequencies are only valid as these notes in a single type of tuning
+>   these frequencies are only valid as these notes in a single type of tuning
 >   system, which is arbitrary. Also, it's all based on starting with A at
->   440hz, which is also arbitrary. Many european orchestras conventionally
+>   440hz, which is also arbitrary. Many orchestras conventionally
 >   tune to 439 or even 442 as an A natural in that octave, which would change
->   all of these frequencies, which are arbitrary. \</caveats\> Historical and
+>   all of these frequencies, which, again, are arbitrary. \</caveats\> Historical and
 >   alternative tuning systems are way outside the scope of this post. Maybe
 >   I'll write another post sometime about that, it's really fascinating. Did
 >   you know old harpsichords were sometimes constructed with a separate Eb and
