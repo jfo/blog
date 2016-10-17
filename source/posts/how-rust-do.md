@@ -176,7 +176,7 @@ In Rust, it looks almost exactly the same! It looks like this:
 
 ```rust
 fn main() {
-    println!("Hello, World!\n");
+    println!("Hello, World!");
 }
 ```
 
