@@ -647,7 +647,7 @@ stdout().write(&[ 44100, 0, 0, 0 ]);
 
 This doesn't make any sense. Each number is a single byte- which is 8 bits. A
 single byte can only hold a value up to 2<sup>8</sup>, which is 256. Including
-0, that's [255 possible values](/c-and-simple-types/). We need a two byte / 16
+0, that's [256 possible values](/c-and-simple-types/) from 0-255. We need a two byte / 16
 bit word to hold 44100.
 
 In binary, that value would look like this:
