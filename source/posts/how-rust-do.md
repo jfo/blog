@@ -1278,7 +1278,7 @@ So whiny.
 Ok so,
 
 ```rust
-fn write_header<T:Write>(seconds: u32, mut handle: StdoutLock) {
+fn write_header(seconds: u32, mut handle: StdoutLock) {
     // stuff
 }
 ```
