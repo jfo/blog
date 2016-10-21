@@ -310,7 +310,7 @@ pitched sounds.
 > pitch (where the pace of the clicking rhythm is fast enough to be perceived as
 > a pitched note) check out [this excellent
 > post](http://dantepfer.com/blog/?p=277) by pianist [Dan
-> Tepfner](https://www.youtube.com/watch?v=0Rdb19JG19k):
+> Tepfer](https://www.youtube.com/watch?v=0Rdb19JG19k):
 
 
 Let's try having it wait just 1 millisecond between `HIGH` and `LOW`...
