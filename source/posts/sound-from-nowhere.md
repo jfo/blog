@@ -38,13 +38,13 @@ story of the first computer to sing, at the infancy of the information age.
 <hr>
 <hr>
 
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Simple_sine_wave.svg/1024px-Simple_sine_wave.svg.png" />
+
 There is a very quiet room, somewhere around sea level. The room is full of
 air. The air is made of particles, of atoms, of different types of gases... it
 doesn't really matter. What matters is that all of the particles and atoms and
 gases are equidistant from each other, roughly speaking. It is a very quiet
 room.
-
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Simple_sine_wave.svg/1024px-Simple_sine_wave.svg.png" />
 
 Let's pretend that two disembodied hands clap together one time, suspended in
 the very middle of the room. Like two cousins It from the Addam's Family.
