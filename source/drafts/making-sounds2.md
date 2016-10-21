@@ -3,6 +3,157 @@ title: Dynamics
 layout: post
 ---
 
+Here, I'm indexing against the array of natural notes from earlier. This is
+pretty unwieldy, and I'm missing the chromatic notes, which is very limiting.
+Instead, I can define numerical constants that will be interpolated by the
+preprocessor as the floats that I want to pass in. That will look something like this:
+
+```c
+#define _C1 213.383
+#define _Db1 243.383
+// etc...
+```
+
+We have the note letter name, the octave (0-8) that it is in, and the
+frequency that the constant will map to. I'm prefixing them with an `_` to
+avoid conflicts with predefined constants in the Arduino standard library.
+
+I'm not going to paste all this in there, but I am going to make a header file
+for it and include it in my arduino sketch to allow me to use all of these
+labels in my song code.
+
+<a href="https://github.com/urthbound/soundfromnowhere/blob/master/player/notes.h" target="_blank">It's here, if you're curious!</a>
+
+Here's another melody, using those constants:
+
+```c
+float buddy_holly[49][2] = {
+    {_Ab3,    500.0}, {_F4,    500.0}, {_Eb4,   500.0}, {_C4,     250.0},
+    {_Ab3,    250.0}, {_Bb3,   250.0}, {_C4,    250.0}, {_Bb3,    250.0},
+    {_Ab3,    250.0}, {_F3,    500.0}, {_Eb3,   500.0}, {_REST,   500.0},
+    {_F4,     500.0}, {_Eb4,   500.0}, {_C4,    250.0}, {_Ab3,    250.0},
+    {_Bb3,    250.0}, {_C4,    250.0}, {_Bb3,   250.0}, {_Ab3,    250.0},
+    {_Bb3,    500.0}, {_REST,  500.0}, {_F3,    500.0}, {_G3,     500.0},
+    {_Ab3,    500.0}, {_Bb3,   250.0}, {_C4,    250.0}, {_F3,     250.0},
+    {_F3,     250.0}, {_Eb3,   250.0}, {_Eb3,   250.0}, {_Eb3,    125.0},
+    {_F3,     125.0}, {_Ab3,   250.0}, {_REST,  500.0}, {_Ab3,    500.0},
+    {_F4,     500.0}, {_Eb4,   250.0}, {_C4,    500.0}, {_REST,   250.0},
+    {_Ab3,    500.0}, {_REST, 1500.0}, {_Ab3,   500.0}, {_F4,     500.0},
+    {_Eb4,    250.0}, {_C4,    500.0}, {_REST,  250.0}, {_Ab3,    500.0},
+    {_REST,  1500.0}
+};
+```
+
+TODO: buddy holly
+
+If you'll notice, we're passing in absolute durations in milliseconds for each
+note. This is also kind of unwieldy, unmusical, and hard to change. A more
+musical way of approaching this would be to mark each note with a constant
+representing a duration, and then modifying the existing ancillary functions to
+process that into the appropriate duration given a global tempo.
+
+I can define an `enum` in one of my header files to provide me with the 'marks':
+
+```c
+enum durs = { SIXTEENTH, EIGHTH, DOTTED_EIGHTH, QUARTER, DOTTED_QUARTER, HALF, WHOLE }
+```
+
+An `enum` is a shorthand way to define numerical constants in C/C++. The above
+could be written as:
+
+```c
+#define SIXTEENTH       0
+#define EIGHT           1
+#define DOTTED_EIGHT    2
+#define QUARTER         3
+#define DOTTED_QUARTER  4
+#define HALF            5
+#define WHOLE           6
+```
+
+As with the note macros defined above, the C preprocessor interpolates these
+integer values wherever it sees its associated token. So `EIGHTH` becomes `0`,
+and `0` is what the compiler actually sees.
+
+Now I can add a `tempo` argument to the `play_melody()` function, and define a
+helper function that computes the value of a rhythmic duration at a given
+tempo. Lickity split!
+
+```c
+int note_duration(int rhythmic_value, int tempo) {
+    // 60000ms in a minute, divided by the tempo in beats per minutes, gives us
+    // the absolute duration of a single beat. From there, dividing and
+    // multiplying the beat will return the durations of related rhythmic values.
+
+    int one_beat = 60000 / tempo
+
+    switch (rhythmic_value) {
+        case : SIXTEENTH
+            return one_beat / 4;
+        case : EIGHTH
+            return one_beat / 2;
+        case : DOTTED_EIGHTH
+            return (one_beat / 2) * 1.5;
+        case : QUARTER
+            return one_beat;
+        case : DOTTED_QUARTER
+            return one_beat * 1.5;
+        case : HALF
+            return one_beat * 2;
+        case : WHOLE
+            return one_beat * 4;
+    }
+}
+
+void play_melody(float melody[][2], size_t size_of_melody, int tempo) {
+
+    int dur = note_duration(melody[i][1], tempo)
+
+    for (int i = 0; i < size_of_melody / (sizeof(float) * 2); i++) {
+        square_wave(melody[i][0], dur);
+    }
+}
+```
+
+Now we can represent these notes as a collection of tuples, that semantically
+make a little more sense.
+
+instead of `{440.0, 500.0}` to represent an A natural quarter note, we can
+write something like `{_A4, QUARTER}` and pass in a global tempo instead of
+doing each note duration by hand.
+
+Here's how a melody looks in these tuples:
+
+```c
+float happy_birthday[26][2] = {
+    { _Db3, DOTTED_EIGHTH }, { _Db3, SIXTEENTH }, { _Eb3, QUARTER }, { _Db3, QUARTER }, { _Gb3, QUARTER }, { _F3, HALF },
+    { _Db3, DOTTED_EIGHTH }, { _Db3, SIXTEENTH }, { _Eb3, QUARTER }, { _Db3, QUARTER }, { _Ab3, QUARTER }, { _Gb, HALF },
+    { _Db3, DOTTED_EIGHTH }, { _Db3, SIXTEENTH }, { _Db4, QUARTER }, { _Bb3, QUARTER }, { _Gb3, QUARTER }, { _F3, QUARTER }, { _Eb3, QUARTER },
+    { _B3, DOTTED_EIGHTH }, { _B3, SIXTEENTH }, { _Bb3, QUARTER }, { _Gb3, QUARTER }, { _Ab3, QUARTER }, { _Gb3, HALF }, { REST, QUARTER }
+}
+
+loop() {
+    play_melody(happy_birthday, sizeof(happy_birthday), 120);
+    play_melody(happy_birthday, sizeof(happy_birthday), 160);
+    delay(1000);
+}
+```
+
+This little instrument never gets tired. It doesn't need to breath, and it can
+play notes faster than we can hear them, because you know, it's a computer:
+
+![Hey kid!](https://media.giphy.com/media/5fBH6zxifuuoKgTKB3O/giphy.gif)
+
+```
+nonsense computer noise notes with duration at 1μs or something.
+```
+
+Not bad for starting from scratch.
+
+
+```c
+flight of the bumble bee
+```
 There is a problem with our design! We can't control the relative volume of the
 notes that we are producing. This is not ideal; dynamics are responsible for a
 huge amount of the expressivity of music, and if we're trying to make something

@@ -9,23 +9,22 @@ doesn't really matter. What matters is that all of the particles and atoms and
 gases are equidistant from each other, roughly speaking. It is a very quiet
 room.
 
-<img src="/images/sinusoidal.png" />
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Simple_sine_wave.svg/1024px-Simple_sine_wave.svg.png" />
 
-Two disembodied hands clap together one time, suspended in the very middle of
-the room. Like two cousin It's from the Addam's Family.
+Let's pretend that two disembodied hands clap together one time, suspended in
+the very middle of the room. Like two cousins It from the Addam's Family.
 
-Where the hands meet, air moves out of the way, and bumps into more air, which
-bumps into more air, etc. A pressure wave moves from the epicenter (where the
-hands met) outward in all directions, until the pressure wave hits
-the wall of the now not as quiet room, where it bounces off, again in all directions,
+Where the hands meet, air moves out of the way. that air bumps into more air,
+which bumps into more air, etc. A pressure wave moves from the epicenter (where
+the hands met) outward in all directions, until the pressure wave hits the wall
+of the now not so quiet room, where it bounces off, again in all directions,
 until the wave is dissipated, and the room is once again a very quiet room.
 
 That is what sound is: a bunch of pressure differentials travelling through the
 air. This is what we are sensing when we hear anything: music, boiling water,
 my neighbor's dogs barking all the time forever and ever... it's all a giant
 mess of different pressure waves interacting with each other and the world and
-getting to our ears where we process it into some weird brain assembly
-language.
+getting to our ears where we process it into brain assembly language.
 
 Let's talk about that wave diagram up there. The X axis is time, and the Y
 value is the level of pressure at a static point at that static time. There are
@@ -36,11 +35,17 @@ follows the positive, hence, -1
 
 Let's look at a speaker; here's a teeny tiny one:
 
+<img src="https://scontent-lga3-1.cdninstagram.com/t51.2885-15/e35/14717617_620959634751773_6623307970975367168_n.jpg?ig_cache_key=MTM2NTY1OTUxOTUxOTUzMTIwNw%3D%3D.2" />
+
+And here's the back of it:
+
+<img src="https://scontent-lga3-1.cdninstagram.com/t51.2885-15/e35/14547775_1058797607552477_2148373500799221760_n.jpg?ig_cache_key=MTM2NTY1OTkwNTg5MDQxOTU3MA%3D%3D.2" />
+
 I want to point out some important bits. There is a speaker cone. There is a
 magnet. There are two nodes that connect to an electromagnet inside the
 speaker. When a current is applied, this electromagnet becomes charged. You'll
 hear a little click. This is the sound that the speaker makes when it is
-*physically moving*. Take a look:
+*physically moving*.
 
 The electromagnet, when charged, becomes attracted to the magnet, and pulls the
 speaker cone inwards. Here's something I never realized before: If you reverse the
@@ -48,15 +53,15 @@ direction of the input current, the speaker cone moves in the opposite
 direction! The electromagnet is being attracted instead of being repelled. This
 makes perfect sense, but had never occurred to me. I love stuff like that!
 
-Controlling when and how much current is applied to this speaker is how we can
+Controlling _exactly_ when and how much current is applied to this speaker is how we can
 control the sound that is coming out of it.
 
 Let's Arduino!
 -------------
 
-We're going to plug the speaker directly into the board. This is kind of silly,
-but it totally works! The arduino has an output voltage of 5v, which is not
-much really, but it's enough to drive the speaker, and the code is hellah
+We're going to plug the speaker directly into the board. This may be kind of
+silly, but it totally works! The arduino has an output voltage of 5v, which is
+not much at all, but it's enough to drive the speaker, and the code is hellah
 simple.
 
 If you've never worked with the Arduino language before: it's C++, basically,
@@ -74,9 +79,9 @@ void loop();
 runs indefinitely, on a loop.
 
 Although I fully intend to delve into the madness and learn how to flash my own
-hardware and write bare C/C++ for chips someday, that day is not today, so this is
-very nice. We just have to write two methods, flash to the board, and the
-Arduino will work. :sparkles: Rapid indeed! Here is a simple program:
+hardware and write bare C for chips someday, that day is not today, so this is
+very nice. We just have to write two methods, flash to the board using the IDE,
+and the Arduino will work. :sparkles: Rapid indeed! Here is a simple program:
 
 ```c
 void setup() {
@@ -108,19 +113,20 @@ void loop() {
 }
 ```
 
-The C preprocessor will now replace every instance of `OUTPIN` with the value
+The preprocessor will now replace every instance of `OUTPIN` with the value
 `13`. This looks similar to variable assignment, but the mechanism underlying
-it is very different. All of those replacements happen at compile time, and so
-a constant should never be redefined after it has been given a value.
+it is very different. All of those replacements happen at (but really _just
+before_) compile time, and so a constant should never be redefined after it has
+been given a value.
 
-Consider:
+Something like:
 
 ```c
 #define MYAWESOMECONSTANT "this is what I want my constant to be!"
 #define MYAWESOMECONSTANT "wait I changed my mind!"
 ```
 
-Gives us this compile time warning:
+would give us this compile time warning:
 
 ```c
 /private/tmp/const.c:2:9: warning: 'MYAWESOMECONSTANT' macro redefined
@@ -131,14 +137,13 @@ Gives us this compile time warning:
 ```
 
 What does the program above do? It writes `HIGH` to the output pin as fast as
-it can, forever. `HIGH` is an arduino constant just like the that resolves to
-the maximum output voltage of the model of board you have, so for this one, 5v)
+it can, forever. `HIGH` is an arduino library constant that resolves to the
+maximum output voltage of the model of board you have, so for this one, 5v)
 
-This doesn't really do that much, but you can indeed hear the telltale click:
+This doesn't really do that much, but you can indeed hear the telltale click
+when the program first starts to run, which means that a current _is_ being applied.
 
-... which means that a current is being applied.
-
-Let's change our loop... (`LOW`, as you might guess, is a constant that resolves
+Let's change the loop... (`LOW`, as you might guess, is a constant that resolves
 to the minimum output of our board, which is 0v):
 
 ```c
@@ -149,11 +154,13 @@ void loop() {
 ```
 This does more... I mean, it makes a ... sound. :\
 
+<iframe src="https://vine.co/v/5w11Hdx3Aq5/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
+
 This loop is writing high and low to the pin as fast as it can. The speaker is
 moving back and forth, and we can hear a high pitched, messy squeal as a result.
 
-We want a little more control over this, but let's start by making something
-pretty close to white noise.
+We want a more control over this, but let's start by making something pretty
+close to white noise.
 
 ```c
 void loop() {
@@ -165,6 +172,10 @@ void loop() {
     }
 }
 ```
+
+With that program, there is a 50/50 chance for either high or low. It sounds like this:
+
+<iframe src="https://vine.co/v/5w11zw1KXAn/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
 
 Wow, that's weird.
 
@@ -191,7 +202,7 @@ void loop() {
 }
 ```
 
-TODO: click video
+<iframe src="https://vine.co/v/5w1dBnKBPve/embed/simple" width="600" height="600" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
 
 (`delay()` takes an int that represents milliseconds, so this is one second)
 
@@ -211,7 +222,7 @@ void loop() {
 }
 ```
 
-TODO: click video two
+<iframe src="https://vine.co/v/5w1JPlIMBt9/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
 
 Now you have your own shitty, too quiet, incredibly user unfriendly
 metronome!
@@ -231,7 +242,7 @@ frequency, in this case of waves per second.
 
 There is a lot more that goes into what a note actually *sounds* like, tonally,
 but the fundamental frequency of the wave, usually but not always the lowest
-frequency in a sound,is what defines the pitch that we perceive. Take a look at
+frequency in a sound, is what defines the pitch that we perceive. Take a look at
 this chart:
 
 ![img](http://www.sengpielaudio.com/FrequenzenKlavier09.jpg)
@@ -247,8 +258,8 @@ because it has a specific frequency.
 >   all of these frequencies, which, again, are arbitrary. \</caveats\> Historical and
 >   alternative tuning systems are way outside the scope of this post. Maybe
 >   I'll write another post sometime about that, it's really fascinating. Did
->   you know old harpsichords were sometimes constructed with a separate Eb and
->   D# key? I know, wild, right? They are in all actuality different notes, as
+>   you know old harpsichords were [sometimes constructed](https://en.wikipedia.org/wiki/Split_sharp) with a separate flat and
+>   sharp enharmonic keys? I know, wild, right? They are in all actuality different notes, as
 >   it turns out. Really good choirs and string sections adjust for this. If
 >   you play a piano you're SOL though. Sorry pianists, only one tuning system
 >   at a time. Guitar isn't much better, what with the frets and all, but at
@@ -259,12 +270,12 @@ We've made the speaker move in and out once per second, and we can hear a
 percussive click. If we can make it move faster than that, we can make real,
 pitched sounds.
 
-To really hear this transformation from rhythm (those percussive clicks) to
-pitch (where the pace of the clicking rhythm is fast enough to be perceived as
-a pitched note) take a second to check out this excellent post by pianist Dan
-Tepfner:
+> To really hear this transformation from rhythm (those percussive clicks) to
+> pitch (where the pace of the clicking rhythm is fast enough to be perceived as
+> a pitched note) check out [this excellent
+> post](http://dantepfer.com/blog/?p=277) by pianist [Dan
+> Tepfner](https://www.youtube.com/watch?v=0Rdb19JG19k):
 
-http://dantepfer.com/blog/?p=277
 
 Let's try having it wait just 1 millisecond between `HIGH` and `LOW`...
 
@@ -280,6 +291,8 @@ void loop() {
 This is one cycle every two milliseconds, which is 500 cycles per second, which
 is 500Hz. Cross referencing with the chart above, our speaker should be
 producing a note about 6.12Hz faster than a B above middle C. Let's see:
+
+<iframe src="https://vine.co/v/5w119r3zaV3/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
 
 Super. We're almost to something musically useful. This is as fast as we can go
 using `delay()` because it takes milliseconds. In order to delay a smaller
@@ -334,6 +347,8 @@ void loop() {
 
 Will produce a tone at _precisely_ 440Hz.
 
+<iframe src="https://vine.co/v/5w1njzB1eEI/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
+
 This is begging to be made into a function that takes a frequency and returns a
 discrete number of microseconds that are equal to have of one cycle. Here it is:
 
@@ -365,7 +380,7 @@ void loop() {
 
 This is a nice little thing to encapsulate, so I'm going to do that, and there
 is no reason not to make the frequency that I'm computing the delay time for
-into a argumanet that is passed into the function:
+into a argument that is passed into the function:
 
 ```c
 void square_wave(float freq) {
@@ -405,12 +420,8 @@ void loop() {
 
 But I'm not going to do that, for reasons that will be clear in a moment.
 
-This would make a great summer single: "The indefinite square wave", by Katy
-Perry. You could pick a frequency and it would just go forever. It's got hit
-written all over it.
-
 Clearly, to do anything useful, we need to come up with a way to
-play a note for some definite amount of time, then maybe play a different note?
+play a note for some defined amount of time, then maybe play a different note?
 I don't know, just a thought. Variety is the spice of life. Let's start
 with.... one second.
 
@@ -440,7 +451,11 @@ void loop() {
 
 This one just beeps an A 440 for one second, and then waits for one second so
 that we can hear when the notes stops and starts. This is very exciting,
-actually! Let's review what we have now:
+actually!
+
+<iframe src="https://vine.co/v/5w1nhuxFnXE/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
+
+Let's review what we have now:
 
 - A reliable way to produce discrete, variable pitches
 - for a defined amount of time.
@@ -450,9 +465,9 @@ In other words:
 - a very simple
 - very shrill
 - monophonic (only one note at a time)
-- _musical instrument._
+- _musical instrument_
 
-Now we can make some music.
+Now I can make music.
 
 There is no reason to hard code the length of the note, though, so lets change that function a little bit:
 
@@ -471,7 +486,7 @@ void square_wave(float freq, int duration){
 ```
 
 `duration` here is in milliseconds. Let's play a scale; recall that frequency
-chart from before... let's enter all the _natural notes_ (white keys) into an array.
+chart from before... I'll enter all the _natural notes_ (white keys) into an array.
 
 This code plays two octaves of a C major scale:
 
@@ -484,6 +499,8 @@ void loop() {
     }
 }
 ```
+
+<iframe src="https://vine.co/v/5w1vB7FFnaH/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
 
 Not very beautiful, but recognizably _musical_.
 
@@ -606,166 +623,4 @@ void loop() {
 }
 ```
 
-Here, I'm indexing against the array of natural notes from earlier. This is
-pretty unwieldy, and I'm missing the chromatic notes, which is very limiting.
-Instead, I can define numerical constants that will be interpolated by the
-preprocessor as the floats that I want to pass in. That will look something like this:
-
-```c
-#define _C1 213.383
-#define _Db1 243.383
-// etc...
-```
-
-We have the note letter name, the octave (0-8) that it is in, and the
-frequency that the constant will map to. I'm prefixing them with an `_` to
-avoid conflicts with predefined constants in the Arduino standard library.
-
-I'm not going to paste all this in there, but I am going to make a header file
-for it and include it in my arduino sketch to allow me to use all of these
-labels in my song code.
-
-<a href="https://github.com/urthbound/soundfromnowhere/blob/master/player/notes.h" target="_blank">It's here, if you're curious!</a>
-
-Here's another melody, using those constants:
-
-```c
-float buddy_holly[49][2] = {
-    {_Ab3,    500.0}, {_F4,    500.0}, {_Eb4,   500.0}, {_C4,     250.0},
-    {_Ab3,    250.0}, {_Bb3,   250.0}, {_C4,    250.0}, {_Bb3,    250.0},
-    {_Ab3,    250.0}, {_F3,    500.0}, {_Eb3,   500.0}, {_REST,   500.0},
-    {_F4,     500.0}, {_Eb4,   500.0}, {_C4,    250.0}, {_Ab3,    250.0},
-    {_Bb3,    250.0}, {_C4,    250.0}, {_Bb3,   250.0}, {_Ab3,    250.0},
-    {_Bb3,    500.0}, {_REST,  500.0}, {_F3,    500.0}, {_G3,     500.0},
-    {_Ab3,    500.0}, {_Bb3,   250.0}, {_C4,    250.0}, {_F3,     250.0},
-    {_F3,     250.0}, {_Eb3,   250.0}, {_Eb3,   250.0}, {_Eb3,    125.0},
-    {_F3,     125.0}, {_Ab3,   250.0}, {_REST,  500.0}, {_Ab3,    500.0},
-    {_F4,     500.0}, {_Eb4,   250.0}, {_C4,    500.0}, {_REST,   250.0},
-    {_Ab3,    500.0}, {_REST, 1500.0}, {_Ab3,   500.0}, {_F4,     500.0},
-    {_Eb4,    250.0}, {_C4,    500.0}, {_REST,  250.0}, {_Ab3,    500.0},
-    {_REST,  1500.0}
-};
-```
-
-If you'll notice, we're passing in absolute durations in milliseconds for each
-note. This is also kind of unwieldy, unmusical, and hard to change. A more
-musical way of approaching this would be to mark each note with a constant
-representing a duration, and then modifying the existing ancillary functions to
-process that into the appropriate duration given a global tempo.
-
-I can define an `enum` in one of my header files to provide me with the 'marks':
-
-```c
-enum durs = { SIXTEENTH, EIGHTH, DOTTED_EIGHTH, QUARTER, DOTTED_QUARTER, HALF, WHOLE }
-```
-
-An `enum` is a shorthand way to define numerical constants in C/C++. The above
-could be written as:
-
-```c
-#define SIXTEENTH       0
-#define EIGHT           1
-#define DOTTED_EIGHT    2
-#define QUARTER         3
-#define DOTTED_QUARTER  4
-#define HALF            5
-#define WHOLE           6
-```
-
-As with the note macros defined above, the C preprocessor interpolates these
-integer values wherever it sees its associated token. So `EIGHTH` becomes `0`,
-and `0` is what the compiler actually sees.
-
-Now I can add a `tempo` argument to the `play_melody()` function, and define a
-helper function that computes the value of a rhythmic duration at a given
-tempo. Lickity split!
-
-```c
-int note_duration(int rhythmic_value, int tempo) {
-    // 60000ms in a minute, divided by the tempo in beats per minutes, gives us
-    // the absolute duration of a single beat. From there, dividing and
-    // multiplying the beat will return the durations of related rhythmic values.
-
-    int one_beat = 60000 / tempo
-
-    switch (rhythmic_value) {
-        case : SIXTEENTH
-            return one_beat / 4;
-        case : EIGHTH
-            return one_beat / 2;
-        case : DOTTED_EIGHTH
-            return (one_beat / 2) * 1.5;
-        case : QUARTER
-            return one_beat;
-        case : DOTTED_QUARTER
-            return one_beat * 1.5;
-        case : HALF
-            return one_beat * 2;
-        case : WHOLE
-            return one_beat * 4;
-    }
-}
-
-void play_melody(float melody[][2], size_t size_of_melody, int tempo) {
-
-    int dur = note_duration(melody[i][1], tempo)
-
-    for (int i = 0; i < size_of_melody / (sizeof(float) * 2); i++) {
-        square_wave(melody[i][0], dur);
-    }
-}
-```
-
-Now we can represent these notes as a collection of tuples, that semantically
-make a little more sense.
-
-instead of `{440.0, 500.0}` to represent an A natural quarter note, we can
-write something like `{_A4, QUARTER}` and pass in a global tempo instead of
-doing each note duration by hand.
-
-Here's how a melody looks in these tuples:
-
-```c
-float happy_birthday[26][2] = {
-    { _Db3, DOTTED_EIGHTH }, { _Db3, SIXTEENTH }, { _Eb3, QUARTER }, { _Db3, QUARTER }, { _Gb3, QUARTER }, { _F3, HALF },
-    { _Db3, DOTTED_EIGHTH }, { _Db3, SIXTEENTH }, { _Eb3, QUARTER }, { _Db3, QUARTER }, { _Ab3, QUARTER }, { _Gb, HALF },
-    { _Db3, DOTTED_EIGHTH }, { _Db3, SIXTEENTH }, { _Db4, QUARTER }, { _Bb3, QUARTER }, { _Gb3, QUARTER }, { _F3, QUARTER }, { _Eb3, QUARTER },
-    { _B3, DOTTED_EIGHTH }, { _B3, SIXTEENTH }, { _Bb3, QUARTER }, { _Gb3, QUARTER }, { _Ab3, QUARTER }, { _Gb3, HALF }, { REST, QUARTER }
-}
-
-loop() {
-    play_melody(happy_birthday, sizeof(happy_birthday), 120);
-    play_melody(happy_birthday, sizeof(happy_birthday), 160);
-    delay(1000);
-}
-```
-
-This little instrument never gets tired. It doesn't need to breath, and it can
-play notes faster than we can hear them, because you know, it's a computer:
-
-![Hey kid!](https://media.giphy.com/media/5fBH6zxifuuoKgTKB3O/giphy.gif)
-
-```
-nonsense white noise notes with duration at 1μs or something.
-```
-
-Here's a wicked fast flight of the bumblebee:
-
-```c
-flight of the bumble bee
-```
-
-Here's Van Halen's sick masterpiece, Eruption:
-
-```c
-```
-
-Not bad for a couple wires and a few chips.
-
-I've made a repo of all of the code and music from this post here:
-
-github.com balhablah
-
-Next time: [brief synopsis of next time]
-
-fuck yeah mother fucker.
+<a href="https://www.instagram.com/p/BLzxOcDlqGr/" target="_blank">Sing oh sing that song little speaker.</a>
