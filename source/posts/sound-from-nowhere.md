@@ -1,6 +1,8 @@
 ---
 title: Sound from nowhere
 layout: post
+date: 2016-10-21
+tags: rc
 ---
 
 "Daisy Bell" was composed by Harry Dacre in 1892. It's one of those 19th
