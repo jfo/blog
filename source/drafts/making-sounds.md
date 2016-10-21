@@ -3,6 +3,39 @@ title: Sound from nowhere
 layout: post
 ---
 
+"Daisy Bell" was composed by Harry Dacre in 1892. It's one of those 19th
+century popular songs with a sticky, saccharine melody... nostalgic even though
+nobody alive now remembers that time. There's a musty melancholy to it, like
+the memory of a well lived love, long past.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/PqvuNb8DevE" frameborder="0" allowfullscreen></iframe>
+
+
+> In 1961, the IBM 7094 became the first computer to sing, singing the song Daisy
+> Bell. Vocals were programmed by John Kelly and Carol Lockbaum and the
+> accompaniment was programmed by [Max
+> Mathews](http://www.mitpressjournals.org/doi/pdf/10.1162/comj.2009.33.3.9). -
+> _from the video description_
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/41U78QP8nBk" frameborder="0" allowfullscreen></iframe>
+
+> In 1962 Arthur C. Clarke, who wrote the novel – and co-wrote the screenplay for
+> the movie – “2001: A Space Odyssey”, visited Bell Labs before putting the
+> finishing touches on the work. There, he was treated to a performance of the
+> song ‘Daisy Bell’ (or, ‘A Bicycle Built for Two’) by the IBM 704 computer. This
+> evidently inspired him to have HAL sing the song as an homage to the
+> programmers of the 704 at Bell Labs - _[link](http://www.universetoday.com/44482/why-did-hal-sing-daisy/)_
+
+It's a remarkable moment in a remarkable film, a retreat into "youth" at the
+end of "life," and the detail of that particular song is based on the true
+story of the first computer to sing, at the infancy of the information age.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/OuEN5TjYRCE" frameborder="0" allowfullscreen></iframe>
+
+<hr>
+<hr>
+<hr>
+
 There is a very quiet room, somewhere around sea level. The room is full of
 air. The air is made of particles, of atoms, of different types of gases... it
 doesn't really matter. What matters is that all of the particles and atoms and
@@ -42,10 +75,10 @@ And here's the back of it:
 <img src="https://scontent-lga3-1.cdninstagram.com/t51.2885-15/e35/14547775_1058797607552477_2148373500799221760_n.jpg?ig_cache_key=MTM2NTY1OTkwNTg5MDQxOTU3MA%3D%3D.2" />
 
 I want to point out some important bits. There is a speaker cone. There is a
-magnet. There are two nodes that connect to an electromagnet inside the
-speaker. When a current is applied, this electromagnet becomes charged. You'll
-hear a little click. This is the sound that the speaker makes when it is
-*physically moving*.
+magnet. There are two nodes on the other side of the back that connect to an
+electromagnet inside the speaker. When a current is applied, this electromagnet
+becomes charged. You'll hear a little click. This is the sound that the speaker
+makes when it is *physically moving*.
 
 The electromagnet, when charged, becomes attracted to the magnet, and pulls the
 speaker cone inwards. Here's something I never realized before: If you reverse the
@@ -59,10 +92,10 @@ control the sound that is coming out of it.
 Let's Arduino!
 -------------
 
-We're going to plug the speaker directly into the board. This may be kind of
+We're going to plug the speaker directly into the board. This may seem kind of
 silly, but it totally works! The arduino has an output voltage of 5v, which is
-not much at all, but it's enough to drive the speaker, and the code is hellah
-simple.
+not much at all, but it's enough to drive the speaker, and it makes the code
+hellah simple.
 
 If you've never worked with the Arduino language before: it's C++, basically,
 but the IDE / Compiler / toolchain takes care of all the heavy lifting with
@@ -152,9 +185,10 @@ void loop() {
     digitalWrite(OUTPIN, LOW);
 }
 ```
+
 This does more... I mean, it makes a ... sound. :\
 
-<iframe src="https://vine.co/v/5w11Hdx3Aq5/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
+<iframe src="https://vine.co/v/5w11Hdx3Aq5/embed/simple" width="480" height="480" frameborder="0"></iframe>
 
 This loop is writing high and low to the pin as fast as it can. The speaker is
 moving back and forth, and we can hear a high pitched, messy squeal as a result.
@@ -175,7 +209,7 @@ void loop() {
 
 With that program, there is a 50/50 chance for either high or low. It sounds like this:
 
-<iframe src="https://vine.co/v/5w11zw1KXAn/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
+<iframe src="https://vine.co/v/5w11zw1KXAn/embed/simple" width="480" height="480" frameborder="0"></iframe>
 
 Wow, that's weird.
 
@@ -202,7 +236,7 @@ void loop() {
 }
 ```
 
-<iframe src="https://vine.co/v/5w1dBnKBPve/embed/simple" width="600" height="600" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
+<iframe src="https://vine.co/v/5w1dBnKBPve/embed/simple" width="600" height="600" frameborder="0"></iframe>
 
 (`delay()` takes an int that represents milliseconds, so this is one second)
 
@@ -222,7 +256,7 @@ void loop() {
 }
 ```
 
-<iframe src="https://vine.co/v/5w1JPlIMBt9/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
+<iframe src="https://vine.co/v/5w1JPlIMBt9/embed/simple" width="480" height="480" frameborder="0"></iframe>
 
 Now you have your own shitty, too quiet, incredibly user unfriendly
 metronome!
@@ -292,7 +326,7 @@ This is one cycle every two milliseconds, which is 500 cycles per second, which
 is 500Hz. Cross referencing with the chart above, our speaker should be
 producing a note about 6.12Hz faster than a B above middle C. Let's see:
 
-<iframe src="https://vine.co/v/5w119r3zaV3/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
+<iframe src="https://vine.co/v/5w119r3zaV3/embed/simple" width="480" height="480" frameborder="0"></iframe>
 
 Super. We're almost to something musically useful. This is as fast as we can go
 using `delay()` because it takes milliseconds. In order to delay a smaller
@@ -347,7 +381,13 @@ void loop() {
 
 Will produce a tone at _precisely_ 440Hz.
 
-<iframe src="https://vine.co/v/5w1njzB1eEI/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
+<iframe src="https://vine.co/v/5w1njzB1eEI/embed/simple" width="480" height="480" frameborder="0"></iframe>
+
+> Did I say "will" and "precisely?" I meant "should." It does not. It almost
+> does! It's only a few cents flat, but it's not precise. The reason is weird
+> and subtle and has to do with the arduino's hardware clock, so I'm going to
+> ignore that for now. Let's all just pretend it's accurate, ok? I'll explore
+> the specifics in another post.
 
 This is begging to be made into a function that takes a frequency and returns a
 discrete number of microseconds that are equal to have of one cycle. Here it is:
@@ -366,7 +406,7 @@ float halfCycleDelay(float freq) {
 ```
 
 I'm returning a float just to retain that precision, though
-`delayMicroseconds()` casts it to an int anyway. NBD.
+`delayMicroseconds()` casts it to an `int` anyway. NBD.
 
 ```c
 void loop() {
@@ -453,7 +493,7 @@ This one just beeps an A 440 for one second, and then waits for one second so
 that we can hear when the notes stops and starts. This is very exciting,
 actually!
 
-<iframe src="https://vine.co/v/5w1nhuxFnXE/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
+<iframe src="https://vine.co/v/5w1nhuxFnXE/embed/simple" width="480" height="480" frameborder="0"></iframe>
 
 Let's review what we have now:
 
@@ -500,9 +540,9 @@ void loop() {
 }
 ```
 
-<iframe src="https://vine.co/v/5w1vB7FFnaH/embed/simple" width="480" height="480" frameborder="0"></iframe><script src="https://platform.vine.co/static/scripts/embed.js"></script>
+<iframe src="https://vine.co/v/5w1vB7FFnaH/embed/simple" width="480" height="480" frameborder="0"></iframe>
 
-Not very beautiful, but recognizably _musical_.
+Not very beautiful (and still out of tune), but recognizably _musical_.
 
 We can represent notes as tight little frequency/duration tuples, packed into
 an array. When initializing such a `2d` array, the first number in brackets
@@ -624,3 +664,11 @@ void loop() {
 ```
 
 <a href="https://www.instagram.com/p/BLzxOcDlqGr/" target="_blank">Sing oh sing that song little speaker.</a>
+
+<hr>
+
+The arduino code for this is [here](https://github.com/urthbound/soundfromnowhere).
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/CTnECKaEP6c" frameborder="0" allowfullscreen></iframe>
+
+<script src="https://platform.vine.co/static/scripts/embed.js"></script>
