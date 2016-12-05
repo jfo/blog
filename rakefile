@@ -30,7 +30,7 @@ task :push => :build do
   Dir.chdir('build') do
       sh 'git init'
       if !system("git log -0")
-          sh "git remote add origin https://github.com/urthbound/urthbound.github.io.git"
+          sh "git remote add origin https://github.com/jfo/jfo.github.io.git"
       end
       status = sh "git add -A && git commit -m '#{Time.now}' && git push -uf origin master"
       puts status ? "OK" : "FAILED"
