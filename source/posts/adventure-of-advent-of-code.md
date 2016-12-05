@@ -255,14 +255,15 @@ Take a look at my ruby solution for the
 next day's second problem:
 
 ```rb
+@input = File.open('./inputs/3.txt', "r")
+.readlines
+.collect! {|e|
+    e.split(' ')
+    .map! {|e|e.to_i}
+}
+
 p (0..2).map{|i|
-    File.open('./inputs/3.txt', "r")
-    .readlines
-    .collect! {|e|
-        e.split(' ')
-        .map! {|e|e.to_i}
-    }
-    .map {|e| e[i]}
+    @input.map {|e| e[i]}
     .each_slice(3)
     .to_a}
 .flatten(1)
