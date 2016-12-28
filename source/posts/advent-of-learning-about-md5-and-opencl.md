@@ -12,7 +12,7 @@ of those rabbit holes! It's a really deep one, too. I got nerdsniped on day 5
 and I totally couldn't let it go.
 
 This post got kind of ridiculously long. I'm sorry. But this snipe definitely
-took me for a ride. I hope it's interesting.
+took me for a ride. I hope it's interesting!
 
 <a name=toc />
 Table of Contents
