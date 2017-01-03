@@ -176,6 +176,9 @@ and meditate more, and generally not treat my body like shit.
 
 > The author literally right now.
 
+
+<a name=deeply />
+
 Think deeply and carefully about how I want to consume and be consumed by media
 -------------------------------------------------------------------
 
@@ -190,7 +193,7 @@ because my lizard brain wants to see `$FEMALE_CELEB` in a tank top? What the fuc
 even _is_ facebook, and twitter? Who _are_ these people?
 
 These websites and others like them have the potential to add _real value_ to
-my life, and have. They've kept me connected to or at least abrest of the lives of
+my life, and have. They've kept me connected to or at least abreast of the lives of
 many people I know and care about, and made it possible to have meaningful
 interactions with [people I really look up
 to](https://twitter.com/id_aa_carmack/status/727148389930954754), it's true.
